@@ -13,8 +13,8 @@
 
 **Purpose**: Project initialization, dependencies, and basic project structure
 
-- [ ] T001 Create project folders per implementation plan in AporTamos-Backend/ and AporTamos-Frontend/
-- [ ] T002 [P] Initialize Python venv and install FastAPI, Supabase client in AporTamos-Backend/requirements.txt
+- [X] T001 Create project folders per implementation plan in AporTamos-Backend/ and AporTamos-Frontend/
+- [X] T002 [P] Initialize Python venv and install FastAPI, Supabase client in AporTamos-Backend/requirements.txt
 - [ ] T003 [P] Initialize Node environment and lock dependency versions in AporTamos-Frontend/package.json (React 19.1.0, React Native 0.81.5, Expo ~54.0.33)
 - [ ] T004 [P] Configure linting (ESLint, Black for Python) in both frontend and backend
 - [ ] T005 Create environment configuration files (.env.example) for Supabase credentials in both projects
