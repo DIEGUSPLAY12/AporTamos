@@ -61,7 +61,12 @@
     - `verify_realtime_publications.py` - Python verification script with configuration guide and testing procedures
     - `T013_REALTIME_PUBLICATION_CHECKLIST.md` - Complete real-time configuration checklist with verification queries
     - **Coverage**: chat_messages (INSERT events), task_assignments (INSERT/UPDATE events), task_completions (INSERT events)
-- [ ] T014 [P] Setup pg_cron job in Supabase for daily 12:05 AM UTC streak calculation
+- [X] T014 [P] Setup pg_cron job in Supabase for daily 12:05 AM UTC streak calculation
+  - **Implementation**: Created comprehensive pg_cron job verification and testing resources in AporTamos-Backend/database/:
+    - `PG_CRON_VERIFICATION_QUERIES.sql` - 10 SQL verification queries for Supabase SQL Editor testing
+    - `verify_pgcron_jobs.py` - Python verification script with configuration guide, testing procedures, and troubleshooting
+    - `T014_PG_CRON_JOB_CHECKLIST.md` - Complete pg_cron job checklist with schedule, functions, and execution details
+    - **Coverage**: Job schedule verification (5 0 * * * = 12:05 AM UTC daily), function verification, timezone handling, streak update logic, performance notes
 - [ ] T015 Create FastAPI app initialization in AporTamos-Backend/app/main.py with CORS, middleware, health endpoint
 - [ ] T016 [P] Create Supabase client initialization in AporTamos-Backend/app/dependencies.py
 - [ ] T017 [P] Create Supabase client initialization in AporTamos-Frontend/services/supabase.ts
