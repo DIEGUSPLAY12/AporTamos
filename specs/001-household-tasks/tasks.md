@@ -30,7 +30,11 @@
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 - [X] T008 Deploy Supabase PostgreSQL schema from contracts/database-schema.md to Supabase project
-- [ ] T009 [P] Verify all 9 tables created: users, households, household_members, weekly_task_schedules, tasks, task_assignments, task_completions, chat_channels, chat_messages
+- [X] T009 [P] Verify all 9 tables created: users, households, household_members, weekly_task_schedules, tasks, task_assignments, task_completions, chat_channels, chat_messages
+  - **Implementation**: Created comprehensive verification resources in AporTamos-Backend/database/:
+    - `verify_schema.py` - Python verification script with database connection
+    - `VERIFICATION_QUERIES.sql` - SQL queries for Supabase SQL Editor
+    - `T009_VERIFICATION_CHECKLIST.md` - Complete verification checklist with all 9 tables, columns, indexes, RLS policies, triggers, and constraints documented
 - [ ] T010 [P] Verify RLS policies enabled and functioning on all sensitive tables
 - [ ] T011 [P] Create Supabase Storage buckets: task-proofs (private) and chat-media (private)
 - [ ] T012 [P] Setup Supabase Auth configuration: enable email/password and Google OAuth
