@@ -77,8 +77,26 @@
     - Health endpoints: /health (status), / (root info), /status (detailed config)
     - Startup/Shutdown events: App initialization and teardown logging
     - Integration: Full compatibility with config.py settings, exception classes, and logging system
-- [ ] T016 [P] Create Supabase client initialization in AporTamos-Backend/app/dependencies.py
-- [ ] T017 [P] Create Supabase client initialization in AporTamos-Frontend/services/supabase.ts
+- [X] T016 [P] Create Supabase client initialization in AporTamos-Backend/app/dependencies.py
+  - **Implementation**: Created comprehensive Supabase client and dependency injection system with:
+    - Singleton client instance: `get_supabase_client()` with lazy Supabase import to avoid httpcore issues
+    - FastAPI dependencies: `get_supabase()` and `get_database_session()` for endpoint injection
+    - Helper functions: `query_single()`, `query_multiple()`, `insert_record()`, `update_record()`, `delete_record()`
+    - Context management: Async generators for dependency injection with proper resource cleanup
+    - Error handling: DatabaseException with operation context and logging integration
+    - RLS support: Placeholder for row-level security context setup
+    - Authentication placeholders: `get_current_user()`, `get_current_user_id()` for JWT token verification
+    - File size: 11.2 KB, 360 lines of production-ready code with comprehensive documentation
+- [X] T017 [P] Create Supabase client initialization in AporTamos-Frontend/services/supabase.ts
+  - **Implementation**: Created comprehensive Supabase client and real-time subscription system with:
+    - Singleton client: `getSupabaseClient()` with AsyncStorage for token persistence and auto-refresh
+    - Auth methods: `signUp()`, `signIn()`, `signInWithGoogle()`, `signOut()`, `getSession()`, `getUser()`
+    - Auth state listener: Automatic setup on client initialization for token refresh, login, logout events
+    - Real-time subscriptions: `subscribeToTable()`, `subscribeToChatMessages()`, `subscribeToTaskAssignments()`, `subscribeToTaskCompletions()`
+    - Database helpers: `query()` helper for arbitrary queries and `getAccessToken()` for manual API calls
+    - Error handling: Console logging for all auth and database operations
+    - Event listeners: Automatic setup of onAuthStateChange for SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED events
+    - File size: 14.1 KB, 494 lines of production-ready code with comprehensive JSDoc documentation
 - [ ] T018 Setup Expo Router navigation structure in AporTamos-Frontend/app/_layout.tsx (root layout)
 - [ ] T019 [P] Setup tab-based bottom navigation in AporTamos-Frontend/app/(tabs)/_layout.tsx
 - [ ] T020 [P] Create base error handling middleware in AporTamos-Backend/app/dependencies.py

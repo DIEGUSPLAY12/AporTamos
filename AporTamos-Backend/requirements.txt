@@ -20,7 +20,9 @@ python-multipart>=0.0.6
 cryptography>=40.0.0
 
 # Async and HTTP
-httpx>=0.24.0
+httpx==0.24.1
+httpcore==0.17.3
+h11==0.14.0
 aiofiles>=23.0.0
 
 # Logging and Monitoring
