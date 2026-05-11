@@ -29,7 +29,7 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Deploy Supabase PostgreSQL schema from contracts/database-schema.md to Supabase project
+- [X] T008 Deploy Supabase PostgreSQL schema from contracts/database-schema.md to Supabase project
 - [ ] T009 [P] Verify all 9 tables created: users, households, household_members, weekly_task_schedules, tasks, task_assignments, task_completions, chat_channels, chat_messages
 - [ ] T010 [P] Verify RLS policies enabled and functioning on all sensitive tables
 - [ ] T011 [P] Create Supabase Storage buckets: task-proofs (private) and chat-media (private)
