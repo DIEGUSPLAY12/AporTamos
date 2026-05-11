@@ -67,7 +67,16 @@
     - `verify_pgcron_jobs.py` - Python verification script with configuration guide, testing procedures, and troubleshooting
     - `T014_PG_CRON_JOB_CHECKLIST.md` - Complete pg_cron job checklist with schedule, functions, and execution details
     - **Coverage**: Job schedule verification (5 0 * * * = 12:05 AM UTC daily), function verification, timezone handling, streak update logic, performance notes
-- [ ] T015 Create FastAPI app initialization in AporTamos-Backend/app/main.py with CORS, middleware, health endpoint
+- [X] T015 Create FastAPI app initialization in AporTamos-Backend/app/main.py with CORS, middleware, health endpoint
+  - **Implementation**: Created comprehensive FastAPI application initialization with:
+    - CORS middleware: Configured for Expo (localhost:19000-19001), React dev (localhost:3000), and production origins
+    - Security middleware: TrustedHost (allowed_hosts), SecurityHeaders (HSTS, X-Frame-Options, X-Content-Type-Options)
+    - Compression middleware: GZipMiddleware for response compression (min 1000 bytes)
+    - Logging middleware: Custom middleware for request/response logging with timing
+    - Exception handlers: 11 handlers covering all AporTamosException types + RequestValidationError + general exceptions
+    - Health endpoints: /health (status), / (root info), /status (detailed config)
+    - Startup/Shutdown events: App initialization and teardown logging
+    - Integration: Full compatibility with config.py settings, exception classes, and logging system
 - [ ] T016 [P] Create Supabase client initialization in AporTamos-Backend/app/dependencies.py
 - [ ] T017 [P] Create Supabase client initialization in AporTamos-Frontend/services/supabase.ts
 - [ ] T018 Setup Expo Router navigation structure in AporTamos-Frontend/app/_layout.tsx (root layout)
