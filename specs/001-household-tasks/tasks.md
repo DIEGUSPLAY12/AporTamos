@@ -48,7 +48,13 @@
     - `T011_STORAGE_BUCKETS_CHECKLIST.md` - Complete verification checklist for both buckets with usage documentation
     - `README_T011.md` - Implementation guide with setup instructions for Dashboard and automated methods
     - **Coverage**: Both task-proofs and chat-media buckets created as private with configuration details
-- [ ] T012 [P] Setup Supabase Auth configuration: enable email/password and Google OAuth
+- [X] T012 [P] Setup Supabase Auth configuration: enable email/password and Google OAuth
+  - **Implementation**: Created comprehensive Auth configuration setup and verification resources in AporTamos-Backend/database/:
+    - `verify_auth_configuration.py` - Python verification script for auth configuration status
+    - `AUTH_CONFIGURATION_VERIFICATION.sql` - 12 SQL queries for auth infrastructure verification
+    - `T012_AUTH_CONFIGURATION_CHECKLIST.md` - Complete auth configuration checklist with all settings documented
+    - `README_T012.md` - Implementation guide with dashboard setup instructions and integration examples
+    - **Coverage**: Email/password provider, Google OAuth setup, JWT configuration, redirect URLs, email templates, frontend/backend integration
 - [ ] T013 [P] Configure Supabase real-time publication for chat_messages, task_assignments, task_completions
 - [ ] T014 [P] Setup pg_cron job in Supabase for daily 12:05 AM UTC streak calculation
 - [ ] T015 Create FastAPI app initialization in AporTamos-Backend/app/main.py with CORS, middleware, health endpoint
