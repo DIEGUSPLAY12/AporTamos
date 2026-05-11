@@ -55,7 +55,12 @@
     - `T012_AUTH_CONFIGURATION_CHECKLIST.md` - Complete auth configuration checklist with all settings documented
     - `README_T012.md` - Implementation guide with dashboard setup instructions and integration examples
     - **Coverage**: Email/password provider, Google OAuth setup, JWT configuration, redirect URLs, email templates, frontend/backend integration
-- [ ] T013 [P] Configure Supabase real-time publication for chat_messages, task_assignments, task_completions
+- [X] T013 [P] Configure Supabase real-time publication for chat_messages, task_assignments, task_completions
+  - **Implementation**: Created comprehensive real-time publication setup and verification resources in AporTamos-Backend/database/:
+    - `realtime-publication.sql` - SQL configuration to create/update Supabase publication for 3 tables
+    - `verify_realtime_publications.py` - Python verification script with configuration guide and testing procedures
+    - `T013_REALTIME_PUBLICATION_CHECKLIST.md` - Complete real-time configuration checklist with verification queries
+    - **Coverage**: chat_messages (INSERT events), task_assignments (INSERT/UPDATE events), task_completions (INSERT events)
 - [ ] T014 [P] Setup pg_cron job in Supabase for daily 12:05 AM UTC streak calculation
 - [ ] T015 Create FastAPI app initialization in AporTamos-Backend/app/main.py with CORS, middleware, health endpoint
 - [ ] T016 [P] Create Supabase client initialization in AporTamos-Backend/app/dependencies.py
