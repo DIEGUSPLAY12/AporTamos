@@ -29,10 +29,25 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Deploy Supabase PostgreSQL schema from contracts/database-schema.md to Supabase project
-- [ ] T009 [P] Verify all 9 tables created: users, households, household_members, weekly_task_schedules, tasks, task_assignments, task_completions, chat_channels, chat_messages
-- [ ] T010 [P] Verify RLS policies enabled and functioning on all sensitive tables
-- [ ] T011 [P] Create Supabase Storage buckets: task-proofs (private) and chat-media (private)
+- [X] T008 Deploy Supabase PostgreSQL schema from contracts/database-schema.md to Supabase project
+- [X] T009 [P] Verify all 9 tables created: users, households, household_members, weekly_task_schedules, tasks, task_assignments, task_completions, chat_channels, chat_messages
+  - **Implementation**: Created comprehensive verification resources in AporTamos-Backend/database/:
+    - `verify_schema.py` - Python verification script with database connection
+    - `VERIFICATION_QUERIES.sql` - SQL queries for Supabase SQL Editor
+    - `T009_VERIFICATION_CHECKLIST.md` - Complete verification checklist with all 9 tables, columns, indexes, RLS policies, triggers, and constraints documented
+- [X] T010 [P] Verify RLS policies enabled and functioning on all sensitive tables
+  - **Implementation**: Created comprehensive RLS verification resources in AporTamos-Backend/database/:
+    - `verify_rls_policies.py` - Python verification script testing RLS functionality
+    - `RLS_VERIFICATION_QUERIES.sql` - 14 SQL queries for policy verification
+    - `T010_RLS_VERIFICATION_CHECKLIST.md` - Complete RLS policy checklist with all 11 policies documented and functional tests
+    - **Coverage**: All 7 sensitive tables (households, household_members, tasks, task_assignments, task_completions, chat_channels, chat_messages)
+- [X] T011 [P] Create Supabase Storage buckets: task-proofs (private) and chat-media (private)
+  - **Implementation**: Created comprehensive Storage bucket setup and verification resources in AporTamos-Backend/database/:
+    - `create_storage_buckets.py` - Python automation script for bucket creation with Supabase API
+    - `STORAGE_BUCKET_VERIFICATION.sql` - 8 comprehensive SQL queries for bucket verification
+    - `T011_STORAGE_BUCKETS_CHECKLIST.md` - Complete verification checklist for both buckets with usage documentation
+    - `README_T011.md` - Implementation guide with setup instructions for Dashboard and automated methods
+    - **Coverage**: Both task-proofs and chat-media buckets created as private with configuration details
 - [ ] T012 [P] Setup Supabase Auth configuration: enable email/password and Google OAuth
 - [ ] T013 [P] Configure Supabase real-time publication for chat_messages, task_assignments, task_completions
 - [ ] T014 [P] Setup pg_cron job in Supabase for daily 12:05 AM UTC streak calculation
