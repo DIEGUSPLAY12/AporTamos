@@ -19,7 +19,7 @@
 - [X] T004 [P] Configure linting (ESLint, Black for Python) in both frontend and backend
 - [X] T005 Create environment configuration files (.env.example) for Supabase credentials in both projects
 - [X] T006 [P] Setup error handling and logging infrastructure in AporTamos-Backend/app/config.py
-- [ ] T007 Create shared TypeScript types file at AporTamos-Frontend/types/models.ts matching API contracts
+- [X] T007 Create shared TypeScript types file at AporTamos-Frontend/types/models.ts matching API contracts
 
 ---
 
