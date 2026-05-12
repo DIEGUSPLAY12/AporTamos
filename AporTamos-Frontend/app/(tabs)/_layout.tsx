@@ -68,8 +68,6 @@ export default function TabLayout() {
         name="profile/index"
         options={{
           title: 'Profile',
-          // Using a user icon for the profile tab
-          //The icon is not showing
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
