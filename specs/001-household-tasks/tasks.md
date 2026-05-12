@@ -118,7 +118,18 @@
     - Documentation: Comprehensive JSDoc with feature descriptions for each tab
     - Placeholder screens: Created AporTamos-Frontend/app/(tabs)/chat/index.tsx and profile/index.tsx with placeholder UI
     - File size: 14.8 KB, 78 lines of enhanced implementation with full inline documentation
-- [ ] T020 [P] Create base error handling middleware in AporTamos-Backend/app/dependencies.py
+- [X] T020 [P] Create base error handling middleware in AporTamos-Backend/app/dependencies.py
+  - **Implementation**: Created comprehensive error handling middleware and utilities with:
+    - ErrorContext async context manager: Wraps operations with automatic exception handling and logging
+    - handle_database_operation: Wrapper function for database operations with error transformation
+    - wrap_endpoint_error_handling: Decorator for endpoint handlers with error catching and logging
+    - RequestErrorHandler: Dependency class for per-endpoint error handling with exception-to-HTTP mapping
+    - Exception mapping: Maps all AporTamos exception types to appropriate HTTP status codes (400, 401, 403, 404, 409, 429, 500)
+    - Logging integration: All error handlers log with context information
+    - Support for all exception types: DatabaseException, ValidationException, AuthenticationException, AuthorizationException, ResourceNotFoundException, ConflictException, RateLimitException
+    - Updated imports: Added all required exception classes and log functions
+    - Updated module docstring: Documented new middleware and error handling utilities
+    - File size: 15.8 KB (~600 lines with additions)
 - [ ] T021 Create base authentication context in AporTamos-Frontend/context/AuthContext.tsx
 - [ ] T022 Setup Tailwind CSS configuration for React Native in AporTamos-Frontend/
 

@@ -1,5 +1,5 @@
 """
-Supabase client initialization and dependency injection for FastAPI.
+Supabase client initialization, dependency injection, and error handling middleware for FastAPI.
 
 This module provides:
 - Supabase client singleton instance
@@ -7,14 +7,29 @@ This module provides:
 - Async context managers for transactions
 - Dependency injection for FastAPI endpoints
 - Error handling and logging
+- Error handling middleware and decorators for endpoint protection
+- Request error handling utilities
 """
 
-from typing import AsyncGenerator, Optional, TYPE_CHECKING
+from typing import AsyncGenerator, Callable, Optional, TYPE_CHECKING
 import logging
 
 from fastapi import Depends, HTTPException, status
 
-from app.config import settings, log_debug, log_error, log_info, DatabaseException
+from app.config import (
+    settings,
+    log_debug,
+    log_error,
+    log_info,
+    log_warning,
+    DatabaseException,
+    ValidationException,
+    AuthenticationException,
+    AuthorizationException,
+    ResourceNotFoundException,
+    ConflictException,
+    RateLimitException,
+)
 
 # Type checking imports to avoid circular imports with httpcore issues
 if TYPE_CHECKING:
@@ -388,3 +403,239 @@ async def set_rls_context(
     # 1. Verifying user_id matches authenticated user
     # 2. Setting session variables for RLS policies
     pass
+
+
+# Error Handling Middleware
+
+class ErrorContext:
+    """
+    Context manager for error handling in endpoint handlers.
+    
+    Automatically catches exceptions and wraps them in appropriate
+    AporTamos exceptions with proper logging.
+    
+    Usage:
+        async def get_user(user_id: str, supabase: Client = Depends(get_supabase)):
+            async with ErrorContext("fetch_user"):
+                response = supabase.table("users").select("*").eq("id", user_id).single().execute()
+                return response.data
+    """
+    
+    def __init__(self, operation: str, extra_context: Optional[dict] = None):
+        """
+        Initialize error context.
+        
+        Args:
+            operation: Name of the operation being performed
+            extra_context: Additional context to log with errors
+        """
+        self.operation = operation
+        self.extra_context = extra_context or {}
+    
+    async def __aenter__(self):
+        """Enter async context."""
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """
+        Exit async context and handle exceptions.
+        
+        Args:
+            exc_type: Exception type
+            exc_val: Exception value
+            exc_tb: Exception traceback
+            
+        Returns:
+            False to propagate exception, True to suppress
+        """
+        if exc_type is None:
+            return False
+        
+        # Already an AporTamos exception, just log and propagate
+        if issubclass(exc_type, Exception) and hasattr(exc_val, 'error_code'):
+            log_warning(
+                f"Operation failed: {self.operation}",
+                extra={
+                    "operation": self.operation,
+                    "error": str(exc_val),
+                    **self.extra_context
+                }
+            )
+            return False
+        
+        # Unexpected exception, wrap and log
+        log_error(
+            f"Unexpected error during {self.operation}",
+            exc_val,
+            extra={
+                "operation": self.operation,
+                **self.extra_context
+            }
+        )
+        
+        return False
+
+
+async def handle_database_operation(
+    operation: str,
+    func,
+    *args,
+    **kwargs
+):
+    """
+    Wrap a database operation with error handling.
+    
+    Args:
+        operation: Name of the operation
+        func: Async function to execute
+        *args: Positional arguments for func
+        **kwargs: Keyword arguments for func
+        
+    Returns:
+        Result of func execution
+        
+    Raises:
+        DatabaseException: If operation fails
+    """
+    try:
+        return await func(*args, **kwargs)
+    except Exception as exc:
+        log_error(
+            f"Database operation failed: {operation}",
+            exc,
+            extra={"operation": operation}
+        )
+        if isinstance(exc, DatabaseException):
+            raise
+        raise DatabaseException(
+            f"Failed to execute {operation}: {str(exc)}",
+            operation=operation
+        ) from exc
+
+
+def wrap_endpoint_error_handling(operation: str):
+    """
+    Decorator to wrap endpoint handlers with error handling.
+    
+    Catches unexpected exceptions and wraps them appropriately,
+    while allowing AporTamos exceptions to propagate normally.
+    
+    Args:
+        operation: Name of the operation being performed
+        
+    Returns:
+        Decorator function
+        
+    Usage:
+        @app.get("/users/{user_id}")
+        @wrap_endpoint_error_handling("get_user")
+        async def get_user(user_id: str, supabase: Client = Depends(get_supabase)):
+            ...
+    """
+    def decorator(func):
+        async def wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except Exception as exc:
+                # Let AporTamos exceptions propagate normally
+                if isinstance(exc, Exception) and hasattr(exc, 'error_code'):
+                    raise
+                
+                # Log and wrap unexpected exceptions
+                log_error(
+                    f"Endpoint error: {operation}",
+                    exc,
+                    extra={"operation": operation}
+                )
+                
+                # Return generic internal error for unexpected exceptions
+                raise DatabaseException(
+                    f"Failed to complete {operation}",
+                    operation=operation
+                ) from exc
+        
+        return wrapper
+    return decorator
+
+
+class RequestErrorHandler:
+    """
+    Dependency class for endpoint-level error handling.
+    
+    Provides structured error handling for individual endpoints.
+    
+    Usage:
+        @app.get("/data")
+        async def get_data(error_handler: RequestErrorHandler = Depends()):
+            try:
+                # ... operation ...
+                pass
+            except Exception as exc:
+                return error_handler.handle(exc, "fetch_data")
+    """
+    
+    @staticmethod
+    def handle(
+        exc: Exception,
+        operation: str,
+        status_code: int = 500
+    ) -> HTTPException:
+        """
+        Handle an exception and return appropriate HTTPException.
+        
+        Args:
+            exc: Exception to handle
+            operation: Name of the operation that failed
+            status_code: HTTP status code (default: 500)
+            
+        Returns:
+            HTTPException for the endpoint to return
+        """
+        log_error(
+            f"Request error during {operation}",
+            exc,
+            extra={"operation": operation}
+        )
+        
+        # Map AporTamos exceptions to HTTP responses
+        if isinstance(exc, DatabaseException):
+            return HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {exc.operation}"
+            )
+        elif isinstance(exc, ValidationException):
+            return HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Validation error: {exc.message}"
+            )
+        elif isinstance(exc, AuthenticationException):
+            return HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=exc.message
+            )
+        elif isinstance(exc, AuthorizationException):
+            return HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=exc.message
+            )
+        elif isinstance(exc, ResourceNotFoundException):
+            return HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=exc.message
+            )
+        elif isinstance(exc, ConflictException):
+            return HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=exc.message
+            )
+        elif isinstance(exc, RateLimitException):
+            return HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=exc.message
+            )
+        else:
+            # Unexpected exception
+            return HTTPException(
+                status_code=status_code,
+                detail="An unexpected error occurred"
+            )
