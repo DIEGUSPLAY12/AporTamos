@@ -127,7 +127,6 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animationEnabled: true,
         }}
       >
         {!isLoggedIn ? (
@@ -145,14 +144,14 @@ export default function RootLayout() {
            * - Prevents returning to login after logout
            * - Smooth transitions between auth screens
            */
-          <Stack.Group screenOptions={{ presentation: 'card', animationEnabled: true }}>
+          <>
             <Stack.Screen
               name="(auth)"
               options={{
                 headerShown: false,
               }}
             />
-          </Stack.Group>
+          </>
         ) : (
           /**
            * App Stack
@@ -168,7 +167,7 @@ export default function RootLayout() {
            * - Tab-based bottom navigation
            * - Modal overlays for secondary flows
            */
-          <Stack.Group>
+          <>
             <Stack.Screen
               name="(tabs)"
               options={{
@@ -182,7 +181,7 @@ export default function RootLayout() {
                 title: 'Modal',
               }}
             />
-          </Stack.Group>
+          </>
         )}
       </Stack>
       <StatusBar style="auto" />
