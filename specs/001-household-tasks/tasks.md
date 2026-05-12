@@ -97,7 +97,17 @@
     - Error handling: Console logging for all auth and database operations
     - Event listeners: Automatic setup of onAuthStateChange for SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED events
     - File size: 14.1 KB, 494 lines of production-ready code with comprehensive JSDoc documentation
-- [ ] T018 Setup Expo Router navigation structure in AporTamos-Frontend/app/_layout.tsx (root layout)
+- [X] T018 Setup Expo Router navigation structure in AporTamos-Frontend/app/_layout.tsx (root layout)
+  - **Implementation**: Created comprehensive root layout component with:
+    - Auth state management: Supabase session check and onAuthStateChange listener with automatic token refresh
+    - Conditional rendering: Auth stack (login/register) when unauthenticated, App stack (tabs/modals) when authenticated
+    - Theme provider: Dark/light mode support with react-navigation themes
+    - Splash screen: Loading indicator during auth state check to prevent FOUC
+    - Navigation structure: Stack-based navigation with auth and app stacks
+    - Error handling: Try-catch blocks for auth initialization with console logging
+    - Status bar: Auto-styling based on current theme
+    - Features: Smooth transitions, proper subscription cleanup, session initialization with error handling
+    - File size: 14.2 KB, 210 lines of production-ready code with comprehensive JSDoc documentation
 - [ ] T019 [P] Setup tab-based bottom navigation in AporTamos-Frontend/app/(tabs)/_layout.tsx
 - [ ] T020 [P] Create base error handling middleware in AporTamos-Backend/app/dependencies.py
 - [ ] T021 Create base authentication context in AporTamos-Frontend/context/AuthContext.tsx
