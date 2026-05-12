@@ -16,6 +16,7 @@ from app.services.auth_service import (
     get_user_by_id,
     authenticate_user,
     authenticate_user_google,
+    create_or_get_user_google,
     update_user,
     soft_delete_user,
     AuthenticationError,
@@ -33,6 +34,7 @@ __all__ = [
     'get_user_by_id',
     'authenticate_user',
     'authenticate_user_google',
+    'create_or_get_user_google',
     'update_user',
     'soft_delete_user',
     # Auth service exceptions

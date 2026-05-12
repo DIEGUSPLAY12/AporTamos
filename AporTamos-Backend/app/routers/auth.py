@@ -16,10 +16,11 @@ from typing import Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 
-from app.models.user import UserCreate, UserLogin, UserResponse
+from app.models.user import UserCreate, UserLogin, UserResponse, GoogleLogin
 from app.services.auth_service import (
     create_user,
     authenticate_user,
+    create_or_get_user_google,
     UserAlreadyExistsError,
     InvalidCredentialsError,
     UserNotFoundError,
@@ -242,6 +243,118 @@ async def login(user_data: UserLogin) -> Dict[str, Any]:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Authentication failed",
+        )
+
+
+@router.post("/google-login", response_model=Dict[str, Any])
+async def google_login(google_data: GoogleLogin) -> Dict[str, Any]:
+    """
+    Authenticate or register with Google OAuth.
+    
+    This endpoint:
+    1. Extracts user info from Google OAuth token
+    2. Retrieves user by google_id if exists
+    3. Creates new user if this is first Google login
+    4. Returns access token and user info with is_new_user flag
+    
+    Args:
+        google_data: GoogleLogin schema with google_token
+        
+    Returns:
+        Dict with access_token, token_type, expires_in, user info, and is_new_user flag
+        
+    Raises:
+        400: Invalid Google token or email already registered
+        401: Token expired
+        500: Database or server error
+        
+    Example:
+        POST /auth/google-login
+        {
+            "google_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ..."
+        }
+        
+        Response (200):
+        {
+            "access_token": "placeholder_token_550e8400...",
+            "token_type": "bearer",
+            "expires_in": 3600,
+            "user": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "email": "user@gmail.com",
+                "name": "John Doe"
+            },
+            "is_new_user": true
+        }
+    """
+    try:
+        # In a production system, we would verify the Google token signature here
+        # For now, we assume the frontend has already validated the token
+        # and we extract the user info from it
+        
+        # TODO: Implement actual Google token verification using google-auth library
+        # For now, this is a placeholder that would be called from frontend with decoded token
+        
+        # Extract user info from token (in real implementation, use google.auth.transport.requests)
+        # This would normally be done via:
+        # from google.auth.transport import requests
+        # id_info = id_token.verify_oauth2_token(google_data.google_token, requests.Request(), settings.google_client_id)
+        
+        # For now, assume token is validated by frontend and we get user info from Supabase
+        # In production, you'd parse the JWT and verify signature
+        
+        # In a real implementation, you would parse the token here
+        # For now, we'll demonstrate the flow with placeholder values
+        # The frontend would send the ID token, and we'd verify it with Google
+        
+        log_warning(
+            "Google login called - token verification not yet implemented",
+            extra={"token_length": len(google_data.google_token)},
+        )
+        
+        # Placeholder for real token verification
+        # In production, implement with:
+        # from google.auth.transport import requests
+        # from google.oauth2 import id_token
+        # id_info = id_token.verify_oauth2_token(google_data.google_token, requests.Request(), settings.google_client_id)
+        # google_id = id_info['sub']
+        # email = id_info['email']
+        # name = id_info.get('name', email.split('@')[0])
+        
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Google OAuth token verification requires backend configuration with Google client credentials",
+        )
+        
+    except InvalidCredentialsError as exc:
+        log_warning(
+            f"Google login failed: Invalid credentials - {str(exc)}",
+            extra={},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+        
+    except UserAlreadyExistsError as exc:
+        log_warning(
+            f"Google login failed: Email already exists",
+            extra={},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+        
+    except Exception as exc:
+        log_error(
+            f"Google login failed: {str(exc)}",
+            exc,
+            extra={},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Google authentication failed",
         )
 
 

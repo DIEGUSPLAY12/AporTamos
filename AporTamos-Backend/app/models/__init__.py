@@ -16,6 +16,8 @@ from app.models.user import (
     UserInDB,
     UserUpdate,
     PasswordChangeRequest,
+    GoogleLogin,
+    GoogleUserInfo,
 )
 
 __all__ = [
@@ -27,4 +29,6 @@ __all__ = [
     'UserInDB',
     'UserUpdate',
     'PasswordChangeRequest',
+    'GoogleLogin',
+    'GoogleUserInfo',
 ]

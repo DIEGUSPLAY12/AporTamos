@@ -301,6 +301,87 @@ class PasswordChangeRequest(BaseModel):
         }
 
 
+class PasswordChangeRequest(BaseModel):
+    """Schema for changing user password.
+    
+    Attributes:
+        current_password: Current password for verification
+        new_password: New password (must meet strength requirements)
+    """
+    
+    current_password: str = Field(..., description="Current password for verification")
+    new_password: str = Field(..., min_length=8, max_length=128, description="New password")
+    
+    @validator('new_password')
+    def validate_new_password_strength(cls, v):
+        """Validate new password meets security requirements."""
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        
+        if not any(c.isupper() for c in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        
+        if not any(c.islower() for c in v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Password must contain at least one digit')
+        
+        special_chars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        if not any(c in special_chars for c in v):
+            raise ValueError(f'Password must contain at least one special character: {special_chars}')
+        
+        return v
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "current_password": "OldPass123!",
+                "new_password": "NewPass456!"
+            }
+        }
+
+
+class GoogleLogin(BaseModel):
+    """Schema for Google OAuth login.
+    
+    Attributes:
+        google_token: JWT token from Google OAuth (contains user info)
+    """
+    
+    google_token: str = Field(..., description="JWT token from Google OAuth")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "google_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ..."
+            }
+        }
+
+
+class GoogleUserInfo(BaseModel):
+    """Decoded information from Google OAuth token.
+    
+    Attributes:
+        google_id: Unique Google user ID
+        email: User's email from Google account
+        name: User's display name from Google account
+    """
+    
+    google_id: str = Field(..., description="Google user ID")
+    email: EmailStr = Field(..., description="Email from Google account")
+    name: str = Field(..., description="Display name from Google account")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "google_id": "118207346348...",
+                "email": "user@gmail.com",
+                "name": "John Doe"
+            }
+        }
+
+
 # Export all models for use in endpoints
 __all__ = [
     'UserCreate',
@@ -310,4 +391,6 @@ __all__ = [
     'UserInDB',
     'UserUpdate',
     'PasswordChangeRequest',
+    'GoogleLogin',
+    'GoogleUserInfo',
 ]

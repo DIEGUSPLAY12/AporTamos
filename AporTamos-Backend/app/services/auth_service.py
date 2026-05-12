@@ -376,6 +376,117 @@ async def authenticate_user_google(google_id: str) -> UserInDB:
         raise AuthenticationError(f"Failed to authenticate with Google: {str(e)}")
 
 
+async def create_or_get_user_google(
+    google_id: str,
+    email: str,
+    name: str,
+) -> tuple[UserInDB, bool]:
+    """Create or retrieve a user via Google OAuth.
+    
+    This function handles both new user registration and existing user login via Google OAuth:
+    1. First tries to retrieve user by google_id
+    2. If found, returns existing user with is_new_user=False
+    3. If not found, creates new user with google_id
+    4. Returns created user with is_new_user=True
+    
+    Args:
+        google_id: The Google account ID from OAuth token
+        email: The user's email from Google profile
+        name: The user's display name from Google profile
+        
+    Returns:
+        Tuple of (UserInDB object, is_new_user boolean)
+        
+    Raises:
+        UserAlreadyExistsError: If email already exists for different user
+        AuthenticationError: If database operation fails
+        
+    Examples:
+        >>> user, is_new = await create_or_get_user_google(
+        ...     google_id="118207346348...",
+        ...     email="john@gmail.com",
+        ...     name="John Doe"
+        ... )
+        >>> is_new
+        True
+    """
+    if not google_id or not email or not name:
+        raise InvalidCredentialsError("google_id, email, and name are required")
+    
+    try:
+        # Try to find existing user by google_id
+        existing_by_google_id = await get_user_by_id(UUID("00000000-0000-0000-0000-000000000000"))  # Dummy to use service
+        response = supabase_client.table("users").select("*").eq(
+            "google_id", google_id
+        ).eq("deleted_at", "null").execute()
+        
+        if response.data and len(response.data) > 0:
+            # User exists via Google ID
+            user_record = response.data[0]
+            logger.info(f"Existing Google user retrieved: {email}")
+            
+            return (
+                UserInDB(
+                    id=UUID(user_record["id"]),
+                    email=user_record["email"],
+                    password_hash=user_record.get("password_hash"),
+                    google_id=user_record.get("google_id"),
+                    name=user_record["name"],
+                    created_at=datetime.fromisoformat(user_record["created_at"]),
+                    updated_at=datetime.fromisoformat(user_record["updated_at"]),
+                    deleted_at=user_record.get("deleted_at"),
+                ),
+                False,  # is_new_user = False
+            )
+        
+        # Check if email already exists (different user)
+        existing_by_email = await get_user_by_email(email)
+        if existing_by_email:
+            logger.warning(f"Email {email} already exists for different user")
+            raise UserAlreadyExistsError(f"Email {email} is already registered. Please sign in instead.")
+        
+        # Create new user via Google OAuth
+        user_id = uuid4()
+        now = datetime.utcnow()
+        
+        create_response = supabase_client.table("users").insert({
+            "id": str(user_id),
+            "email": email,
+            "password_hash": None,  # No password for OAuth users
+            "google_id": google_id,
+            "name": name,
+            "created_at": now.isoformat(),
+            "updated_at": now.isoformat(),
+            "deleted_at": None,
+        }).execute()
+        
+        if not create_response.data:
+            raise AuthenticationError("Failed to create user in database")
+        
+        user_record = create_response.data[0]
+        logger.info(f"New Google user created: {email}")
+        
+        return (
+            UserInDB(
+                id=UUID(user_record["id"]),
+                email=user_record["email"],
+                password_hash=user_record.get("password_hash"),
+                google_id=user_record.get("google_id"),
+                name=user_record["name"],
+                created_at=datetime.fromisoformat(user_record["created_at"]),
+                updated_at=datetime.fromisoformat(user_record["updated_at"]),
+                deleted_at=user_record.get("deleted_at"),
+            ),
+            True,  # is_new_user = True
+        )
+        
+    except (UserAlreadyExistsError, InvalidCredentialsError):
+        raise
+    except Exception as e:
+        logger.error(f"Error creating/getting Google user: {str(e)}")
+        raise AuthenticationError(f"Failed to process Google authentication: {str(e)}")
+
+
 async def update_user(user_id: UUID, **fields) -> UserInDB:
     """Update user fields (name, email, etc.).
     
@@ -488,6 +599,7 @@ __all__ = [
     'get_user_by_id',
     'authenticate_user',
     'authenticate_user_google',
+    'create_or_get_user_google',
     'update_user',
     'soft_delete_user',
     # Exceptions
