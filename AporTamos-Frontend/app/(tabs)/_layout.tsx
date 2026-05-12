@@ -56,7 +56,7 @@ export default function TabLayout() {
 
       {/* Chat Tab: Real-time messaging and household coordination */}
       <Tabs.Screen
-        name="chat"
+        name="chat/index"
         options={{
           title: 'Chat',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="bubble.right.fill" color={color} />,
@@ -65,9 +65,11 @@ export default function TabLayout() {
 
       {/* Profile Tab: User account and settings management */}
       <Tabs.Screen
-        name="profile"
+        name="profile/index"
         options={{
           title: 'Profile',
+          // Using a user icon for the profile tab
+          //The icon is not showing
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
