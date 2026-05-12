@@ -213,7 +213,23 @@
     - Updated app/main.py to include auth_router in FastAPI app (app.include_router(auth_router))
     - Router mounted at `/auth` prefix with /register, /login, /logout endpoints
   - **Testing**: Endpoint accessible at POST /auth/register with proper error handling
-- [ ] T026 [US1] Implement POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (validate credentials, return JWT token)
+- [X] T026 [US1] Implement POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (validate credentials, return JWT token)
+  - **Implementation**: Created POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (same file as T025):
+    - Accepts UserLogin request (email, password)
+    - Calls `authenticate_user()` from auth_service to validate credentials
+    - Returns 200 OK with access_token, token_type, expires_in, user info
+    - Returns 401 Unauthorized for invalid credentials (InvalidCredentialsError)
+    - Returns 404 Not Found for user not found (UserNotFoundError)
+    - Returns 500 for database/server errors
+    - Comprehensive error logging for audit trail and debugging
+    - Full OpenAPI documentation with request/response examples
+  - **Integration**: 
+    - Reuses auth_router from T025 (no new files needed)
+    - Uses UserLogin model from T023
+    - Calls authenticate_user() service function from T024
+    - Integrates with existing exception handling and logging
+  - **Security**: Password verification via bcrypt, no plaintext passwords in responses/logs
+  - **Testing**: Endpoint accessible at POST /auth/login with proper error handling
 - [ ] T027 [P] [US1] Implement POST /auth/google-login endpoint in AporTamos-Backend/app/routers/auth.py (verify Google token, create/update user)
 - [ ] T028 [US1] Implement POST /auth/logout endpoint in AporTamos-Backend/app/routers/auth.py (invalidate session)
 - [ ] T029 [P] [US1] Create auth hooks in AporTamos-Frontend/hooks/useAuth.ts (manage Supabase Auth state)
