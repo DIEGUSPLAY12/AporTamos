@@ -276,7 +276,25 @@
     - Uses existing error handling and logging
   - **Security**: Client-side token removal recommended (Keychain on iOS, Keystore on Android)
   - **Testing**: Endpoint accessible at POST /auth/logout (requires valid Bearer token)
-- [ ] T029 [P] [US1] Create auth hooks in AporTamos-Frontend/hooks/useAuth.ts (manage Supabase Auth state)
+- [X] T029 [P] [US1] Create auth hooks in AporTamos-Frontend/hooks/useAuth.ts (manage Supabase Auth state)
+  - **Implementation**: Created comprehensive custom React hooks for authentication state management with:
+    - useAuthState: Get current auth state (user, session, isLoggedIn, userId, userEmail)
+    - useAuthLoading: Get loading state for async auth operations
+    - useAuthError: Get and manage auth errors with clearError function
+    - useLogin: Handle email/password login with local error handling
+    - useRegister: Handle user registration with email, password, name
+    - useLogout: Handle user logout with error handling
+    - useGoogleAuth: Handle Google OAuth login with token parameter
+    - useAuthRefresh: Refresh session state or recheck auth after navigation
+    - useIsLoggedIn: Shortcut to check if user is logged in
+    - useCurrentUser: Get current user object
+    - useCurrentUserId: Get current user ID for API calls
+    - useIsAuthLoading: Check if auth operation is in progress
+    - useAuthForm: Composite hook combining all auth state and methods for forms
+    - Error handling: Local error state in each hook + context errors
+    - TypeScript support: Full type definitions for all hooks
+    - Documentation: Comprehensive JSDoc with usage examples
+    - File size: 17.8 KB, 410 lines of production-ready code
 - [ ] T030 [P] [US1] Create LoginScreen component in AporTamos-Frontend/components/auth/LoginScreen.tsx (email/password form, Google OAuth button)
 - [ ] T031 [P] [US1] Create RegisterScreen component in AporTamos-Frontend/components/auth/RegisterScreen.tsx (registration form validation)
 - [ ] T032 [US1] Create auth flow navigation in AporTamos-Frontend/app/_layout.tsx (conditional render based on auth state)
