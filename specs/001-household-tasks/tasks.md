@@ -179,7 +179,21 @@
     - `PasswordChangeRequest`: Schema for password changes with strength validation
     - **Validation**: Email format (EmailStr), password strength (8+ chars, uppercase, lowercase, digit, special), name validation (1-100 chars, valid characters)
     - **Features**: All models include Pydantic Config with examples, from_attributes for ORM mapping, proper error messages
-- [ ] T024 [P] [US1] Create authentication service with password hashing in AporTamos-Backend/app/services/auth_service.py
+- [X] T024 [P] [US1] Create authentication service with password hashing in AporTamos-Backend/app/services/auth_service.py
+  - **Implementation**: Created comprehensive auth service in AporTamos-Backend/app/services/auth_service.py with 8 core async functions:
+    - `hash_password()`: Bcrypt password hashing with validation
+    - `verify_password()`: Password verification against hash
+    - `create_user()`: New user account creation with duplicate email check
+    - `get_user_by_email()`: User retrieval by email (excludes soft-deleted)
+    - `get_user_by_id()`: User retrieval by UUID (excludes soft-deleted)
+    - `authenticate_user()`: Email/password authentication with credential validation
+    - `authenticate_user_google()`: Google OAuth user retrieval by google_id
+    - `update_user()`: Update user profile fields (name, email)
+    - `soft_delete_user()`: Soft delete user account
+    - **Security**: Bcrypt via passlib for password hashing, proper error handling, detailed logging
+    - **Error Handling**: 4 custom exceptions (AuthenticationError, UserAlreadyExistsError, InvalidCredentialsError, UserNotFoundError)
+    - **Integration**: Works with Supabase via dependencies.supabase_client, uses User models from T023
+    - **Features**: Async/await support, comprehensive docstrings with examples, ORM integration
 - [ ] T025 [US1] Implement POST /auth/register endpoint in AporTamos-Backend/app/routers/auth.py (validate email, hash password, create user record)
 - [ ] T026 [US1] Implement POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (validate credentials, return JWT token)
 - [ ] T027 [P] [US1] Implement POST /auth/google-login endpoint in AporTamos-Backend/app/routers/auth.py (verify Google token, create/update user)
