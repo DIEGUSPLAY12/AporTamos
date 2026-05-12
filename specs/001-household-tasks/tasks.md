@@ -296,7 +296,7 @@
     - Documentation: Comprehensive JSDoc with usage examples
     - File size: 17.8 KB, 410 lines of production-ready code
 - [X] T030 [P] [US1] Create LoginScreen component in AporTamos-Frontend/components/auth/LoginScreen.tsx (email/password form, Google OAuth button)
-- [ ] T031 [P] [US1] Create RegisterScreen component in AporTamos-Frontend/components/auth/RegisterScreen.tsx (registration form validation)
+- [X] T031 [P] [US1] Create RegisterScreen component in AporTamos-Frontend/components/auth/RegisterScreen.tsx (registration form validation)
 - [ ] T032 [US1] Create auth flow navigation in AporTamos-Frontend/app/_layout.tsx (conditional render based on auth state)
 - [ ] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
 - [ ] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
