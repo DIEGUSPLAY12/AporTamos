@@ -168,7 +168,17 @@
 
 ### Implementation for US1
 
-- [ ] T023 [P] [US1] Create User Pydantic model in AporTamos-Backend/app/models/user.py
+- [X] T023 [P] [US1] Create User Pydantic model in AporTamos-Backend/app/models/user.py
+  - **Implementation**: Created comprehensive User Pydantic models in AporTamos-Backend/app/models/user.py:
+    - `UserCreate`: Registration request schema (email, password, name) with password strength validation
+    - `UserLogin`: Login request schema (email, password)
+    - `UserResponse`: Public user info for API responses (id, email, name, created_at)
+    - `User`: Complete user model with all fields and helper properties (is_active, is_oauth_user)
+    - `UserInDB`: Database model with password_hash and auth method helpers (has_password, can_use_email_password, can_use_oauth)
+    - `UserUpdate`: Schema for profile updates (name, email)
+    - `PasswordChangeRequest`: Schema for password changes with strength validation
+    - **Validation**: Email format (EmailStr), password strength (8+ chars, uppercase, lowercase, digit, special), name validation (1-100 chars, valid characters)
+    - **Features**: All models include Pydantic Config with examples, from_attributes for ORM mapping, proper error messages
 - [ ] T024 [P] [US1] Create authentication service with password hashing in AporTamos-Backend/app/services/auth_service.py
 - [ ] T025 [US1] Implement POST /auth/register endpoint in AporTamos-Backend/app/routers/auth.py (validate email, hash password, create user record)
 - [ ] T026 [US1] Implement POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (validate credentials, return JWT token)
