@@ -194,7 +194,25 @@
     - **Error Handling**: 4 custom exceptions (AuthenticationError, UserAlreadyExistsError, InvalidCredentialsError, UserNotFoundError)
     - **Integration**: Works with Supabase via dependencies.supabase_client, uses User models from T023
     - **Features**: Async/await support, comprehensive docstrings with examples, ORM integration
-- [ ] T025 [US1] Implement POST /auth/register endpoint in AporTamos-Backend/app/routers/auth.py (validate email, hash password, create user record)
+- [X] T025 [US1] Implement POST /auth/register endpoint in AporTamos-Backend/app/routers/auth.py (validate email, hash password, create user record)
+  - **Implementation**: Created comprehensive auth router with POST /auth/register endpoint in AporTamos-Backend/app/routers/auth.py (250+ lines):
+    - `POST /auth/register`: User registration with email/password/name validation
+      - Accepts UserCreate request (email, password, name)
+      - Calls create_user() from auth_service for secure account creation
+      - Returns 201 Created with access_token, token_type, expires_in, user info
+      - Returns 400 for duplicate email (UserAlreadyExistsError)
+      - Returns 422 for validation errors (invalid email, weak password)
+      - Comprehensive error logging for debugging
+    - `POST /auth/login`: User authentication (implemented as foundation for T026)
+    - `POST /auth/logout`: Session invalidation (implemented as foundation for T028)
+    - Helper function `_create_token_response()` for standardized token responses
+    - Full docstrings with examples showing request/response format
+    - Error handling for UserAlreadyExistsError, InvalidCredentialsError, UserNotFoundError
+  - **Integration**: 
+    - Updated app/routers/__init__.py to export auth_router
+    - Updated app/main.py to include auth_router in FastAPI app (app.include_router(auth_router))
+    - Router mounted at `/auth` prefix with /register, /login, /logout endpoints
+  - **Testing**: Endpoint accessible at POST /auth/register with proper error handling
 - [ ] T026 [US1] Implement POST /auth/login endpoint in AporTamos-Backend/app/routers/auth.py (validate credentials, return JWT token)
 - [ ] T027 [P] [US1] Implement POST /auth/google-login endpoint in AporTamos-Backend/app/routers/auth.py (verify Google token, create/update user)
 - [ ] T028 [US1] Implement POST /auth/logout endpoint in AporTamos-Backend/app/routers/auth.py (invalidate session)

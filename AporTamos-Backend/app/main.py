@@ -39,6 +39,7 @@ from app.config import (
     log_warning,
     settings,
 )
+from app.routers import auth_router
 
 
 # ============================================================================
@@ -508,6 +509,9 @@ def create_app() -> FastAPI:
                 "log_level": settings.log_level.value,
             },
         }
+    
+    # Include routers
+    app.include_router(auth_router)
     
     return app
 
