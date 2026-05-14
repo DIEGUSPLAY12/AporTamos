@@ -446,6 +446,76 @@
     - Error messages guide user to fix specific issues
     - Loading indicator prevents multiple submissions
 - [X] T032 [US1] Create auth flow navigation in AporTamos-Frontend/app/_layout.tsx (conditional render based on auth state)
+  - **Implementation**: Created comprehensive root navigation layout (210 lines) with:
+    - Conditional Stack rendering based on authentication state
+    - Auth stack: Shows (auth) group with login/register screens when not authenticated
+    - App stack: Shows (tabs) group with main navigation when authenticated
+    - Splash screen component for smooth loading state during auth check
+    - Supabase session management with automatic token refresh
+    - Auth state change listeners for SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED events
+    - Theme provider integration with dark/light mode support
+    - Status bar auto-styling based on current theme
+    - Error handling for auth initialization failures
+    - Proper cleanup of subscriptions on unmount
+  - **Features**:
+    - **Authentication Flow**:
+      - Not logged in: Display (auth) stack with login/register screens
+      - Logged in: Display (tabs) stack with main app navigation
+      - Loading: Show SplashScreen with ActivityIndicator while checking session
+      - Prevents flash of unstyled content (FOUC) during auth state check
+    - **Session Management**:
+      - Initial session check on app load
+      - Continuous auth state monitoring via onAuthStateChange listener
+      - Automatic token refresh handling
+      - Logout event detection
+      - Error logging for all auth operations
+    - **Navigation Structure**:
+      - Auth stack: (auth) group with no header
+      - App stack: (tabs) group with bottom tab navigation, modal screen for overlays
+      - Smooth transitions between auth and app states
+    - **Theme Integration**:
+      - ThemeProvider wraps both auth and app stacks
+      - Uses useColorScheme hook for dark/light mode detection
+      - Applies navigation themes from react-navigation
+      - Auto-adjusts status bar based on theme
+  - **Integration Points**:
+    - Uses getSupabaseClient() from AporTamos-Frontend/services/supabase.ts
+    - Uses useColorScheme() hook from use-color-scheme.ts
+    - Requires (auth) group at app/(auth)/_layout.tsx with login/register screens
+    - Requires (tabs) group at app/(tabs)/_layout.tsx with main navigation
+    - Modal screen at app/modal.tsx for overlay content
+  - **Auth Event Handling**:
+    | Event | Action | Result |
+    |-------|--------|--------|
+    | SIGNED_IN | User logged in or registered | setIsLoggedIn(true), show app stack |
+    | SIGNED_OUT | User logged out explicitly | setIsLoggedIn(false), show auth stack |
+    | TOKEN_REFRESHED | New access token obtained | Update session, maintain logged in state |
+    | USER_UPDATED | User profile/email changed | Keep logged in, update user data |
+  - **Error Handling**:
+    - Session check errors: Log error, show auth stack
+    - Auth initialization failures: Log error, show auth stack
+    - Subscription cleanup: Automatic on component unmount
+  - **Performance Optimizations**:
+    - Lazy initialization of Supabase on first auth check
+    - Single subscription listener (no duplicate listeners)
+    - Proper cleanup prevents memory leaks
+    - SplashScreen prevents UI flashing during state check
+  - **Accessibility**:
+    - Clear loading state with ActivityIndicator
+    - Auth transitions are smooth and visible
+    - Error messages logged for debugging
+  - **File Structure**:
+    - 210 lines total
+    - SplashScreen component at top (simple loading indicator)
+    - RootLayout component in middle (main navigation logic)
+    - useEffect hook for auth initialization (lifecycle management)
+    - Stack with conditional rendering (auth vs app stacks)
+    - StatusBar configuration at bottom
+  - **Related Components**:
+    - (auth)/_layout.tsx: Groups login/register screens
+    - (tabs)/_layout.tsx: Main tabbed navigation
+    - login screen: Email/password login (T030)
+    - register screen: User registration (T031)
 - [ ] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
 - [ ] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
 - [ ] T035 [US1] Add error handling for auth failures (invalid credentials, user exists) with appropriate HTTP codes
