@@ -8,6 +8,7 @@ This module provides:
 - Dependency injection for FastAPI endpoints
 - JWT token handling and verification
 - Token refresh logic
+- Bearer token validation middleware
 - Error handling and logging
 - Error handling middleware and decorators for endpoint protection
 - Request error handling utilities
@@ -858,3 +859,230 @@ class RequestErrorHandler:
                 status_code=status_code,
                 detail="An unexpected error occurred"
             )
+
+
+# Bearer Token Validation Middleware
+
+async def validate_bearer_token(
+    authorization: Optional[str] = Header(None)
+) -> Optional[str]:
+    """
+    Optional bearer token validation dependency.
+    
+    Returns the token if present and valid, None if not present.
+    Used for endpoints that accept but don't require authentication.
+    
+    Usage:
+        @app.get("/public-data")
+        async def get_public_data(token = Depends(validate_bearer_token)):
+            # token is None if not provided, or the token string if provided
+            if token:
+                current_user = verify_jwt_token(token)
+                # Use authenticated user data
+            else:
+                # Use public data
+    
+    Args:
+        authorization: Authorization header from request
+        
+    Returns:
+        str: JWT token if valid and present
+        None: If Authorization header is not provided
+        
+    Raises:
+        HTTPException: 401 if Authorization header is malformed or token is invalid
+    """
+    if not authorization:
+        return None
+    
+    try:
+        token = extract_token_from_header(authorization)
+        # Verify token is valid
+        verify_jwt_token(token)
+        log_debug(
+            "Bearer token validated successfully",
+            extra={"operation": "validate_bearer_token"}
+        )
+        return token
+    except HTTPException:
+        # Re-raise HTTPException from token extraction/verification
+        raise
+    except Exception as exc:
+        log_error(
+            "Unexpected error during bearer token validation",
+            exc,
+            extra={"operation": "validate_bearer_token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Bearer token validation failed",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+async def require_bearer_token(
+    authorization: Optional[str] = Header(None)
+) -> str:
+    """
+    Enforce bearer token validation dependency.
+    
+    Returns the validated token or raises 401.
+    Used for protected endpoints that require authentication.
+    
+    Usage:
+        @app.get("/protected")
+        async def get_protected_data(token = Depends(require_bearer_token)):
+            # token is guaranteed to be valid
+            # 401 will be raised if no token or invalid token
+    
+    Args:
+        authorization: Authorization header from request
+        
+    Returns:
+        str: Validated JWT token string
+        
+    Raises:
+        HTTPException: 
+            - 401 if Authorization header is missing
+            - 401 if token format is invalid
+            - 401 if token is expired or invalid
+    """
+    token = extract_token_from_header(authorization)
+    verify_jwt_token(token)
+    
+    log_debug(
+        "Bearer token requirement satisfied",
+        extra={"operation": "require_bearer_token"}
+    )
+    
+    return token
+
+
+class BearerTokenMiddleware:
+    """
+    Middleware for bearer token validation on specific routes.
+    
+    This middleware class can be extended to validate bearer tokens
+    on a per-route basis, providing flexibility in which endpoints
+    require authentication.
+    
+    Features:
+    - Optional validation (returns None if token not provided)
+    - Required validation (raises 401 if token not provided)
+    - Token verification on each request
+    - Comprehensive logging of validation attempts
+    - Error recovery for invalid tokens
+    
+    Usage:
+        As a dependency for optional auth:
+        @app.get("/endpoint")
+        async def endpoint(token = Depends(validate_bearer_token)):
+            if token:
+                # Token is valid
+                ...
+        
+        As a dependency for required auth:
+        @app.get("/protected")
+        async def protected(token = Depends(require_bearer_token)):
+            # Token is guaranteed to be valid
+            ...
+    """
+    
+    @staticmethod
+    def is_protected_route(path: str, method: str = "GET") -> bool:
+        """
+        Determine if a route requires bearer token validation.
+        
+        Can be customized to define which routes need authentication.
+        By default, all endpoints except /auth/* require tokens.
+        
+        Args:
+            path: Request path
+            method: HTTP method
+            
+        Returns:
+            bool: True if route requires authentication
+        """
+        # Allow public endpoints
+        if path.startswith("/auth/"):
+            return False
+        if path == "/health":
+            return False
+        if path == "/status":
+            return False
+        if path == "/":
+            return False
+        
+        # All other routes require authentication
+        return True
+    
+    @staticmethod
+    def get_bearer_token(authorization: Optional[str]) -> Optional[str]:
+        """
+        Extract bearer token from Authorization header if present.
+        
+        Args:
+            authorization: Authorization header value
+            
+        Returns:
+            str: Extracted token
+            None: If no Authorization header
+            
+        Raises:
+            HTTPException: If format is invalid
+        """
+        if not authorization:
+            return None
+        
+        try:
+            return extract_token_from_header(authorization)
+        except HTTPException as exc:
+            # Re-raise auth errors
+            raise
+        except Exception as exc:
+            log_error(
+                "Error extracting bearer token",
+                exc,
+                extra={"operation": "get_bearer_token"}
+            )
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid Authorization header",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+
+def create_bearer_validation_dependency(required: bool = True):
+    """
+    Factory function to create bearer token validation dependencies.
+    
+    Allows creating custom dependencies with flexible requirements.
+    
+    Args:
+        required: If True, token is mandatory. If False, token is optional.
+        
+    Returns:
+        Dependency function for use with FastAPI Depends()
+        
+    Usage:
+        # Create optional auth dependency
+        optional_auth = create_bearer_validation_dependency(required=False)
+        
+        @app.get("/public")
+        async def public_endpoint(token = Depends(optional_auth)):
+            if token:
+                # Use authenticated user data
+                ...
+        
+        # Create required auth dependency
+        required_auth = create_bearer_validation_dependency(required=True)
+        
+        @app.get("/protected")
+        async def protected_endpoint(token = Depends(required_auth)):
+            # token is guaranteed to be present
+            ...
+    """
+    if required:
+        return require_bearer_token
+    else:
+        return validate_bearer_token

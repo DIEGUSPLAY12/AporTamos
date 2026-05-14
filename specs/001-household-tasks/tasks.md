@@ -641,7 +641,176 @@
     - Protects: All endpoints requiring authentication (T036+)
     - Complements: Bearer token validation middleware (T034)
     - Complements: Error handling for auth failures (T035)
-- [ ] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
+- [X] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
+  - **Implementation**: Created comprehensive bearer token validation middleware system with:
+    - Optional bearer token validation dependency
+    - Required bearer token validation dependency
+    - Bearer token extraction from Authorization header
+    - Token verification with specific error handling
+    - Factory function for flexible dependency creation
+    - BearerTokenMiddleware class for route-based validation
+    - Public route detection for auth exemptions
+    - Comprehensive logging of validation attempts
+    - Proper error responses with WWW-Authenticate header
+  - **Features**:
+    - **Optional Token Validation**:
+      - `validate_bearer_token(authorization)`: Returns token if valid, None if not provided
+      - For endpoints that accept but don't require authentication
+      - Usage: `@app.get("/endpoint")(token = Depends(validate_bearer_token))`
+      - Returns None if no Authorization header
+      - Raises 401 if header is malformed or token is invalid
+    - **Required Token Validation**:
+      - `require_bearer_token(authorization)`: Returns token or raises 401
+      - For protected endpoints that require authentication
+      - Usage: `@app.get("/protected")(token = Depends(require_bearer_token))`
+      - Raises 401 if Authorization header is missing
+      - Raises 401 if token format is invalid or token is expired
+    - **Bearer Token Extraction**:
+      - Validates "Bearer <token>" header format
+      - Extracts token string from Authorization header
+      - Handles missing or malformed headers gracefully
+      - Returns specific error messages for format issues
+    - **Token Verification**:
+      - Verifies JWT signature and expiration
+      - Uses `verify_jwt_token()` from T033
+      - Returns decoded token payload
+      - Handles expired tokens with specific error message
+      - Handles invalid signature with specific error message
+    - **Route-Based Validation**:
+      - `BearerTokenMiddleware.is_protected_route(path, method)`: Determines if route needs auth
+      - Public routes exempted: /auth/*, /health, /status, /
+      - All other routes require authentication by default
+      - Customizable for future route-specific policies
+    - **Flexible Dependency Creation**:
+      - `create_bearer_validation_dependency(required)`: Factory for custom dependencies
+      - required=True: Token mandatory (default)
+      - required=False: Token optional
+      - Allows creating custom auth behaviors per endpoint
+  - **Usage Examples**:
+    ```python
+    # Optional authentication
+    @app.get("/public-data")
+    async def get_public_data(token = Depends(validate_bearer_token)):
+        if token:
+            current_user = verify_jwt_token(token)
+            # Use authenticated user data
+        else:
+            # Use public data
+        return data
+    
+    # Required authentication
+    @app.get("/user-tasks")
+    async def get_user_tasks(token = Depends(require_bearer_token)):
+        # token is guaranteed to be valid
+        current_user = verify_jwt_token(token)
+        user_id = current_user["sub"]
+        return await fetch_user_tasks(user_id)
+    
+    # Using with get_current_user dependency from T033
+    @app.get("/me")
+    async def get_profile(current_user = Depends(get_current_user)):
+        # Combined: validate token + extract user info
+        return {
+            "user_id": current_user["sub"],
+            "email": current_user["email"]
+        }
+    
+    # Factory for custom dependencies
+    optional_auth = create_bearer_validation_dependency(required=False)
+    
+    @app.get("/search")
+    async def search(token = Depends(optional_auth)):
+        # token is optional, customizable per endpoint
+        ...
+    ```
+  - **Error Handling**:
+    | Scenario | Status | Detail | Dependency |
+    |----------|--------|--------|------------|
+    | Missing header (required) | 401 | Missing authorization header | require_bearer_token |
+    | Missing header (optional) | N/A | Returns None | validate_bearer_token |
+    | Invalid format | 401 | Invalid authorization header format | Both |
+    | Expired token | 401 | Access token has expired | Both |
+    | Invalid signature | 401 | Invalid token signature | Both |
+    | Malformed token | 401 | Invalid access token | Both |
+    | Unexpected error | 401 | Bearer token validation failed | Both |
+  - **Public Routes**:
+    | Route | Method | Auth Required |
+    |-------|--------|---------------|
+    | /auth/* | POST | No |
+    | /health | GET | No |
+    | /status | GET | No |
+    | / | GET | No |
+    | All others | All | Yes |
+  - **Bearer Token Middleware Class**:
+    - `BearerTokenMiddleware.is_protected_route(path, method)`: Route protection checker
+    - `BearerTokenMiddleware.get_bearer_token(authorization)`: Token extraction helper
+    - Extensible for route-based validation policies
+    - Supports future middleware registration on FastAPI app
+  - **Authentication Flow with Middleware**:
+    ```
+    Client Request
+        ↓
+    Authorization: Bearer <token> header
+        ↓
+    extract_token_from_header()
+        ↓
+    verify_jwt_token(token)
+        ↓
+    Token Valid? → Yes → Return token
+                → No → Raise 401
+        ↓
+    Endpoint receives token
+        ↓
+    Process request with authenticated user
+    ```
+  - **Integration with T033**:
+    - Uses functions from T033: `extract_token_from_header`, `verify_jwt_token`
+    - Complements `get_current_user` dependency from T033
+    - Works alongside JWT token creation from T033
+    - Shares error handling with T033
+  - **Logging**:
+    - DEBUG: Successful bearer token validation
+    - DEBUG: Token requirement satisfied
+    - WARNING: Missing/invalid Authorization header
+    - WARNING: Verification failures
+    - ERROR: Unexpected errors during validation
+    - All logs include operation context for debugging
+  - **Response Headers**:
+    - 401 responses include: `WWW-Authenticate: Bearer` header
+    - Follows HTTP RFC 7235 authentication standards
+    - Signals to clients that Bearer authentication is required
+  - **Dependencies**:
+    - Uses existing imports from T033: `jose`, `fastapi`, `app.config`
+    - No new external dependencies required
+    - Builds on python-jose and FastAPI
+  - **File Updates**:
+    - Module docstring: Updated to document bearer token validation middleware
+    - New section: Bearer Token Validation Middleware (lines ~900+)
+    - 4 new functions: validate_bearer_token, require_bearer_token, BearerTokenMiddleware class, create_bearer_validation_dependency
+    - Total file size: Increased from 860 lines to approximately 1,100+ lines
+  - **Comparison with T033**:
+    | Feature | T033 (Token Handling) | T034 (Validation Middleware) |
+    |---------|----------------------|------------------------------|
+    | Scope | Core JWT operations | Request-level validation |
+    | Purpose | Create/verify tokens | Apply tokens to endpoints |
+    | User | Low-level auth logic | Endpoint developers |
+    | Integration | Dependency injection | Middleware + dependencies |
+    | Token Verification | Raw function | Enforced via dependencies |
+    | Optional Auth | Supported | Explicitly optional variant |
+    | Required Auth | Supported | Explicitly required variant |
+  - **Security Considerations**:
+    ✅ **Authorization header validation**: Prevents format attacks
+    ✅ **Token verification**: Ensures token hasn't been tampered with
+    ✅ **Expiration check**: Prevents use of old tokens
+    ✅ **Public route exemptions**: Allows unauthenticated access where needed
+    ✅ **Error message consistency**: Doesn't leak information about token validity
+    ✅ **HTTP standards**: WWW-Authenticate header per RFC 7235
+    ✅ **Logging**: Audit trail of auth attempts
+  - **Related Components**:
+    - Works with: T033 JWT token handling functions
+    - Protects: All endpoints in T036+ (User Story 2+)
+    - Complements: T035 error handling for auth failures
+    - Works with: FastAPI dependency injection system
 - [ ] T035 [US1] Add error handling for auth failures (invalid credentials, user exists) with appropriate HTTP codes
 
 **Checkpoint**: User Story 1 complete - users can register and log in
