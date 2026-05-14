@@ -516,7 +516,131 @@
     - (tabs)/_layout.tsx: Main tabbed navigation
     - login screen: Email/password login (T030)
     - register screen: User registration (T031)
-- [ ] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
+- [X] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
+  - **Implementation**: Created comprehensive JWT token handling and verification system with:
+    - JWT token extraction from Authorization header with Bearer scheme validation
+    - Token signature verification using configured secret_key and algorithm (HS256)
+    - Token expiration verification
+    - Decoded token payload extraction with all claims
+    - Error handling for expired, invalid, or malformed tokens
+    - Access token creation with customizable expiration
+    - Dependency injection for protected endpoints
+    - Comprehensive logging for debugging
+  - **Features**:
+    - **JWT Token Verification**:
+      - `verify_jwt_token(token)`: Decodes and validates JWT signature
+      - Verifies token hasn't expired (checks exp claim)
+      - Returns decoded payload with user claims
+      - Provides specific error messages for different JWT errors
+    - **Token Extraction**:
+      - `extract_token_from_header(authorization)`: Parses Authorization header
+      - Validates "Bearer <token>" format
+      - Raises 401 if header missing or malformed
+      - Tolerant of whitespace variations
+    - **Token Creation**:
+      - `create_access_token(data, expires_delta)`: Creates new JWT tokens
+      - Includes exp (expiration) and iat (issued-at) claims
+      - Uses configured algorithm (HS256) and secret_key
+      - Supports custom expiration times
+    - **Dependency Injection**:
+      - `get_current_user(authorization)`: FastAPI dependency for token verification
+      - Combines token extraction + verification
+      - Returns decoded JWT payload with user claims
+      - Used as: `async def endpoint(current_user = Depends(get_current_user))`
+      - `get_current_user_id(current_user)`: Extracts user UUID from token
+      - Used as: `async def endpoint(user_id = Depends(get_current_user_id))`
+  - **JWT Token Structure**:
+    ```json
+    {
+      "sub": "550e8400-e29b-41d4-a716-446655440000",
+      "email": "user@example.com",
+      "type": "access",
+      "exp": 1682000000,
+      "iat": 1681996400
+    }
+    ```
+  - **Error Handling**:
+    | Scenario | Status | Detail | Header |
+    |----------|--------|--------|--------|
+    | Missing Authorization | 401 | Missing authorization header | WWW-Authenticate: Bearer |
+    | Invalid format | 401 | Invalid authorization header format | WWW-Authenticate: Bearer |
+    | Expired token | 401 | Access token has expired | WWW-Authenticate: Bearer |
+    | Invalid signature | 401 | Invalid token signature | WWW-Authenticate: Bearer |
+    | Malformed token | 401 | Invalid access token | WWW-Authenticate: Bearer |
+    | Missing user ID | 401 | Invalid token: missing user ID | WWW-Authenticate: Bearer |
+  - **Configuration Used**:
+    | Setting | Default | Purpose |
+    |---------|---------|---------|
+    | secret_key | change-me-in-production | Token signature verification |
+    | algorithm | HS256 | Token encoding algorithm |
+    | access_token_expire_minutes | 30 | Access token lifetime |
+    | refresh_token_expire_days | 7 | Refresh token lifetime |
+  - **Usage Examples**:
+    ```python
+    # Simple endpoint with user verification
+    @app.get("/me")
+    async def get_profile(current_user = Depends(get_current_user)):
+        return {
+            "user_id": current_user["sub"],
+            "email": current_user.get("email"),
+            "token_type": current_user.get("type")
+        }
+    
+    # Endpoint accessing user ID
+    @app.get("/tasks")
+    async def get_user_tasks(user_id = Depends(get_current_user_id)):
+        # user_id is guaranteed to be from authenticated user
+        return await get_tasks_for_user(user_id)
+    
+    # Creating new tokens (e.g., after password reset)
+    new_token = create_access_token(
+        data={"sub": user_id, "email": user_email},
+        expires_delta=timedelta(minutes=60)
+    )
+    ```
+  - **Token Lifecycle**:
+    1. **Creation**: User calls POST /auth/register or POST /auth/login
+    2. Backend creates JWT with user claims + expiration
+    3. Frontend receives token in response
+    4. **Usage**: Frontend includes token in Authorization header for each request
+    5. Backend verifies token before processing request
+    6. **Expiration**: Token expires after 30 minutes (default)
+    7. **Refresh**: Frontend uses refresh token to get new access token (automatic via Supabase)
+    8. **Logout**: Frontend deletes refresh token (automatic via Supabase)
+  - **Integration with Dependencies**:
+    - Imports: Added `Header` from fastapi for Authorization header extraction
+    - Imports: Added `jose.jwt` and `jose.JWTError` for JWT operations
+    - Imports: Added `datetime` and `timedelta` for expiration handling
+    - Updated module imports to include JWT and datetime libraries
+  - **Security Considerations**:
+    - Token verification uses configured secret_key (MUST be changed in production)
+    - Token signature prevents tampering
+    - Expiration prevents indefinite token validity
+    - Bearer scheme enforces proper Authorization header format
+    - 401 status for any authentication failure
+    - WWW-Authenticate header for proper HTTP auth standards
+  - **Logging**:
+    - DEBUG: Token extraction and verification success
+    - WARNING: Missing/invalid authorization, verification failures
+    - ERROR: Unexpected errors during token handling
+    - All logs include operation name and relevant context (user_id, error_type)
+  - **Dependencies**:
+    - `python-jose>=3.3.0` for JWT operations
+    - `cryptography>=40.0.0` for crypto operations
+    - FastAPI's `Header` dependency for Authorization extraction
+  - **File Updates**:
+    - Module docstring: Updated to document JWT token handling and refresh logic
+    - Module imports: Added JWT libraries and datetime handling
+    - New functions: Added 5 new functions for token handling
+    - Updated docstrings: Expanded with usage examples and error details
+    - Total file size: Increased from 15.8 KB to approximately 19.2 KB
+  - **Related Components**:
+    - Works with: POST /auth/register endpoint (T025) - creates tokens
+    - Works with: POST /auth/login endpoint (T026) - creates tokens
+    - Works with: POST /auth/google-login endpoint (T027) - creates tokens
+    - Protects: All endpoints requiring authentication (T036+)
+    - Complements: Bearer token validation middleware (T034)
+    - Complements: Error handling for auth failures (T035)
 - [ ] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
 - [ ] T035 [US1] Add error handling for auth failures (invalid credentials, user exists) with appropriate HTTP codes
 
