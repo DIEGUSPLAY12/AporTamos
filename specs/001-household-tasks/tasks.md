@@ -296,6 +296,61 @@
     - Documentation: Comprehensive JSDoc with usage examples
     - File size: 17.8 KB, 410 lines of production-ready code
 - [X] T030 [P] [US1] Create LoginScreen component in AporTamos-Frontend/components/auth/LoginScreen.tsx (email/password form, Google OAuth button)
+  - **Implementation**: Created comprehensive LoginScreen component (519 lines) with:
+    - Email/password form with validation (email format, 8+ char password)
+    - Error display with dismissible error messages
+    - Loading state management during authentication
+    - Show/hide password toggle
+    - Forgot password navigation link
+    - Google OAuth login button (infrastructure ready, integration TODO)
+    - Sign up navigation to RegisterScreen
+    - Dark mode support with color scheme
+    - Responsive design for mobile/tablet/web
+    - Keyboard handling with KeyboardAvoidingView
+    - ScrollView for content overflow handling
+  - **Features**:
+    - Email validation using regex pattern
+    - Password strength validation (8+ characters minimum)
+    - Dual error handling: local state + context errors
+    - ActivityIndicator during async operations
+    - Accessibility labels and hints for all interactive elements
+    - Disabled state during authentication to prevent multiple submissions
+    - Show/hide password functionality
+    - Themed UI components (ThemedText, ThemedView) for consistent styling
+  - **Integration**:
+    - Uses useLogin() hook from T029 for email/password auth
+    - Uses useGoogleAuth() hook for OAuth auth
+    - Uses useAuthError() hook for error management
+    - Uses useColorScheme() hook for dark mode
+    - Uses theme constants (Colors, typography)
+    - Navigates to /register screen for new users
+    - Navigates to /forgot-password screen (future)
+  - **Validation Rules**:
+    - Email: Required, valid format (user@example.com)
+    - Password: Required, minimum 8 characters
+    - Error messages: Clear, field-specific feedback
+  - **Styling**:
+    - Tailwind-compatible responsive design
+    - Colors: Primary blue (#0ea5e9), error red (#dc2626)
+    - Spacing: Consistent 20px horizontal padding, 40px vertical
+    - Typography: Title (28px bold), subtitle (14px), labels (14px bold)
+    - Buttons: Full-width, 14px vertical padding, 8px border radius
+  - **Error Handling**:
+    - Invalid email format error
+    - Weak password error
+    - Login failure error from service
+    - Google login not yet implemented notification
+  - **Accessibility**:
+    - ARIA labels for all inputs
+    - ARIA hints for buttons
+    - Keyboard navigation support
+    - Text contrast meets WCAG standards
+  - **File Structure**:
+    - 519 lines total
+    - Validation helpers at top
+    - Component logic in middle
+    - StyleSheet definitions at bottom
+    - Clean separation of concerns
 - [X] T031 [P] [US1] Create RegisterScreen component in AporTamos-Frontend/components/auth/RegisterScreen.tsx (registration form validation)
 - [X] T032 [US1] Create auth flow navigation in AporTamos-Frontend/app/_layout.tsx (conditional render based on auth state)
 - [ ] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
