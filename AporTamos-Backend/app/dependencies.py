@@ -9,6 +9,7 @@ This module provides:
 - JWT token handling and verification
 - Token refresh logic
 - Bearer token validation middleware
+- Authentication error handling with appropriate HTTP codes
 - Error handling and logging
 - Error handling middleware and decorators for endpoint protection
 - Request error handling utilities
@@ -1086,3 +1087,269 @@ def create_bearer_validation_dependency(required: bool = True):
         return require_bearer_token
     else:
         return validate_bearer_token
+
+
+# Authentication Error Handling
+
+class AuthenticationErrorHandler:
+    """
+    Comprehensive error handler for authentication failures.
+    
+    Provides centralized error handling for common auth failure scenarios with
+    proper HTTP status codes, error messages, and audit logging.
+    
+    Supports:
+    - Invalid credentials (wrong password)
+    - User not found
+    - Email already exists (during registration)
+    - Invalid email format
+    - Weak password
+    - Account locked (future)
+    - Token validation failures
+    
+    Usage:
+        from app.services.auth_service import UserAlreadyExistsError, InvalidCredentialsError
+        
+        handler = AuthenticationErrorHandler()
+        
+        try:
+            user = create_user(user_data)
+        except UserAlreadyExistsError as exc:
+            raise handler.handle_user_exists(exc)
+        except ValueError as exc:
+            raise handler.handle_validation_error(exc)
+    """
+    
+    @staticmethod
+    def handle_user_exists(exc: Exception, email: Optional[str] = None) -> HTTPException:
+        """
+        Handle "user already exists" error (email already registered).
+        
+        Args:
+            exc: Original exception
+            email: User email for logging (optional)
+            
+        Returns:
+            HTTPException with 409 Conflict status
+        """
+        log_warning(
+            "Registration failed: user already exists",
+            extra={
+                "email": email,
+                "error": str(exc),
+                "operation": "register"
+            }
+        )
+        return HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Email already registered. Please log in or use a different email.",
+        )
+    
+    @staticmethod
+    def handle_invalid_credentials(exc: Exception, email: Optional[str] = None) -> HTTPException:
+        """
+        Handle invalid credentials error (wrong password or email/password mismatch).
+        
+        Args:
+            exc: Original exception
+            email: User email for logging (optional)
+            
+        Returns:
+            HTTPException with 401 Unauthorized status
+        """
+        log_warning(
+            "Login failed: invalid credentials",
+            extra={
+                "email": email,
+                "error": str(exc),
+                "operation": "login"
+            }
+        )
+        return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password. Please check your credentials and try again.",
+        )
+    
+    @staticmethod
+    def handle_user_not_found(exc: Exception, email: Optional[str] = None) -> HTTPException:
+        """
+        Handle user not found error.
+        
+        Args:
+            exc: Original exception
+            email: User email for logging (optional)
+            
+        Returns:
+            HTTPException with 401 Unauthorized status (generic for security)
+        """
+        log_warning(
+            "Login failed: user not found",
+            extra={
+                "email": email,
+                "error": str(exc),
+                "operation": "login"
+            }
+        )
+        # Return 401 instead of 404 to avoid revealing whether email exists
+        return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password. Please check your credentials and try again.",
+        )
+    
+    @staticmethod
+    def handle_validation_error(exc: Exception, field: Optional[str] = None, email: Optional[str] = None) -> HTTPException:
+        """
+        Handle validation error (invalid email format, weak password, etc).
+        
+        Args:
+            exc: Original exception
+            field: Field that failed validation (optional)
+            email: User email for logging (optional)
+            
+        Returns:
+            HTTPException with 422 Unprocessable Entity status
+        """
+        error_message = str(exc)
+        
+        log_warning(
+            "Validation error",
+            extra={
+                "email": email,
+                "field": field,
+                "error": error_message,
+                "operation": "validation"
+            }
+        )
+        
+        return HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Validation failed: {error_message}",
+        )
+    
+    @staticmethod
+    def handle_account_locked(exc: Exception, email: Optional[str] = None) -> HTTPException:
+        """
+        Handle account locked error (too many failed login attempts).
+        
+        Args:
+            exc: Original exception
+            email: User email for logging (optional)
+            
+        Returns:
+            HTTPException with 429 Too Many Requests status
+        """
+        log_warning(
+            "Account locked: too many failed login attempts",
+            extra={
+                "email": email,
+                "error": str(exc),
+                "operation": "login"
+            }
+        )
+        return HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Account temporarily locked due to too many failed login attempts. Please try again later.",
+        )
+    
+    @staticmethod
+    def handle_token_error(exc: Exception) -> HTTPException:
+        """
+        Handle token-related error (invalid, expired, malformed).
+        
+        Args:
+            exc: Original exception
+            
+        Returns:
+            HTTPException with 401 Unauthorized status
+        """
+        log_warning(
+            "Token validation failed",
+            extra={
+                "error": str(exc),
+                "operation": "token_validation"
+            }
+        )
+        return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired authentication token. Please log in again.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    @staticmethod
+    def handle_oauth_error(exc: Exception, provider: str = "OAuth") -> HTTPException:
+        """
+        Handle OAuth provider error (invalid token, provider error, etc).
+        
+        Args:
+            exc: Original exception
+            provider: OAuth provider name (default: "OAuth")
+            
+        Returns:
+            HTTPException with 400 or 401 status depending on error type
+        """
+        error_message = str(exc)
+        
+        if "expired" in error_message.lower():
+            status_code = status.HTTP_401_UNAUTHORIZED
+            detail = f"{provider} token expired. Please try authenticating again."
+        elif "invalid" in error_message.lower():
+            status_code = status.HTTP_400_BAD_REQUEST
+            detail = f"Invalid {provider} token. Please ensure you're using a valid authentication token."
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+            detail = f"{provider} authentication failed. Please try again."
+        
+        log_warning(
+            f"{provider} authentication error",
+            extra={
+                "error": error_message,
+                "provider": provider,
+                "operation": f"{provider.lower()}_login"
+            }
+        )
+        
+        return HTTPException(
+            status_code=status_code,
+            detail=detail,
+        )
+    
+    @staticmethod
+    def handle_generic_auth_error(exc: Exception, operation: str = "authentication") -> HTTPException:
+        """
+        Handle generic/unexpected authentication error.
+        
+        Args:
+            exc: Original exception
+            operation: Description of the operation (default: "authentication")
+            
+        Returns:
+            HTTPException with 500 Internal Server Error status
+        """
+        log_error(
+            f"Unexpected error during {operation}",
+            exc,
+            extra={"operation": operation}
+        )
+        
+        return HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred during {operation}. Please try again later.",
+        )
+
+
+def create_auth_error_handler() -> AuthenticationErrorHandler:
+    """
+    Factory function to create an AuthenticationErrorHandler instance.
+    
+    Usage:
+        handler = create_auth_error_handler()
+        
+        try:
+            user = await authenticate_user(email, password)
+        except InvalidCredentialsError as exc:
+            raise handler.handle_invalid_credentials(exc, email=email)
+    
+    Returns:
+        AuthenticationErrorHandler: Error handler instance
+    """
+    return AuthenticationErrorHandler()
