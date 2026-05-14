@@ -352,6 +352,99 @@
     - StyleSheet definitions at bottom
     - Clean separation of concerns
 - [X] T031 [P] [US1] Create RegisterScreen component in AporTamos-Frontend/components/auth/RegisterScreen.tsx (registration form validation)
+  - **Implementation**: Created comprehensive RegisterScreen component (802 lines) with:
+    - Full name input with 1-100 character validation
+    - Email input with format validation
+    - Password input with strength indicator and requirements feedback
+    - Confirm password input with match validation
+    - Password strength visualizer (weak/fair/good/strong levels with color)
+    - Password requirements checklist (8+ chars, uppercase, lowercase, digit, special char)
+    - Password match indicator (✓ or ✗)
+    - Terms & Conditions checkbox (required for registration)
+    - Error display with dismissible messages
+    - Loading state management during registration
+    - Show/hide password toggles for both fields
+    - Google OAuth registration button (infrastructure ready, integration TODO)
+    - Sign in link to LoginScreen
+    - Dark mode support with color scheme
+    - Responsive design for mobile/tablet/web
+    - Keyboard handling with KeyboardAvoidingView
+    - ScrollView for content overflow handling
+  - **Features**:
+    - **Comprehensive Validation**:
+      - Name: Required, 1-100 characters, trimmed
+      - Email: Required, valid format (user@example.com)
+      - Password: Required, must meet all strength requirements
+      - Confirm Password: Required, must match password
+      - Terms: Required checkbox for legal agreement
+    - **Password Strength System**:
+      - Weak (0-2 criteria met): Red (#ef4444), 25%
+      - Fair (3 criteria met): Orange (#f97316), 50%
+      - Good (4 criteria met): Yellow (#eab308), 75%
+      - Strong (5 criteria met): Green (#22c55e), 100%
+    - **Password Requirements**:
+      - Minimum 8 characters
+      - At least one uppercase letter
+      - At least one lowercase letter
+      - At least one digit (0-9)
+      - At least one special character (!@#$%^&*()_+-=[]{}|;:,"\\|,.<>?)
+    - **Real-time Feedback**:
+      - Password strength bar updates as user types
+      - Requirements checklist shows unmet criteria
+      - Password match indicator shows ✓ or ✗
+      - Requirements disappear when password is valid
+    - **Error Handling**:
+      - Field-specific validation errors
+      - Display as dismissible error message
+      - Local errors + context errors combined
+      - Form disabled during registration
+  - **Integration**:
+    - Uses useRegister() hook from T029 for email/password registration
+    - Uses useGoogleAuth() hook for OAuth signup
+    - Uses useAuthError() hook for error management
+    - Uses useColorScheme() hook for dark mode
+    - Uses theme constants (Colors, typography)
+    - Navigates to /login screen for existing users
+    - Terms & Conditions acceptance required
+  - **Validation Rules**:
+    | Field | Rules |
+    |-------|-------|
+    | Name | Required, 1-100 characters, trimmed |
+    | Email | Required, valid format |
+    | Password | Required, 8+ chars, uppercase, lowercase, digit, special |
+    | Confirm | Required, must match password |
+    | Terms | Required, must check checkbox |
+  - **Styling**:
+    - Tailwind-compatible responsive design
+    - Colors: Primary blue (#0ea5e9), error red (#dc2626), success green (#22c55e)
+    - Spacing: Consistent 20px horizontal padding, 40px vertical
+    - Typography: Title (28px bold), subtitle (14px), labels (14px bold)
+    - Buttons: Full-width, 14px vertical padding, 8px border radius
+    - Password strength bar: 6px height, animated fill
+    - Requirements: 12px text, bullet points (○)
+    - Strength label: Colored text matching progress
+  - **Accessibility**:
+    - ARIA labels for all inputs
+    - ARIA hints for buttons and complex inputs
+    - Keyboard navigation support
+    - Text contrast meets WCAG standards
+    - Disabled states clearly indicated
+    - Terms checkbox with visual feedback
+  - **File Structure**:
+    - 802 lines total (larger than LoginScreen due to validation complexity)
+    - Validation helpers at top (5 functions: validateName, validateEmail, validatePassword, getPasswordStrength)
+    - Component logic in middle (state management, handlers)
+    - JSX rendering with detailed form fields
+    - StyleSheet definitions at bottom
+    - Clean separation of concerns
+  - **User Experience Enhancements**:
+    - Password strength visualization encourages strong passwords
+    - Real-time feedback prevents submission errors
+    - Show/hide for both password and confirm fields
+    - Match indicator prevents password mismatch frustration
+    - Terms checkbox prevents accidental agreement skips
+    - Error messages guide user to fix specific issues
+    - Loading indicator prevents multiple submissions
 - [X] T032 [US1] Create auth flow navigation in AporTamos-Frontend/app/_layout.tsx (conditional render based on auth state)
 - [ ] T033 [P] [US1] Add JWT token handling and refresh logic in AporTamos-Backend/app/dependencies.py
 - [ ] T034 [P] [US1] Add bearer token validation middleware in AporTamos-Backend/app/dependencies.py
