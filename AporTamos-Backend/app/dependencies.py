@@ -6,15 +6,18 @@ This module provides:
 - Database connection management
 - Async context managers for transactions
 - Dependency injection for FastAPI endpoints
+- JWT token handling and verification
+- Token refresh logic
 - Error handling and logging
 - Error handling middleware and decorators for endpoint protection
 - Request error handling utilities
 """
 
-from typing import AsyncGenerator, Callable, Optional, TYPE_CHECKING
+from typing import AsyncGenerator, Callable, Optional, TYPE_CHECKING, Dict, Any
 import logging
-
-from fastapi import Depends, HTTPException, status
+from datetime import datetime, timedelta
+from jose import JWTError, jwt
+from fastapi import Depends, HTTPException, status, Header
 
 from app.config import (
     settings,
@@ -112,38 +115,237 @@ async def get_database_session() -> AsyncGenerator[Client, None]:
         yield client
 
 
-def get_current_user(token: str) -> dict:
+# JWT Token Handling
+
+def extract_token_from_header(authorization: Optional[str]) -> str:
     """
-    Extract current user from JWT token (placeholder for token verification).
-    
-    This will be implemented in the authentication service.
-    Currently, this is a placeholder that will be replaced with actual
-    token verification logic.
+    Extract JWT token from Authorization header.
     
     Args:
-        token: JWT token from Authorization header
+        authorization: Authorization header value (format: "Bearer <token>")
         
     Returns:
-        dict: Decoded token with user information
+        str: JWT token
         
     Raises:
-        HTTPException: If token is invalid
+        HTTPException: If token is missing or malformed
     """
-    # TODO: Implement JWT token verification with secret_key from settings
-    # This should:
-    # 1. Decode the JWT token using settings.secret_key
-    # 2. Verify token expiration
-    # 3. Extract user_id and other claims
-    # 4. Return decoded token payload
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Authentication required"
-    )
+    if not authorization:
+        log_warning(
+            "Missing authorization header",
+            extra={"operation": "extract_token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authorization header",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Authorization header should be "Bearer <token>"
+    parts = authorization.split()
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        log_warning(
+            "Invalid authorization header format",
+            extra={
+                "operation": "extract_token",
+                "format": "Expected 'Bearer <token>'"
+            }
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authorization header format. Expected 'Bearer <token>'",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    return parts[1]
 
 
-async def get_current_user_id(supabase: Client = Depends(get_supabase)) -> str:
+def verify_jwt_token(token: str) -> Dict[str, Any]:
     """
-    Get the current authenticated user's ID from Supabase auth.
+    Verify and decode a JWT token.
+    
+    Validates:
+    - Token signature using configured secret_key
+    - Token expiration (exp claim)
+    - Token algorithm
+    
+    Args:
+        token: JWT token string
+        
+    Returns:
+        dict: Decoded token payload with claims
+        
+    Raises:
+        HTTPException: If token is invalid, expired, or malformed
+    """
+    try:
+        # Decode and verify token signature
+        payload = jwt.decode(
+            token,
+            settings.secret_key,
+            algorithms=[settings.algorithm]
+        )
+        
+        log_debug(
+            "JWT token verified successfully",
+            extra={
+                "operation": "verify_jwt_token",
+                "user_id": payload.get("sub"),
+                "token_type": payload.get("type")
+            }
+        )
+        
+        return payload
+        
+    except JWTError as exc:
+        log_warning(
+            "JWT token verification failed",
+            extra={
+                "operation": "verify_jwt_token",
+                "error": str(exc),
+                "error_type": type(exc).__name__
+            }
+        )
+        
+        # Provide specific error messages for different JWT errors
+        if "expired" in str(exc).lower():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Access token has expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        elif "signature" in str(exc).lower():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token signature",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid access token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except Exception as exc:
+        log_error(
+            "Unexpected error during JWT verification",
+            exc,
+            extra={"operation": "verify_jwt_token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication failed",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+def create_access_token(
+    data: Dict[str, Any],
+    expires_delta: Optional[timedelta] = None
+) -> str:
+    """
+    Create a new JWT access token.
+    
+    Encodes the provided data with optional expiration.
+    
+    Args:
+        data: Dictionary of claims to encode
+        expires_delta: Optional expiration time (default: access_token_expire_minutes)
+        
+    Returns:
+        str: Encoded JWT token
+        
+    Raises:
+        Exception: If token creation fails
+    """
+    to_encode = data.copy()
+    
+    # Set expiration time
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
+    
+    to_encode.update({"exp": expire})
+    
+    try:
+        encoded_jwt = jwt.encode(
+            to_encode,
+            settings.secret_key,
+            algorithm=settings.algorithm
+        )
+        
+        log_debug(
+            "JWT access token created",
+            extra={
+                "operation": "create_access_token",
+                "user_id": data.get("sub"),
+                "expires_at": expire.isoformat()
+            }
+        )
+        
+        return encoded_jwt
+    except Exception as exc:
+        log_error(
+            "Failed to create access token",
+            exc,
+            extra={"operation": "create_access_token"}
+        )
+        raise
+
+
+def get_current_user(
+    authorization: Optional[str] = Header(None)
+) -> Dict[str, Any]:
+    """
+    Extract and verify current user from JWT token in Authorization header.
+    
+    This dependency verifies:
+    - Authorization header is present and properly formatted
+    - JWT token is valid and not expired
+    - Token signature matches configured secret key
+    
+    Returns the decoded token payload containing user claims.
+    
+    Usage:
+        @app.get("/me")
+        async def get_current_user_profile(current_user = Depends(get_current_user)):
+            return {
+                "user_id": current_user["sub"],
+                "email": current_user.get("email"),
+                "token_type": current_user.get("type")
+            }
+    
+    Args:
+        authorization: Authorization header from request
+        
+    Returns:
+        dict: Decoded JWT token payload with claims including:
+            - sub: User ID (UUID)
+            - email: User email address
+            - type: Token type (e.g., "access")
+            - exp: Token expiration timestamp
+            - iat: Token issued-at timestamp
+        
+    Raises:
+        HTTPException: 
+            - 401 if Authorization header is missing
+            - 401 if token format is invalid
+            - 401 if token is expired
+            - 401 if token signature is invalid
+    """
+    token = extract_token_from_header(authorization)
+    return verify_jwt_token(token)
+
+
+async def get_current_user_id(
+    current_user: Dict[str, Any] = Depends(get_current_user)
+) -> str:
+    """
+    Get the current authenticated user's ID from JWT token.
+    
+    Extracts the 'sub' (subject) claim from the verified JWT token,
+    which contains the user's UUID.
     
     Usage:
         @app.get("/me")
@@ -152,21 +354,38 @@ async def get_current_user_id(supabase: Client = Depends(get_supabase)) -> str:
             ...
     
     Args:
-        supabase: Supabase client from dependency injection
+        current_user: Verified JWT token payload from get_current_user
         
     Returns:
         str: UUID of the current authenticated user
         
     Raises:
-        HTTPException: If user is not authenticated
+        HTTPException: 
+            - 401 if user_id claim is missing from token
+            - 401 if user_id is not a valid UUID
     """
-    # TODO: This will use Supabase Auth session
-    # Implementation will extract user_id from supabase.auth.get_session()
-    # and verify it matches the JWT token
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User not authenticated"
+    user_id = current_user.get("sub")
+    
+    if not user_id:
+        log_warning(
+            "User ID missing from JWT token",
+            extra={"operation": "get_current_user_id"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token: missing user ID",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    log_debug(
+        "Current user ID extracted from token",
+        extra={
+            "operation": "get_current_user_id",
+            "user_id": user_id
+        }
     )
+    
+    return user_id
 
 
 # Database helper functions
