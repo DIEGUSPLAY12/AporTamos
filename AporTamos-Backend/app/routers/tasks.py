@@ -7,12 +7,15 @@ This module defines all task schedule management endpoints:
 - PUT /households/{household_id}/schedule: Update weekly schedule (creates new version)
 - POST /households/{household_id}/schedule/tasks: Add a new task to existing schedule
 - PUT /households/{household_id}/schedule/tasks/{task_id}: Update an existing task
+- POST /internal/daily-assignments: Generate daily TaskAssignment records for all households (internal)
 
 All endpoints require authentication and validate user access/owner permissions.
+Internal endpoints are for scheduled jobs/cron calls and should be protected by infrastructure.
 """
 
 import logging
-from typing import Optional
+from datetime import date
+from typing import Optional, Dict, Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status, Path
@@ -31,6 +34,7 @@ from app.services.task_service import (
     add_task_to_schedule,
     update_task,
     get_task_by_id,
+    generate_daily_assignments_batch,
     ScheduleNotFoundError,
     TaskNotFoundError,
     ScheduleAccessError,
@@ -656,4 +660,109 @@ async def update_task_endpoint(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update task"
+        )
+
+
+# Internal endpoints (for scheduled jobs, cron calls, etc.)
+
+@router.post(
+    "/internal/daily-assignments",
+    response_model=Dict[str, Any],
+    status_code=status.HTTP_200_OK,
+    tags=["Internal"]
+)
+async def generate_daily_assignments_endpoint(
+    target_date: Optional[str] = None
+) -> Dict[str, Any]:
+    """Generate daily TaskAssignment records for all households.
+    
+    This is an internal endpoint designed to be called by scheduled jobs or cron tasks.
+    It generates TaskAssignment records for all active schedules for a given date.
+    
+    **NOTE**: This endpoint should be protected at the infrastructure level (e.g., only
+    callable from approved IPs, VPN, or with special internal authentication). It does
+    not use normal Bearer token authentication to allow for easy scheduling.
+    
+    Query Parameters:
+    - target_date (optional): Date to generate assignments for (YYYY-MM-DD format).
+      If not provided, defaults to today.
+    
+    Returns:
+        JSON object with statistics:
+        - date: str - The date assignments were generated for
+        - total_households: int - Total number of households in the system
+        - households_processed: int - Number of households with active schedules
+        - households_failed: int - Number of households that failed processing
+        - total_assignments_created: int - Total TaskAssignment records created
+        - errors: list - Any error messages encountered
+        
+    Example:
+        POST /internal/daily-assignments
+        POST /internal/daily-assignments?target_date=2025-05-10
+    """
+    try:
+        parsed_date = None
+        
+        if target_date:
+            try:
+                # Parse target_date as YYYY-MM-DD
+                date_parts = target_date.split("-")
+                if len(date_parts) != 3:
+                    raise ValueError("Date must be in YYYY-MM-DD format")
+                
+                parsed_date = date(
+                    year=int(date_parts[0]),
+                    month=int(date_parts[1]),
+                    day=int(date_parts[2])
+                )
+            except (ValueError, IndexError) as e:
+                log_warning(
+                    "Invalid date format provided to daily assignment generation",
+                    extra={"target_date": target_date, "error": str(e)}
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid date format. Expected YYYY-MM-DD, got: {target_date}"
+                )
+        
+        log_info(
+            "Daily assignment generation requested",
+            extra={"target_date": str(parsed_date) if parsed_date else "today"}
+        )
+        
+        result = await generate_daily_assignments_batch(target_date=parsed_date)
+        
+        if result["households_failed"] > 0:
+            log_warning(
+                "Daily assignment generation completed with errors",
+                extra={
+                    "date": result["date"],
+                    "failed": result["households_failed"],
+                    "errors": result["errors"]
+                }
+            )
+        else:
+            log_info(
+                "Daily assignment generation completed successfully",
+                extra={
+                    "date": result["date"],
+                    "households_processed": result["households_processed"],
+                    "assignments_created": result["total_assignments_created"]
+                }
+            )
+        
+        return result
+        
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        log_error(
+            "Unexpected error in daily assignment generation endpoint",
+            e,
+            extra={"target_date": target_date}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate daily assignments"
         )

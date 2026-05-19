@@ -14,7 +14,8 @@ Functions:
 - add_task_to_schedule(): Add a new task to an existing schedule
 - update_task(): Update task details
 - get_task_by_id(): Retrieve task by ID
-- generate_daily_assignments(): Generate TaskAssignment records for today's tasks
+- generate_daily_assignments(): Generate TaskAssignment records for today's tasks in a household
+- generate_daily_assignments_batch(): Generate daily TaskAssignment records for all households
 - check_owner_access(): Verify user is household owner
 """
 
@@ -665,6 +666,237 @@ async def generate_daily_assignments(schedule_id: UUID, household_id: UUID) -> N
             f"Failed to generate assignments: {str(exc)}",
             operation="generate_daily_assignments"
         ) from exc
+
+
+async def generate_daily_assignments_batch(target_date: Optional[date] = None) -> dict:
+    """Generate daily TaskAssignment records for all households for a specific date.
+    
+    This is the batch/internal function that generates daily assignments for all active
+    schedules in the system. It should be called daily (e.g., via cron job or scheduler).
+    
+    Args:
+        target_date: Date to generate assignments for (default: today)
+        
+    Returns:
+        dict with statistics: {
+            "date": str,
+            "total_households": int,
+            "households_processed": int,
+            "households_failed": int,
+            "total_assignments_created": int,
+            "errors": list
+        }
+    """
+    supabase = get_supabase_client()
+    
+    if target_date is None:
+        target_date = date.today()
+    
+    day_name = target_date.strftime("%a").upper()[:3]
+    
+    # Map day names to schedule format (MON, TUE, etc)
+    day_mapping = {
+        "Mon": DayOfWeek.MON.value,
+        "Tue": DayOfWeek.TUE.value,
+        "Wed": DayOfWeek.WED.value,
+        "Thu": DayOfWeek.THU.value,
+        "Fri": DayOfWeek.FRI.value,
+        "Sat": DayOfWeek.SAT.value,
+        "Sun": DayOfWeek.SUN.value,
+    }
+    
+    today_day_of_week = day_mapping.get(day_name)
+    if not today_day_of_week:
+        log_error(
+            "Could not determine day of week for batch assignment generation",
+            Exception("Invalid day mapping"),
+            extra={"date": str(target_date)}
+        )
+        return {
+            "date": str(target_date),
+            "total_households": 0,
+            "households_processed": 0,
+            "households_failed": 0,
+            "total_assignments_created": 0,
+            "errors": ["Could not determine day of week"]
+        }
+    
+    try:
+        # Get all active schedules
+        schedules_response = await (
+            supabase
+            .table("weekly_task_schedules")
+            .select("id, household_id")
+            .is_("active_until", "null")
+            .is_("deleted_at", "null")
+            .execute()
+        )
+        
+        schedules = schedules_response.data if schedules_response.data else []
+        
+        # Get all households for statistics
+        households_response = await (
+            supabase
+            .table("households")
+            .select("id")
+            .is_("deleted_at", "null")
+            .execute()
+        )
+        
+        total_households = len(households_response.data) if households_response.data else 0
+        households_processed = 0
+        households_failed = 0
+        total_assignments_created = 0
+        errors = []
+        
+        log_info(
+            "Starting batch daily assignment generation",
+            extra={
+                "date": str(target_date),
+                "day_of_week": today_day_of_week,
+                "total_schedules": len(schedules),
+                "total_households": total_households
+            }
+        )
+        
+        # Process each active schedule
+        for schedule in schedules:
+            try:
+                household_id = schedule["household_id"]
+                schedule_id = schedule["id"]
+                
+                # Get tasks for this day
+                tasks_response = await (
+                    supabase
+                    .table("tasks")
+                    .select("*")
+                    .eq("schedule_id", schedule_id)
+                    .eq("day_of_week", today_day_of_week)
+                    .execute()
+                )
+                
+                tasks = tasks_response.data if tasks_response.data else []
+                
+                if not tasks:
+                    # No tasks for this day, skip
+                    households_processed += 1
+                    continue
+                
+                # Get household members for random assignment
+                members_response = await (
+                    supabase
+                    .table("household_members")
+                    .select("user_id")
+                    .eq("household_id", household_id)
+                    .execute()
+                )
+                
+                household_members = [m["user_id"] for m in members_response.data] if members_response.data else []
+                
+                if not household_members:
+                    log_warning(
+                        "No household members found for assignment",
+                        extra={"household_id": household_id, "date": str(target_date)}
+                    )
+                    households_processed += 1
+                    continue
+                
+                # Check if assignments already exist for this date
+                existing_response = await (
+                    supabase
+                    .table("task_assignments")
+                    .select("id")
+                    .eq("household_id", household_id)
+                    .eq("assignment_date", str(target_date))
+                    .limit(1)
+                    .execute()
+                )
+                
+                if existing_response.data:
+                    # Assignments already exist for this date, skip
+                    log_debug(
+                        "Assignments already exist for date",
+                        extra={"household_id": household_id, "date": str(target_date)}
+                    )
+                    households_processed += 1
+                    continue
+                
+                # Generate assignments
+                assignments_to_create = []
+                
+                for task in tasks:
+                    assignment_user_id = None
+                    
+                    if task["assignment_type"] == "explicit":
+                        assignment_user_id = task["assigned_user_id"]
+                    elif task["assignment_type"] == "random":
+                        # Randomly select from household members
+                        import random
+                        assignment_user_id = random.choice(household_members)
+                    
+                    if assignment_user_id:
+                        assignment = {
+                            "id": str(uuid4()),
+                            "task_id": task["id"],
+                            "household_id": household_id,
+                            "assigned_to_user_id": assignment_user_id,
+                            "assignment_date": str(target_date),
+                            "is_completed": False,
+                            "completed_at": None,
+                            "created_at": datetime.utcnow().isoformat() + "Z",
+                            "updated_at": datetime.utcnow().isoformat() + "Z",
+                        }
+                        assignments_to_create.append(assignment)
+                
+                if assignments_to_create:
+                    await supabase.table("task_assignments").insert(assignments_to_create).execute()
+                    total_assignments_created += len(assignments_to_create)
+                
+                households_processed += 1
+                
+            except Exception as exc:
+                households_failed += 1
+                error_msg = f"Failed to generate assignments for household {schedule['household_id']}: {str(exc)}"
+                errors.append(error_msg)
+                log_error(
+                    "Error generating assignments for household",
+                    exc,
+                    extra={"household_id": schedule["household_id"], "date": str(target_date)}
+                )
+        
+        log_info(
+            "Batch daily assignment generation completed",
+            extra={
+                "date": str(target_date),
+                "households_processed": households_processed,
+                "households_failed": households_failed,
+                "total_assignments_created": total_assignments_created
+            }
+        )
+        
+        return {
+            "date": str(target_date),
+            "total_households": total_households,
+            "households_processed": households_processed,
+            "households_failed": households_failed,
+            "total_assignments_created": total_assignments_created,
+            "errors": errors
+        }
+        
+    except Exception as exc:
+        log_error(
+            "Failed to run batch daily assignment generation",
+            exc,
+            extra={"date": str(target_date)}
+        )
+        return {
+            "date": str(target_date),
+            "total_households": 0,
+            "households_processed": 0,
+            "households_failed": 0,
+            "total_assignments_created": 0,
+            "errors": [f"Batch generation failed: {str(exc)}"]
+        }
 
 
 # Helper functions
