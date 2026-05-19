@@ -1291,9 +1291,59 @@
     - Placeholder for future GET /users/{user_id}/households endpoint
   - File: AporTamos-Frontend/context/HouseholdContext.tsx (450+ lines)
   - Exports: HouseholdProvider, useHouseholdContext, useSelectedHousehold, useHouseholdMembers, useIsHouseholdOwner, useIsHouseholdMember
-- [ ] T049 [US2] Update home screen in AporTamos-Frontend/app/(tabs)/index.tsx to display list of user's households
+- [x] T049 [US2] Update home screen in AporTamos-Frontend/app/(tabs)/index.tsx to display list of user's households
+  - **Implementation**: Created comprehensive home screen showing list of user's households (400+ lines)
+  - Screen Features:
+    - Displays list of all user's households via HouseholdContext
+    - Shows household cards using HouseholdCard component (T043)
+    - "Create Household" button in header and empty state
+    - Opens CreateHouseholdModal (T045) to create new household
+    - Pull-to-refresh to reload household list
+    - Navigation to household detail screen (T044) on card press
+    - Loading and error states with appropriate UI
+    - Empty state message when user has no households
+    - Shows household owner badge on owned households
+  - UI Components:
+    - FlatList with household data
+    - RefreshControl for pull-to-refresh
+    - Header with title, household count, and create button
+    - HouseholdCard for each household (pressable)
+    - Empty state with guidance and create button
+    - Loading state with spinner
+    - Error state with retry button
+    - Responsive design for mobile/tablet/web
+  - Functionality:
+    - `renderHeader()` - Displays title and household count
+    - `renderHouseholdItem()` - Renders each household card with navigation
+    - `renderEmptyState()` - Shows message when no households exist
+    - `handleRefresh()` - Pull-to-refresh handler
+    - `handleHouseholdPress()` - Navigate to household detail on card press
+    - `handleCreateHouseholdSuccess()` - Reload list after creating household
+  - Integration Points:
+    - Uses useHouseholdContext() from T048 for household list state
+    - Uses useAuthState() from T029 for user context
+    - Uses HouseholdCard component from T043
+    - Uses CreateHouseholdModal from T045
+    - Navigates to HouseholdDetail screen (T044) via router.push()
+    - Uses useFocusEffect to reload when screen is focused
+  - State Management:
+    - `createModalVisible` - Controls CreateHouseholdModal visibility
+    - `isRefreshing` - Tracks pull-to-refresh state
+    - Gets households, isLoading, error from HouseholdContext
+  - Features:
+    - Responsive padding and font sizes for different screen widths
+    - Dark mode support via useColorScheme hook
+    - Accessibility labels for all buttons and interactive elements
+    - Test IDs for automated testing (household-list, household-card-{id})
+    - Haptic feedback via HapticTab component (via tab press)
+  - Error Handling:
+    - Displays error message with retry button
+    - Clears error on retry or when navigating
+    - Handles network failures gracefully
+  - File: AporTamos-Frontend/app/(tabs)/index.tsx (400+ lines)
+  - Exports: Default component (HomeScreen)
 
-**Checkpoint**: User Story 2 complete - users can create and join households
+**Checkpoint**: User Story 2 complete - users can create and join households ✅
 
 ---
 
