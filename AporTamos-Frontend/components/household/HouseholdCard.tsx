@@ -27,15 +27,11 @@ import React, { useCallback } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   ViewStyle,
-  TextStyle,
   Pressable,
   useWindowDimensions,
 } from 'react-native';
-import { ThemedView } from '@/components/themed-view';
-import { ThemedText } from '@/components/themed-text';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import type { Household } from '@/types/models';
@@ -147,7 +143,7 @@ export function HouseholdCard({
   const dynamicStyles = StyleSheet.create({
     container: {
       backgroundColor: colors.background,
-      borderColor: colors.border || '#e5e7eb',
+      borderColor: colors.border,
       borderWidth: 1,
       borderRadius: 12,
       marginBottom: containerPadding,
@@ -183,7 +179,7 @@ export function HouseholdCard({
       paddingHorizontal: badgePadding,
       paddingVertical: badgePadding - 2,
       borderRadius: 6,
-      backgroundColor: colors.cardBackground || '#f3f4f6',
+      backgroundColor: colors.cardBackground,
     },
     streakBadge: {
       backgroundColor: `${streakColor}20`, // Add transparency
@@ -220,11 +216,11 @@ export function HouseholdCard({
       alignItems: 'center',
       paddingTop: 8,
       borderTopWidth: 1,
-      borderTopColor: colors.border || '#e5e7eb',
+      borderTopColor: colors.border,
     },
     footerText: {
       fontSize: 12,
-      color: colors.subtext || '#6b7280',
+      color: colors.subtext,
     },
   });
 

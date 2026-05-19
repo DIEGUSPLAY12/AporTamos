@@ -1153,8 +1153,85 @@
     - Uses Colors constants for consistent styling
     - Accepts Props: visible, onClose, onSuccess callbacks
   - File: AporTamos-Frontend/components/household/CreateHouseholdModal.tsx (550 lines)
-- [ ] T046 [US2] Create InviteMembersModal in AporTamos-Frontend/components/household/InviteMembersModal.tsx (form to invite by email)
-- [ ] T047 [P] [US2] Create useHousehold hook in AporTamos-Frontend/hooks/useHousehold.ts (fetch household data, manage state)
+- [x] T046 [US2] Create InviteMembersModal in AporTamos-Frontend/components/household/InviteMembersModal.tsx (form to invite by email)
+  - **Implementation**: Created TypeScript React Native modal component for inviting household members (350+ lines)
+  - Features:
+    - Email address input with real-time validation
+    - Email format validation (user@example.com pattern)
+    - Form validation before submission (prevents empty/invalid emails)
+    - Loading state during API call with disabled buttons
+    - Error handling with user-friendly messages:
+      - "Email already a member" (400 error)
+      - "Only owner can invite" (403 error)
+      - "Household not found" (404 error)
+    - Dismissible error messages with × button
+    - Help text explaining invitation workflow
+    - Accessibility labels and hints for screen readers
+    - Dark mode support using useColorScheme hook
+    - Send button disabled until valid email entered
+    - Case-insensitive email normalization
+    - Keyboard dismissal on submit
+    - Form reset on successful submission
+  - Integration points:
+    - Uses inviteMember() from @/services/api
+    - Uses useColorScheme hook for theme support
+    - Uses Colors constants for consistent styling
+    - Accepts Props: visible, householdId, onClose, onSuccess callbacks
+  - Props interface:
+    - visible: boolean - Controls modal visibility
+    - householdId: string - ID of household to invite to
+    - onClose: () => void - Called when modal closes
+    - onSuccess: () => void - Called after successful invitation
+  - API integration:
+    - POST /households/{householdId}/members with email
+    - Returns: { message: "Invitation sent to ..." }
+  - File: AporTamos-Frontend/components/household/InviteMembersModal.tsx (350 lines)
+- [x] T047 [P] [US2] Create useHousehold hook in AporTamos-Frontend/hooks/useHousehold.ts (fetch household data, manage state)
+  - **Implementation**: Created custom React hook for managing household data (350+ lines)
+  - Core Hooks:
+    - `useHousehold(householdId, skip?)` - Main hook for fetching and managing household data
+      - Returns: { household, isLoading, isRefetching, error, refetch, hasError, isReady }
+      - Automatically fetches on mount
+      - Handles dependency updates
+      - Cleanup on unmount
+    - `useHouseholdState(householdId)` - Simple hook for reading cached data without fetching
+      - Returns: HouseholdDetail | null
+    - Utility functions:
+      - `clearHouseholdCache(householdId?)` - Clear specific or all household cache
+      - `preloadHousehold(householdId)` - Prefetch data before navigation
+  - Features:
+    - In-memory caching with 5-minute TTL per household
+    - Automatic cache freshness checking
+    - Loading and error state management
+    - Refetching capability with separate state
+    - Network error handling via ApiError class
+    - Mounted component tracking to prevent state updates after unmount
+    - TypeScript with full type support
+    - Configurable cache duration (CACHE_DURATION constant)
+    - Async/await based API calls
+  - State Management:
+    - `isLoading`: True on initial fetch
+    - `isRefetching`: True during manual refetch
+    - `error`: Error message or null
+    - `household`: HouseholdDetail data or null
+    - `isReady`: Convenience flag (loaded and no error)
+  - Cache Strategy:
+    - Stores last-fetched data by householdId
+    - Reuses cache for 5 minutes
+    - Automatically clears stale cache
+    - Survives component unmount/remount
+  - Integration:
+    - Uses getHouseholdDetails() from @/services/api
+    - Works with HouseholdDetail type from @/types/models
+    - Compatible with HouseholdDetail screen (T044)
+    - Compatible with HouseholdContext (T048)
+  - Performance:
+    - Prevents duplicate API calls via caching
+    - Handles rapid re-renders gracefully
+    - Prevents memory leaks with mounted tracking
+    - Supports preloading for faster navigation
+  - File: AporTamos-Frontend/hooks/useHousehold.ts (350 lines)
+  - Export: Default + named exports (useHousehold, useHouseholdState, clearHouseholdCache, preloadHousehold)
 - [ ] T048 [P] [US2] Add household context in AporTamos-Frontend/context/HouseholdContext.tsx (share household data across screens)
 - [ ] T049 [US2] Update home screen in AporTamos-Frontend/app/(tabs)/index.tsx to display list of user's households
 
