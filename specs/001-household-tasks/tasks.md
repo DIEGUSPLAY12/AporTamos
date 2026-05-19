@@ -1457,11 +1457,58 @@
     - Uses logging/exception classes from app.config
     - Called by task endpoints (T052+)
   - File: AporTamos-Backend/app/services/task_service.py (900+ lines)
-- [ ] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
-- [ ] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
-- [ ] T054 [P] [US3] Implement GET /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (fetch current schedule)
-- [ ] T055 [P] [US3] Implement POST /households/{id}/schedule/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (add task to schedule)
-- [ ] T056 [P] [US3] Implement PUT /households/{id}/schedule/tasks/{task_id} endpoint in AporTamos-Backend/app/routers/tasks.py (update task)
+- [x] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
+  - Created POST /households/{household_id}/schedule endpoint (201 Created)
+  - Validates user is household owner
+  - Creates WeeklyTaskSchedule with version=1 and active_from=today
+  - Creates all Task records from provided list
+  - Generates initial TaskAssignment records for today's tasks
+  - Returns WeeklyTaskScheduleResponse with created schedule and tasks
+  - Error handling: 403 for non-owner, 409 for existing active schedule, 422 for validation errors
+- [x] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
+  - Created PUT /households/{household_id}/schedule endpoint (200 OK)
+  - Returns current active schedule (placeholder for future version management)
+  - Validates user has household access
+  - Returns WeeklyTaskScheduleResponse
+  - Error handling: 403 for access denied, 404 for schedule not found
+- [x] T054 [P] [US3] Implement GET /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (fetch current schedule)
+  - Created GET /households/{household_id}/schedule endpoint (200 OK)
+  - Validates user has household access
+  - Retrieves active schedule (active_until IS NULL)
+  - Fetches all associated tasks
+  - Returns WeeklyTaskScheduleResponse with tasks
+  - Error handling: 403 for access denied, 404 for schedule not found
+- [x] T055 [P] [US3] Implement POST /households/{id}/schedule/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (add task to schedule)
+  - Created POST /households/{household_id}/schedule/tasks endpoint (201 Created)
+  - Validates user is household owner
+  - Retrieves current active schedule
+  - Creates new Task record within schedule
+  - Returns TaskResponse with created task
+  - Error handling: 403 for non-owner, 404 for schedule not found, 422 for validation errors
+- [x] T056 [P] [US3] Implement PUT /households/{id}/schedule/tasks/{task_id} endpoint in AporTamos-Backend/app/routers/tasks.py (update task)
+  - Created PUT /households/{household_id}/schedule/tasks/{task_id} endpoint (200 OK)
+  - Validates user is household owner
+  - Updates task with partial fields (only provided fields updated)
+  - Returns TaskResponse with updated task
+  - Error handling: 403 for non-owner, 404 for task not found, 422 for validation errors
+- Task Router Implementation (tasks.py - 600+ lines):
+  - Module provides 5 endpoints for task schedule management
+  - All endpoints require Bearer token authentication
+  - Owner-only validation for create/update endpoints using is_household_owner()
+  - Comprehensive error handling with proper HTTP status codes:
+    - 201 for successful creation (POST)
+    - 200 for successful retrieval/update (GET/PUT)
+    - 400 for invalid data
+    - 403 for permission denied (owner-only)
+    - 404 for resource not found
+    - 409 for conflict (active schedule exists)
+    - 422 for validation errors
+    - 500 for database/server errors
+  - Full audit logging at info/warning/error levels
+  - Dependency injection for get_current_user_id
+  - Proper status codes and response models
+  - Router integration: included in app.routers.__init__.py and app.main.py
+  - File: AporTamos-Backend/app/routers/tasks.py (600+ lines)
 - [ ] T057 [P] [US3] Add task assignment logic to create daily TaskAssignment records for each task
 - [ ] T058 [US3] Create ScheduleEditor component in AporTamos-Frontend/components/task/ScheduleEditor.tsx (form to create/edit weekly schedule)
 - [ ] T059 [P] [US3] Create TaskForm component in AporTamos-Frontend/components/task/TaskForm.tsx (add/edit individual tasks with effort weight and assignment type)
