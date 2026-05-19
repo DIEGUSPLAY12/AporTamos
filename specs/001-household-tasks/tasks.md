@@ -991,7 +991,19 @@
 
 ### Implementation for US2
 
-- [ ] T036 [P] [US2] Create Household and HouseholdMember Pydantic models in AporTamos-Backend/app/models/household.py
+- [x] T036 [P] [US2] Create Household and HouseholdMember Pydantic models in AporTamos-Backend/app/models/household.py
+  - **Implementation**: Created comprehensive Household and HouseholdMember Pydantic models in AporTamos-Backend/app/models/household.py with:
+    - HouseholdCreate: Request schema for POST /households (name, timezone_id)
+    - HouseholdResponse: Public household API response (id, owner_id, name, timezone_id, daily_streak, last_completion_date, created_at, updated_at)
+    - Household: Complete model with deleted_at and is_active property
+    - HouseholdMember: Membership model with id, household_id, user_id, role (owner/member), joined_at, updated_at
+    - HouseholdMemberResponse: API response with user information (user_id, name, email, role, joined_at)
+    - HouseholdDetail: Complete household with members list for GET /households/{id} responses
+    - HouseholdUpdate: Schema for updating household name and timezone
+    - HouseholdRoleEnum: Enum for "owner" and "member" roles
+    - All models include validation (name length, timezone format, role validation)
+    - All models include from_attributes=True for SQLAlchemy ORM compatibility
+    - All models include comprehensive JSON schema examples
 - [ ] T037 [P] [US2] Create household service in AporTamos-Backend/app/services/household_service.py (create, join, manage members)
 - [ ] T038 [US2] Implement POST /households endpoint in AporTamos-Backend/app/routers/households.py (create household, set owner)
 - [ ] T039 [US2] Implement GET /households/{id} endpoint in AporTamos-Backend/app/routers/households.py (fetch household with members)
