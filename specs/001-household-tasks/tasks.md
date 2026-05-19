@@ -1133,7 +1133,26 @@
       - AporTamos-Frontend/app/(tabs)/[householdId]/index.tsx (437 lines)
       - AporTamos-Frontend/services/api.ts (260 lines)
     - Created directory: AporTamos-Frontend/app/(tabs)/[householdId]/
-- [ ] T045 [US2] Create CreateHouseholdModal in AporTamos-Frontend/components/household/CreateHouseholdModal.tsx (form to create household)
+- [x] T045 [US2] Create CreateHouseholdModal in AporTamos-Frontend/components/household/CreateHouseholdModal.tsx (form to create household)
+  - Created TypeScript React Native modal component (550+ lines)
+  - Features:
+    - Household name input with validation (1-100 characters, character counter)
+    - Timezone picker with 13 common IANA timezone options (defaults to "America/New_York")
+    - Form validation before submission (prevents empty names, validates timezone)
+    - Loading state during API call with disabled buttons
+    - Error handling with dismissible error messages
+    - Accessibility labels and roles (button, expanded state, hints)
+    - Dark mode support using useColorScheme hook
+    - Dropdown-based timezone selector with scrollable list
+    - Info text explaining timezone usage for task streak reset
+    - Calls createHousehold from api service
+    - Resets form and calls onSuccess callback on success
+  - Integration points:
+    - Uses createHousehold() from @/services/api
+    - Uses useColorScheme hook for theme support
+    - Uses Colors constants for consistent styling
+    - Accepts Props: visible, onClose, onSuccess callbacks
+  - File: AporTamos-Frontend/components/household/CreateHouseholdModal.tsx (550 lines)
 - [ ] T046 [US2] Create InviteMembersModal in AporTamos-Frontend/components/household/InviteMembersModal.tsx (form to invite by email)
 - [ ] T047 [P] [US2] Create useHousehold hook in AporTamos-Frontend/hooks/useHousehold.ts (fetch household data, manage state)
 - [ ] T048 [P] [US2] Add household context in AporTamos-Frontend/context/HouseholdContext.tsx (share household data across screens)
