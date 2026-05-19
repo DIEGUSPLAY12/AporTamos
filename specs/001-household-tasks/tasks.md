@@ -1511,7 +1511,7 @@
   - File: AporTamos-Backend/app/routers/tasks.py (600+ lines)
 - [x] T057 [P] [US3] Add task assignment logic to create daily TaskAssignment records for each task
 - [x] T058 [US3] Create ScheduleEditor component in AporTamos-Frontend/components/task/ScheduleEditor.tsx (form to create/edit weekly schedule)
-- [ ] T059 [P] [US3] Create TaskForm component in AporTamos-Frontend/components/task/TaskForm.tsx (add/edit individual tasks with effort weight and assignment type)
+- [x] T059 [P] [US3] Create TaskForm component in AporTamos-Frontend/components/task/TaskForm.tsx (add/edit individual tasks with effort weight and assignment type)
 - [ ] T060 [P] [US3] Create AssignmentSelector component in AporTamos-Frontend/components/task/AssignmentSelector.tsx (choose explicit user or random assignment)
 - [ ] T061 [P] [US3] Create useTasks hook in AporTamos-Frontend/hooks/useTasks.ts (fetch and manage task data)
 - [ ] T062 [US3] Create ScheduleManagement screen in AporTamos-Frontend/app/(tabs)/[householdId]/schedule.tsx (owner-only access to schedule editor)
