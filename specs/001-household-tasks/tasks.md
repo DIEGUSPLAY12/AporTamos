@@ -1386,7 +1386,77 @@
     - Assignment type consistency: explicit requires assigned_user_id, random requires null
     - Schedule must have at least one task
   - File: AporTamos-Backend/app/models/task.py (1,100+ lines)
-- [ ] T051 [P] [US3] Create task service in AporTamos-Backend/app/services/task_service.py (create schedule, add tasks, handle assignments)
+- [x] T051 [P] [US3] Create task service in AporTamos-Backend/app/services/task_service.py (create schedule, add tasks, handle assignments)
+  - Created comprehensive task_service.py module with 900+ lines
+  - Exception Classes (task-specific errors):
+    - TaskError: Base exception for task-related errors
+    - ScheduleNotFoundError: Schedule does not exist
+    - TaskNotFoundError: Task does not exist
+    - ScheduleAccessError: User does not have access to schedule/household
+    - ScheduleOwnerError: Only household owner can perform this action
+    - ScheduleValidationError: Schedule validation fails
+    - TaskValidationError: Task validation fails
+  - Schedule Management Functions:
+    - create_schedule(household_id, user_id, schedule_data):
+      - Verifies user is household owner (raises ScheduleOwnerError if not)
+      - Checks no other active schedule exists
+      - Creates WeeklyTaskSchedule record with version=1
+      - Creates all Task records from the provided list
+      - Generates initial TaskAssignment records for today's tasks
+      - Returns WeeklyTaskScheduleResponse with created schedule and tasks
+    - get_schedule(household_id, user_id):
+      - Verifies user has access to household
+      - Retrieves active schedule (where active_until IS NULL)
+      - Fetches all tasks for the schedule
+      - Returns WeeklyTaskScheduleResponse with tasks list
+    - get_schedule_by_id(schedule_id):
+      - Retrieves schedule by ID regardless of active status
+      - Fetches associated tasks
+      - Returns WeeklyTaskScheduleResponse
+  - Task Management Functions:
+    - add_task_to_schedule(schedule_id, household_id, task_data):
+      - Creates new Task record within existing schedule
+      - Validates assignment type consistency via Pydantic models
+      - Returns TaskResponse with created task
+    - update_task(task_id, task_data):
+      - Updates task with partial fields (only provided fields updated)
+      - Supports updating name, description, day_of_week, effort_weight, assignment_type, assigned_user_id, frequency
+      - Handles null assignment_user_id for random assignments
+      - Returns TaskResponse with updated task
+    - get_task_by_id(task_id):
+      - Retrieves task by ID
+      - Returns TaskResponse
+  - Daily Assignment Generation:
+    - generate_daily_assignments(schedule_id, household_id):
+      - Determines today's day of week
+      - Retrieves all tasks matching today's day
+      - For explicit assignments: creates TaskAssignment for assigned user
+      - For random assignments: randomly selects from household members
+      - Creates TaskAssignment records for all matching tasks
+      - Logs assignment count and details
+      - Handles error cases gracefully (no tasks, no members)
+  - Helper Functions:
+    - _check_household_access(user_id, household_id): Verify user is household member
+    - _get_household_or_fail(supabase, household_id, user_id): Get household with access verification
+  - Features:
+    - Comprehensive error handling with custom exception classes
+    - Owner-only validation for schedule creation
+    - Active schedule uniqueness enforcement
+    - Automatic daily task assignment generation
+    - Partial update support for tasks
+    - Type-safe UUID and enum handling
+    - Full audit logging at info/warning/error levels
+    - Graceful handling of edge cases (no tasks, no members, etc)
+  - Database Operations:
+    - Reads from: households, household_members, weekly_task_schedules, tasks
+    - Writes to: weekly_task_schedules, tasks, task_assignments
+    - Uses Supabase client for all operations
+  - Integration Points:
+    - Uses models from app.models.task (Pydantic schemas)
+    - Uses Supabase client from app.dependencies
+    - Uses logging/exception classes from app.config
+    - Called by task endpoints (T052+)
+  - File: AporTamos-Backend/app/services/task_service.py (900+ lines)
 - [ ] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
 - [ ] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
 - [ ] T054 [P] [US3] Implement GET /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (fetch current schedule)
