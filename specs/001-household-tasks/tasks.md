@@ -1186,7 +1186,7 @@
     - POST /households/{householdId}/members with email
     - Returns: { message: "Invitation sent to ..." }
   - File: AporTamos-Frontend/components/household/InviteMembersModal.tsx (350 lines)
-- [x] T047 [P] [US2] Create useHousehold hook in AporTamos-Frontend/hooks/useHousehold.ts (fetch household data, manage state)
+- [x] T047 [P] [US2] º
   - **Implementation**: Created custom React hook for managing household data (350+ lines)
   - Core Hooks:
     - `useHousehold(householdId, skip?)` - Main hook for fetching and managing household data
@@ -1232,7 +1232,65 @@
     - Supports preloading for faster navigation
   - File: AporTamos-Frontend/hooks/useHousehold.ts (350 lines)
   - Export: Default + named exports (useHousehold, useHouseholdState, clearHouseholdCache, preloadHousehold)
-- [ ] T048 [P] [US2] Add household context in AporTamos-Frontend/context/HouseholdContext.tsx (share household data across screens)
+- [x] T048 [P] [US2] Add household context in AporTamos-Frontend/context/HouseholdContext.tsx (share household data across screens)
+  - **Implementation**: Created comprehensive HouseholdContext with household state management across screens (450+ lines)
+  - Core Context Features:
+    - `HouseholdProvider` - Provider component for wrapping app/screens
+    - `useHouseholdContext()` - Main hook for accessing household context
+    - `useSelectedHousehold()` - Hook for selected household only
+    - `useHouseholdMembers()` - Hook for household members array
+    - `useIsHouseholdOwner()` - Hook to check owner role
+    - `useIsHouseholdMember()` - Hook to check member role
+  - State Management:
+    - `selectedHousehold`: Currently selected HouseholdDetail with full data
+    - `households`: List of user's households
+    - `isLoading`: Loading state for household selection
+    - `isLoadingHouseholds`: Loading state for households list fetch
+    - `error`: Error message or null
+  - Methods:
+    - `selectHousehold(householdId)`: Switch selected household
+    - `createHousehold(data)`: Create new household and select it
+    - `loadHouseholds()`: Fetch user's households list
+    - `refreshSelectedHousehold()`: Refetch selected household details
+    - `removeSelectedHousehold()`: Clear household selection
+    - `clearError()`: Clear error message
+    - `isUserOwner(userId)`: Check if user is owner
+    - `isUserMember(userId)`: Check if user is member
+  - Features:
+    - Integrates with useHousehold hook for detailed data fetching
+    - Integrates with useAuthState for user context
+    - Auto-selects first household if available
+    - Caches household list to prevent repeated fetches
+    - Manages loading states for both household list and details
+    - Provides utility hooks for common checks (owner/member)
+    - Comprehensive error handling and logging
+    - TypeScript with full type support
+  - Integration Points:
+    - Uses useHousehold() hook from T047 for detailed data
+    - Uses useAuthState() hook from T029 for user context
+    - Uses getUserHouseholds() from api.ts (stub for future T049 endpoint)
+    - Compatible with HouseholdDetail screen (T044)
+    - Compatible with InviteMembersModal (T046)
+    - Compatible with CreateHouseholdModal (T045)
+  - Hooks Exported:
+    - `useHouseholdContext()` - Full context access
+    - `useSelectedHousehold()` - Selected household data
+    - `useHouseholdMembers()` - Members array shortcut
+    - `useIsHouseholdOwner(userId)` - Owner check
+    - `useIsHouseholdMember(userId)` - Member check
+  - Error Handling:
+    - User not authenticated error
+    - Household not found in list error
+    - Failed to load households error
+    - Failed to create household error
+    - Failed to refresh error
+    - Specific error messages for each scenario
+  - API Integration:
+    - Added getUserHouseholds() function to api.ts (stub)
+    - Calls createHousehold() for new household creation
+    - Placeholder for future GET /users/{user_id}/households endpoint
+  - File: AporTamos-Frontend/context/HouseholdContext.tsx (450+ lines)
+  - Exports: HouseholdProvider, useHouseholdContext, useSelectedHousehold, useHouseholdMembers, useIsHouseholdOwner, useIsHouseholdMember
 - [ ] T049 [US2] Update home screen in AporTamos-Frontend/app/(tabs)/index.tsx to display list of user's households
 
 **Checkpoint**: User Story 2 complete - users can create and join households

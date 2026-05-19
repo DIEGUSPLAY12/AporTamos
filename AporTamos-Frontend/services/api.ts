@@ -213,6 +213,30 @@ export async function getHouseholdDetails(householdId: string): Promise<Househol
 }
 
 /**
+ * Fetch list of households for current user
+ *
+ * @returns {Promise<Household[]>} Array of user's households
+ *
+ * @note This endpoint (GET /users/{user_id}/households) needs to be implemented
+ * in the backend as part of T049 implementation. For now, returns empty array.
+ *
+ * @example
+ * const households = await getUserHouseholds();
+ */
+export async function getUserHouseholds(): Promise<Household[]> {
+  try {
+    // TODO: Implement GET /users/{user_id}/households endpoint in backend
+    // This endpoint should return list of all households user is member of
+    // For now, return empty array - will be updated when backend endpoint available
+    console.warn('[API] getUserHouseholds: Backend endpoint not yet implemented');
+    return [];
+  } catch (error) {
+    console.error('[API] Failed to fetch user households:', error);
+    throw error;
+  }
+}
+
+/**
  * Create a new household
  *
  * @param {CreateHouseholdRequest} data - Household creation data
@@ -271,6 +295,7 @@ export default {
   post,
   patch,
   del,
+  getUserHouseholds,
   getHouseholdDetails,
   createHousehold,
   inviteMember,
