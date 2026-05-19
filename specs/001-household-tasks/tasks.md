@@ -1076,8 +1076,63 @@
     - Error handling: 401 (auth), 403 (not owner), 500 (server)
     - Comprehensive logging of member removals
     - OpenAPI documentation with example request
-- [ ] T043 [P] [US2] Create HouseholdCard component in AporTamos-Frontend/components/household/HouseholdCard.tsx (display household name, streak, member count)
-- [ ] T044 [P] [US2] Create HouseholdDetail screen in AporTamos-Frontend/app/(tabs)/[householdId]/index.tsx (show household info and member list)
+- [x] T043 [P] [US2] Create HouseholdCard component in AporTamos-Frontend/components/household/HouseholdCard.tsx (display household name, streak, member count)
+  - **Implementation**: Created comprehensive HouseholdCard component with:
+    - Displays household name (title, up to 2 lines with ellipsis)
+    - Displays daily streak with fire emoji (🔥) and color coding (red=0, yellow=1-2, green=3+)
+    - Displays member count with people emoji (👥)
+    - Optional "Owner" badge to indicate user's own household
+    - Responsive design adapting to small/medium/large screens
+    - Pressable/touchable with visual feedback (opacity change on press)
+    - Dark mode support with themed colors
+    - Accessibility labels for screen readers
+    - Last update date display in footer (if available)
+    - TypeScript interface HouseholdCardProps for type safety
+    - Hooks: useColorScheme, useWindowDimensions for responsive behavior
+    - Test IDs for automated testing support
+    - Proper PropTypes and JSDoc documentation
+    - Streak color indicators: red (#ef4444) for 0, yellow (#eab308) for 1-2, green (#22c55e) for 3+
+    - Responsive padding and font sizes based on screen width
+    - File size: 11.2 KB with comprehensive component documentation
+- [x] T044 [P] [US2] Create HouseholdDetail screen in AporTamos-Frontend/app/(tabs)/[householdId]/index.tsx (show household info and member list)
+  - **Implementation**: Created comprehensive HouseholdDetail screen with:
+    - Displays household info using HouseholdCard component (name, streak, member count, owner badge)
+    - Shows timezone information
+    - Displays complete member list with:
+      - Member names with "You" indicator for current user
+      - Owner badge (purple) for household owner
+      - Join date for each member
+      - Remove button for non-owner members (owner-only access)
+    - Action buttons:
+      - "Invite Member" button (owner-only)
+      - "Leave Household" button (member-only, confirms before leaving)
+    - Features:
+      - Real-time data fetching with error handling
+      - Pull-to-refresh functionality
+      - Loading and empty states
+      - Permission-based UI (owner vs member actions)
+      - Responsive design for mobile/tablet
+      - Dark mode support
+      - Accessibility labels
+    - Created new api.ts service module with:
+      - Typed HTTP client for FastAPI backend
+      - Authentication token management via SecureStore
+      - Request/response handling with error classes
+      - Retry logic for network errors
+      - Timeout handling
+      - Methods: getHouseholdDetails, createHousehold, inviteMember, acceptInvitation, removeMember
+    - Component integrations:
+      - Uses HouseholdCard component for household display
+      - Uses useAuthState hook for current user context
+      - Uses useColorScheme and useWindowDimensions for responsive design
+    - Error handling:
+      - Network errors with retry logic
+      - API errors with user-friendly messages
+      - Permission errors with alert dialogs
+    - File paths:
+      - AporTamos-Frontend/app/(tabs)/[householdId]/index.tsx (437 lines)
+      - AporTamos-Frontend/services/api.ts (260 lines)
+    - Created directory: AporTamos-Frontend/app/(tabs)/[householdId]/
 - [ ] T045 [US2] Create CreateHouseholdModal in AporTamos-Frontend/components/household/CreateHouseholdModal.tsx (form to create household)
 - [ ] T046 [US2] Create InviteMembersModal in AporTamos-Frontend/components/household/InviteMembersModal.tsx (form to invite by email)
 - [ ] T047 [P] [US2] Create useHousehold hook in AporTamos-Frontend/hooks/useHousehold.ts (fetch household data, manage state)
