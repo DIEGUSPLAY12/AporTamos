@@ -6,12 +6,15 @@ This package contains all API route modules that define FastAPI endpoints.
 Routers:
 - auth: Authentication endpoints (register, login, logout, etc.)
 - households: Household management endpoints (create, invite, join, manage members)
+- tasks: Task schedule endpoints (create, update, manage weekly schedules)
 """
 
 from app.routers.auth import router as auth_router
 from app.routers.households import router as households_router
+from app.routers.tasks import router as tasks_router
 
 __all__ = [
     "auth_router",
     "households_router",
+    "tasks_router",
 ]

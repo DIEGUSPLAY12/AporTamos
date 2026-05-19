@@ -1,39 +1,37 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Constitution Update: Template → v1.0.0
-Date: 2026-05-07
+Constitution Update: v1.0.0 → v1.1.0
+Date: 2026-05-19
 
 VERSION CHANGE:
-- Template → 1.0.0 (MAJOR: Full constitutional framework ratified with 5 core principles)
+- v1.0.0 → v1.1.0 (MINOR: Added Git Workflow section with direct main-branch policy)
 
 MODIFIED PRINCIPLES:
-- I. Clean Code (NON-NEGOTIABLE) — filled in with clarity, maintainability, and readability guidance
-- II. Simple UX (NON-NEGOTIABLE) — filled in with feature justification and no feature creep rule
-- III. Responsive Design (NON-NEGOTIABLE) — filled in with viewport testing requirements
-- IV. Minimal Dependencies (NON-NEGOTIABLE) — filled in with evaluation criteria and security considerations
-- V. No Testing Required (SUPERSEDES ALL OTHER GUIDANCE) — new principle: tests explicitly not required
+- None (core principles unchanged)
 
 ADDED SECTIONS:
-- Technology Stack (Frontend: React, React Native, Expo, Expo Router, React Navigation, React Native Web; Backend: FastAPI, Supabase)
-- Development Workflow (Code Review, Manual Testing, No Automated Testing, Complexity Justification)
-- Governance (Amendment procedures, versioning policy, principle supremacy)
+- VI. Git Workflow (NEW): All commits must target main branch directly. Feature branches are not permitted.
+
+ADDED GUIDANCE:
+- Git Workflow section specifies:
+  * All work commits directly to main branch
+  * No feature/secondary branches should be created
+  * Simplifies workflow and reduces branch management overhead
+  * Aligns with rapid iteration and continuous deployment philosophy
 
 REMOVED SECTIONS:
-- None (template placeholders removed and replaced with concrete content)
-
-TEMPLATES UPDATED:
-- ✅ .specify/templates/tasks-template.md — Updated to reflect "No Testing Required" principle
-
-TEMPLATES REQUIRING REVIEW:
-- .specify/templates/plan-template.md — Advisory only; no breaking changes detected
-- .specify/templates/spec-template.md — Advisory only; no breaking changes detected
-
-FOLLOW-UP TODOS:
 - None
 
-NOTE: The "No Testing Required" principle supersedes all testing-related guidance in templates and tools.
-This is a non-negotiable governance decision for the AporTamos project.
+TEMPLATES REQUIRING REVIEW:
+- .specify/templates/tasks-template.md — May reference feature branches; should clarify main-branch-only policy
+- .specify/extensions.yml — Contains speckit.git.feature hook that creates branches; should be disabled per new policy
+
+FOLLOW-UP TODOS:
+- Disable speckit.git.feature hook in extensions.yml to prevent feature branch creation
+- Update speckit templates to reflect main-branch-only workflow if they reference branching
+
+NOTE: Git workflow change simplifies the development process and aligns with the principle of keeping processes straightforward and minimal.
 -->
 
 # AporTamos Constitution
@@ -60,6 +58,10 @@ Dependencies must be justified and kept to a minimum. Before adding a dependency
 
 Unit tests, integration tests, and end-to-end tests are explicitly NOT required. This principle supersedes any other guidance, tooling, or templates that may suggest test-driven development or automated testing. Manual verification and code review are the primary quality gates.
 
+### VI. Direct Main Branch Commits (NON-NEGOTIABLE)
+
+All work commits directly to the main branch. Feature branches and secondary branches are NOT permitted. This simplifies the workflow, reduces branch management overhead, and aligns with rapid iteration and continuous deployment philosophy. Each commit should be self-contained, well-tested manually, and ready to deploy immediately.
+
 ## Technology Stack
 
 ### Frontend
@@ -84,12 +86,14 @@ These versions and technologies are locked and must be respected for all develop
 
 **No Automated Testing**: Not required at any stage of development.
 
-**Complexity Justification**: All feature additions must justify their complexity and dependency footprint against the five core principles.
+**Complexity Justification**: All feature additions must justify their complexity and dependency footprint against the six core principles.
+
+**Git Workflow**: All commits are made directly to main branch. No feature branches. Each commit should be atomic, well-tested manually, and ready to deploy immediately.
 
 ## Governance
 
-This constitution is the source of truth for AporTamos development practices. All decisions must align with the five core principles. The "No Testing Required" principle explicitly supersedes any tooling, template, or guidance suggesting test-driven development or automated testing.
+This constitution is the source of truth for AporTamos development practices. All decisions must align with the six core principles. The "No Testing Required" principle explicitly supersedes any tooling, template, or guidance suggesting test-driven development or automated testing. The "Direct Main Branch Commits" principle explicitly supersedes any workflows that create feature branches.
 
 Constitution amendments require documented rationale and explicit approval. Version increments follow semantic versioning: MAJOR for principle redefinition, MINOR for new principle or substantial section addition, PATCH for clarifications and wording improvements.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-07
+**Version**: 1.1.0 | **Ratified**: 2026-05-07 | **Last Amended**: 2026-05-19
