@@ -37,7 +37,7 @@ from app.models.household import (
     HouseholdUpdate,
 )
 from app.models.user import User
-from app.dependencies import supabase_client
+from app.dependencies import get_supabase_client
 
 
 logger = logging.getLogger(__name__)
@@ -108,7 +108,7 @@ async def create_household(
     
     try:
         # Create household record
-        household_response = supabase_client.table("households").insert({
+        household_response = get_supabase_client().table("households").insert({
             "id": str(household_id),
             "owner_id": str(user_id),
             "name": household_data.name,
@@ -127,7 +127,7 @@ async def create_household(
         
         # Create HouseholdMember record for owner
         member_id = uuid4()
-        supabase_client.table("household_members").insert({
+        get_supabase_client().table("household_members").insert({
             "id": str(member_id),
             "household_id": str(household_id),
             "user_id": str(user_id),
@@ -138,7 +138,7 @@ async def create_household(
         
         # Create ChatChannel for household
         channel_id = uuid4()
-        supabase_client.table("chat_channels").insert({
+        get_supabase_client().table("chat_channels").insert({
             "id": str(channel_id),
             "household_id": str(household_id),
             "created_at": now.isoformat(),
@@ -186,7 +186,7 @@ async def get_household(household_id: UUID) -> Optional[HouseholdDetail]:
     
     try:
         # Get household record
-        response = supabase_client.table("households").select("*").eq(
+        response = get_supabase_client().table("households").select("*").eq(
             "id", str(household_id)
         ).eq("deleted_at", "null").execute()
         
@@ -237,7 +237,7 @@ async def get_household_members(household_id: UUID) -> List[HouseholdMemberRespo
     
     try:
         # Query to join household_members with users
-        response = supabase_client.table("household_members").select(
+        response = get_supabase_client().table("household_members").select(
             "*, users(id, name, email)"
         ).eq("household_id", str(household_id)).execute()
         
@@ -288,7 +288,7 @@ async def check_user_household_access(
         return False
     
     try:
-        response = supabase_client.table("household_members").select("id").eq(
+        response = get_supabase_client().table("household_members").select("id").eq(
             "household_id", str(household_id)
         ).eq("user_id", str(user_id)).execute()
         
@@ -324,7 +324,7 @@ async def is_household_owner(
         return False
     
     try:
-        response = supabase_client.table("household_members").select("role").eq(
+        response = get_supabase_client().table("household_members").select("role").eq(
             "household_id", str(household_id)
         ).eq("user_id", str(user_id)).eq("role", "owner").execute()
         
@@ -435,7 +435,7 @@ async def accept_invitation(
         member_id = uuid4()
         now = datetime.utcnow()
         
-        supabase_client.table("household_members").insert({
+        get_supabase_client().table("household_members").insert({
             "id": str(member_id),
             "household_id": str(household_id),
             "user_id": str(user_id),
@@ -510,7 +510,7 @@ async def remove_member(
             )
         
         # Remove the member
-        response = supabase_client.table("household_members").delete().eq(
+        response = get_supabase_client().table("household_members").delete().eq(
             "household_id", str(household_id)
         ).eq("user_id", str(member_user_id)).execute()
         
@@ -562,7 +562,7 @@ async def remove_member_by_email(
     
     try:
         # Look up user by email
-        response = supabase_client.table("users").select("id").eq(
+        response = get_supabase_client().table("users").select("id").eq(
             "email", member_email.lower()
         ).eq("deleted_at", "null").execute()
         
@@ -626,7 +626,7 @@ async def transfer_ownership(
         now = datetime.utcnow()
         
         # Update current owner to member role
-        supabase_client.table("household_members").update({
+        get_supabase_client().table("household_members").update({
             "role": "member",
             "updated_at": now.isoformat(),
         }).eq("household_id", str(household_id)).eq(
@@ -634,7 +634,7 @@ async def transfer_ownership(
         ).execute()
         
         # Update new owner to owner role
-        supabase_client.table("household_members").update({
+        get_supabase_client().table("household_members").update({
             "role": "owner",
             "updated_at": now.isoformat(),
         }).eq("household_id", str(household_id)).eq(
@@ -642,7 +642,7 @@ async def transfer_ownership(
         ).execute()
         
         # Update household owner_id
-        supabase_client.table("households").update({
+        get_supabase_client().table("households").update({
             "owner_id": str(new_owner_user_id),
             "updated_at": now.isoformat(),
         }).eq("id", str(household_id)).execute()
@@ -710,7 +710,7 @@ async def update_household(
         if household_data.timezone_id is not None:
             update_dict["timezone_id"] = household_data.timezone_id
         
-        response = supabase_client.table("households").update(
+        response = get_supabase_client().table("households").update(
             update_dict
         ).eq("id", str(household_id)).execute()
         
@@ -781,7 +781,7 @@ async def delete_household(
             raise HouseholdNotFoundError(f"Household {household_id} not found")
         
         # Soft delete the household
-        supabase_client.table("households").update({
+        get_supabase_client().table("households").update({
             "deleted_at": datetime.utcnow().isoformat(),
             "updated_at": datetime.utcnow().isoformat(),
         }).eq("id", str(household_id)).execute()

@@ -26,7 +26,7 @@ from passlib.context import CryptContext
 from pydantic import EmailStr
 
 from app.models.user import User, UserCreate, UserInDB
-from app.dependencies import supabase_client
+from app.dependencies import get_supabase_client
 
 
 # Configure password hashing context using bcrypt
@@ -156,7 +156,7 @@ async def create_user(user_data: UserCreate) -> UserInDB:
     now = datetime.utcnow()
     
     try:
-        response = supabase_client.table("users").insert({
+        response = get_supabase_client().table("users").insert({
             "id": str(user_id),
             "email": user_data.email,
             "password_hash": password_hash,
@@ -211,7 +211,7 @@ async def get_user_by_email(email: str) -> Optional[UserInDB]:
         return None
     
     try:
-        response = supabase_client.table("users").select("*").eq(
+        response = get_supabase_client().table("users").select("*").eq(
             "email", email.lower()
         ).eq("deleted_at", "null").execute()
         
@@ -255,7 +255,7 @@ async def get_user_by_id(user_id: UUID) -> Optional[UserInDB]:
         return None
     
     try:
-        response = supabase_client.table("users").select("*").eq(
+        response = get_supabase_client().table("users").select("*").eq(
             "id", str(user_id)
         ).eq("deleted_at", "null").execute()
         
@@ -348,7 +348,7 @@ async def authenticate_user_google(google_id: str) -> UserInDB:
         raise InvalidCredentialsError("Google ID is required")
     
     try:
-        response = supabase_client.table("users").select("*").eq(
+        response = get_supabase_client().table("users").select("*").eq(
             "google_id", google_id
         ).eq("deleted_at", "null").execute()
         
@@ -416,7 +416,7 @@ async def create_or_get_user_google(
     try:
         # Try to find existing user by google_id
         existing_by_google_id = await get_user_by_id(UUID("00000000-0000-0000-0000-000000000000"))  # Dummy to use service
-        response = supabase_client.table("users").select("*").eq(
+        response = get_supabase_client().table("users").select("*").eq(
             "google_id", google_id
         ).eq("deleted_at", "null").execute()
         
@@ -449,7 +449,7 @@ async def create_or_get_user_google(
         user_id = uuid4()
         now = datetime.utcnow()
         
-        create_response = supabase_client.table("users").insert({
+        create_response = get_supabase_client().table("users").insert({
             "id": str(user_id),
             "email": email,
             "password_hash": None,  # No password for OAuth users
@@ -525,7 +525,7 @@ async def update_user(user_id: UUID, **fields) -> UserInDB:
     fields["updated_at"] = datetime.utcnow().isoformat()
     
     try:
-        response = supabase_client.table("users").update(fields).eq(
+        response = get_supabase_client().table("users").update(fields).eq(
             "id", str(user_id)
         ).execute()
         
@@ -575,7 +575,7 @@ async def soft_delete_user(user_id: UUID) -> None:
         raise UserNotFoundError(f"User with ID {user_id} not found")
     
     try:
-        response = supabase_client.table("users").update({
+        response = get_supabase_client().table("users").update({
             "deleted_at": datetime.utcnow().isoformat()
         }).eq("id", str(user_id)).execute()
         
