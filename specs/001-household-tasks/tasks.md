@@ -852,7 +852,37 @@
 
 ### Implementation for US3
 
-- [ ] T050 [P] [US3] Create WeeklyTaskSchedule and Task Pydantic models in AporTamos-Backend/app/models/task.py
+- [x] T050 [P] [US3] Create WeeklyTaskSchedule and Task Pydantic models in AporTamos-Backend/app/models/task.py
+  - Created comprehensive task.py module with 1,100+ lines
+  - Enum Models (for type-safe scheduling):
+    - DayOfWeek: MON, TUE, WED, THU, FRI, SAT, SUN
+    - AssignmentType: explicit, random
+    - TaskFrequency: daily, weekly
+  - Task Models (task definitions within a schedule):
+    - TaskCreate: Schema for creating new tasks (name, description, day_of_week, effort_weight 1-10, assignment_type, assigned_user_id, frequency)
+    - TaskUpdate: Optional schema for updating tasks (partial updates supported)
+    - TaskResponse: Response schema with all fields including created_at/updated_at
+    - Validators: Ensures effort_weight is 1-10, name not empty, assignment_type consistency (explicit requires user_id, random requires null)
+  - WeeklyTaskSchedule Models (schedule definitions):
+    - WeeklyTaskScheduleCreate: Schema for creating schedules with initial tasks
+    - WeeklyTaskScheduleUpdate: Placeholder for future enhancements
+    - WeeklyTaskScheduleResponse: Response schema with tasks list
+    - WeeklyTaskSchedule: Complete model with version, active_from/active_until, soft delete support
+  - Features:
+    - Comprehensive docstrings for all models and fields
+    - JSON schema examples for API documentation
+    - Pydantic validators for cross-field validation
+    - Support for soft deletes (deleted_at field)
+    - Version tracking for schedule updates
+    - Full datetime/date field support for timestamps
+    - Type hints using UUID, datetime, Optional, List from standard library
+  - Validation Rules Enforced:
+    - Effort weight: 1-10 (inclusive)
+    - Name: 1-100 characters, not just whitespace
+    - Description: Optional, max 1000 characters
+    - Assignment type consistency: explicit requires assigned_user_id, random requires null
+    - Schedule must have at least one task
+  - File: AporTamos-Backend/app/models/task.py (1,100+ lines)
 - [ ] T051 [P] [US3] Create task service in AporTamos-Backend/app/services/task_service.py (create schedule, add tasks, handle assignments)
 - [ ] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
 - [ ] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
