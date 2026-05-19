@@ -1355,19 +1355,19 @@
 
 ### Implementation for US3
 
-- [ ] T050 [P] [US3] Create WeeklyTaskSchedule and Task Pydantic models in AporTamos-Backend/app/models/task.py
-- [ ] T051 [P] [US3] Create task service in AporTamos-Backend/app/services/task_service.py (create schedule, add tasks, handle assignments)
-- [ ] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
-- [ ] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
-- [ ] T054 [P] [US3] Implement GET /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (fetch current schedule)
-- [ ] T055 [P] [US3] Implement POST /households/{id}/schedule/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (add task to schedule)
-- [ ] T056 [P] [US3] Implement PUT /households/{id}/schedule/tasks/{task_id} endpoint in AporTamos-Backend/app/routers/tasks.py (update task)
-- [ ] T057 [P] [US3] Add task assignment logic to create daily TaskAssignment records for each task
-- [ ] T058 [US3] Create ScheduleEditor component in AporTamos-Frontend/components/task/ScheduleEditor.tsx (form to create/edit weekly schedule)
-- [ ] T059 [P] [US3] Create TaskForm component in AporTamos-Frontend/components/task/TaskForm.tsx (add/edit individual tasks with effort weight and assignment type)
-- [ ] T060 [P] [US3] Create AssignmentSelector component in AporTamos-Frontend/components/task/AssignmentSelector.tsx (choose explicit user or random assignment)
-- [ ] T061 [P] [US3] Create useTasks hook in AporTamos-Frontend/hooks/useTasks.ts (fetch and manage task data)
-- [ ] T062 [US3] Create ScheduleManagement screen in AporTamos-Frontend/app/(tabs)/[householdId]/schedule.tsx (owner-only access to schedule editor)
+- [x] T050 [P] [US3] Create WeeklyTaskSchedule and Task Pydantic models in AporTamos-Backend/app/models/task.py
+- [x] T051 [P] [US3] Create task service in AporTamos-Backend/app/services/task_service.py (create schedule, add tasks, handle assignments)
+- [x] T052 [US3] Implement POST /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (create weekly schedule)
+- [x] T053 [US3] Implement PUT /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (update schedule)
+- [x] T054 [P] [US3] Implement GET /households/{id}/schedule endpoint in AporTamos-Backend/app/routers/tasks.py (fetch current schedule)
+- [x] T055 [P] [US3] Implement POST /households/{id}/schedule/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (add task to schedule)
+- [x] T056 [P] [US3] Implement PUT /households/{id}/schedule/tasks/{task_id} endpoint in AporTamos-Backend/app/routers/tasks.py (update task)
+- [x] T057 [P] [US3] Add task assignment logic to create daily TaskAssignment records for each task
+- [x] T058 [US3] Create ScheduleEditor component in AporTamos-Frontend/components/task/ScheduleEditor.tsx (form to create/edit weekly schedule)
+- [x] T059 [P] [US3] Create TaskForm component in AporTamos-Frontend/components/task/TaskForm.tsx (add/edit individual tasks with effort weight and assignment type)
+- [x] T060 [P] [US3] Create AssignmentSelector component in AporTamos-Frontend/components/task/AssignmentSelector.tsx (choose explicit user or random assignment)
+- [x] T061 [P] [US3] Create useTasks hook in AporTamos-Frontend/hooks/useTasks.ts (fetch and manage task data)
+- [x] T062 [US3] Create ScheduleManagement screen in AporTamos-Frontend/app/(tabs)/[householdId]/schedule.tsx (owner-only access to schedule editor)
 - [ ] T063 [US3] Add validation that explicit assignments have user_id and random assignments don't
 
 **Checkpoint**: User Story 3 complete - tasks can be scheduled and assigned
