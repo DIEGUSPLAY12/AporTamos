@@ -32,7 +32,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Inicio',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol size={26} name={'house.fill'} color={color} />
+          ),
         }}
       />
 
@@ -40,7 +42,9 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: 'Mis Tareas',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="checkmark.square.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol size={26} name={'checkmark.square.fill'} color={color} />
+          ),
         }}
       />
 
@@ -48,7 +52,9 @@ export default function TabLayout() {
         name="chat/index"
         options={{
           title: 'Chats',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="bubble.right.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol size={26} name={'bubble.right.fill'} color={color} />
+          ),
         }}
       />
 
@@ -56,9 +62,15 @@ export default function TabLayout() {
         name="profile/index"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="person.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol size={26} name={'person.fill'} color={color} />
+          ),
         }}
       />
+
+      {/* Rutas internas — ocultas de la tab bar */}
+      <Tabs.Screen name="[householdId]/index" options={{ href: null }} />
+      <Tabs.Screen name="[householdId]/schedule" options={{ href: null }} />
     </Tabs>
   );
 }
