@@ -71,6 +71,7 @@ export default function TabLayout() {
       {/* Rutas internas — ocultas de la tab bar */}
       <Tabs.Screen name="[householdId]/index" options={{ href: null }} />
       <Tabs.Screen name="[householdId]/schedule" options={{ href: null }} />
+      <Tabs.Screen name="[householdId]/tasks" options={{ href: null }} />
     </Tabs>
   );
 }

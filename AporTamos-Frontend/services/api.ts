@@ -314,6 +314,54 @@ export async function updateSchedule(
   return post(`/households/${householdId}/schedule`, data);
 }
 
+/**
+ * Task API Methods
+ */
+
+export interface TaskSummaryItem {
+  task_id: string;
+  assignment_id: string;
+  name: string;
+  effort_weight: number;
+  is_completed: boolean;
+  assigned_to: string;
+  assignment_date: string;
+  photo_url?: string;
+  completed_at?: string;
+}
+
+export interface TaskListResponse {
+  date: string;
+  household_id: string;
+  household_name: string;
+  daily_completion_pct: number;
+  tasks: TaskSummaryItem[];
+}
+
+export interface TaskCompletionResponse {
+  id: string;
+  assignment_id: string;
+  user_id: string;
+  photo_url: string;
+  completed_at: string;
+}
+
+export async function getUserTasks(
+  householdId: string,
+  date?: string
+): Promise<TaskListResponse> {
+  const query = date ? `?date=${date}` : '';
+  return get(`/households/${householdId}/tasks${query}`);
+}
+
+export async function getHouseholdTasks(
+  householdId: string,
+  date?: string
+): Promise<TaskListResponse> {
+  const query = date ? `?date=${date}` : '';
+  return get(`/households/${householdId}/tasks/all${query}`);
+}
+
 export default {
   get,
   post,
