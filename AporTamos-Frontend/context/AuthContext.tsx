@@ -92,8 +92,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (sessionError) {
           console.error('[AuthContext] Session error:', sessionError);
+          // Don't fail - just start with no session
           setSession(null);
           setUser(null);
+          setIsLoading(false);
           return;
         }
 
@@ -131,10 +133,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return () => {
             subscription?.unsubscribe();
           };
+        } else {
+          setSession(null);
+          setUser(null);
         }
       } catch (err) {
         console.error('[AuthContext] Initialization error:', err);
-        setError('Failed to initialize authentication');
+        // Don't set error state on initialization - just start unauthenticated
+        setSession(null);
+        setUser(null);
       } finally {
         setIsLoading(false);
       }

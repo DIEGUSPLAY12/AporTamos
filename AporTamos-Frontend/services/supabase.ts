@@ -24,11 +24,47 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 /**
+ * Custom storage implementation that gracefully handles AsyncStorage unavailability
+ * Falls back to in-memory storage if AsyncStorage native module is not available
+ */
+const createCustomStorage = () => {
+  const memoryStorage: { [key: string]: string } = {};
+  
+  return {
+    getItem: async (key: string): Promise<string | null> => {
+      try {
+        return await AsyncStorage.getItem(key);
+      } catch (error: any) {
+        console.warn(`[Storage] AsyncStorage.getItem failed, using memory fallback:`, error?.message);
+        return memoryStorage[key] || null;
+      }
+    },
+    setItem: async (key: string, value: string): Promise<void> => {
+      try {
+        await AsyncStorage.setItem(key, value);
+      } catch (error: any) {
+        console.warn(`[Storage] AsyncStorage.setItem failed, using memory fallback:`, error?.message);
+        memoryStorage[key] = value;
+      }
+    },
+    removeItem: async (key: string): Promise<void> => {
+      try {
+        await AsyncStorage.removeItem(key);
+      } catch (error: any) {
+        console.warn(`[Storage] AsyncStorage.removeItem failed, using memory fallback:`, error?.message);
+        delete memoryStorage[key];
+      }
+    },
+  };
+};
+
+const customStorage = createCustomStorage();
+
+/**
  * Supabase client singleton instance
  *
  * The client is created with:
- * - AsyncStorage for token persistence (React Native)
- * - Custom fetch options for Expo
+ * - Custom storage with AsyncStorage fallback for token persistence
  * - Automatic token refresh
  * - Real-time subscriptions enabled
  */
@@ -51,7 +87,7 @@ export function getSupabaseClient(): SupabaseClient {
 
     supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
-        storage: AsyncStorage,
+        storage: customStorage as any,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
