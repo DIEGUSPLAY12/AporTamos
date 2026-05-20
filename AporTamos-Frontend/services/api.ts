@@ -14,11 +14,13 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { 
-  HouseholdDetail, 
-  Household, 
+import type {
+  HouseholdDetail,
+  Household,
   CreateHouseholdRequest,
   InviteMemberRequest,
+  WeeklyTaskScheduleResponse,
+  CreateWeeklyTaskScheduleRequest,
 } from '@/types/models';
 
 /**
@@ -290,6 +292,28 @@ export async function removeMember(
   return del(`/households/${householdId}/members/${userId}`);
 }
 
+/**
+ * Schedule API Methods
+ */
+
+export async function getSchedule(householdId: string): Promise<WeeklyTaskScheduleResponse> {
+  return get(`/households/${householdId}/schedule`);
+}
+
+export async function createSchedule(
+  householdId: string,
+  data: CreateWeeklyTaskScheduleRequest,
+): Promise<WeeklyTaskScheduleResponse> {
+  return post(`/households/${householdId}/schedule`, data);
+}
+
+export async function updateSchedule(
+  householdId: string,
+  data: CreateWeeklyTaskScheduleRequest,
+): Promise<WeeklyTaskScheduleResponse> {
+  return post(`/households/${householdId}/schedule`, data);
+}
+
 export default {
   get,
   post,
@@ -301,4 +325,7 @@ export default {
   inviteMember,
   acceptInvitation,
   removeMember,
+  getSchedule,
+  createSchedule,
+  updateSchedule,
 };

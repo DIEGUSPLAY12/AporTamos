@@ -353,7 +353,7 @@ export interface RealtimeEvent<T = any> {
  * Utility Types
  */
 
-export type AsyncResult<T> = 
+export type AsyncResult<T> =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "success"; data: T }
@@ -364,4 +364,18 @@ export interface PageParams {
   limit?: number;
   sort?: string;
   order?: "asc" | "desc";
+}
+
+// Type aliases used by ScheduleEditor and useTasks hooks
+export type WeeklyTaskScheduleResponse = WeeklyTaskSchedule;
+export type CreateWeeklyTaskScheduleRequest = CreateScheduleRequest;
+export type TaskCreate = CreateTaskDefinition;
+export type TaskAssignmentResponse = TaskAssignmentDetail;
+
+export interface TaskListResponse {
+  date: string;
+  household_id: string;
+  household_name: string;
+  daily_completion_pct: number;
+  tasks: TaskAssignmentDetail[];
 }

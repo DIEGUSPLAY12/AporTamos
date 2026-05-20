@@ -25,11 +25,12 @@
 
 ## Frontend ⬜ (pendientes)
 
-- [ ] T062 Create ScheduleManagement screen in AporTamos-Frontend/app/(tabs)/[householdId]/schedule.tsx
-  - Accesible solo para owners desde HouseholdDetail
-  - Usa ScheduleEditor, TaskForm, AssignmentSelector
-  - GET /households/{id}/schedule para cargar datos
-  - POST/PUT /households/{id}/schedule/tasks para mutaciones
+- [x] T062 Create ScheduleManagement screen in AporTamos-Frontend/app/(tabs)/[householdId]/schedule.tsx
+  - Accesible solo para owners desde HouseholdDetail (botón "Manage Schedule")
+  - Usa ScheduleEditor con members list y schedule existente
+  - useSchedule hook conectado a GET /households/{id}/schedule
+  - api.ts extendido con getSchedule, createSchedule, updateSchedule
+  - types/models.ts extendido con WeeklyTaskScheduleResponse, TaskCreate, TaskListResponse, etc.
 
 - [ ] T063 Add validation that explicit assignments have user_id and random assignments don't
   - Validar en TaskForm antes de submit

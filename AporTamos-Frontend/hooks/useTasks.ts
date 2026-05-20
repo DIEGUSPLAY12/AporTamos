@@ -28,11 +28,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { getSchedule } from '@/services/api';
 import type {
   WeeklyTaskScheduleResponse,
   TaskAssignmentResponse,
   TaskListResponse,
-  ApiError,
 } from '@/types/models';
 
 // Cache duration in milliseconds (5 minutes)
@@ -115,16 +115,7 @@ export function useSchedule(
         setIsLoading(true);
       }
 
-      // TODO: Replace with actual API call when endpoint is available
-      // const response = await getSchedule(householdId);
-      const response: WeeklyTaskScheduleResponse = {
-        id: householdId,
-        household_id: householdId,
-        version: 1,
-        tasks: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
+      const response = await getSchedule(householdId);
 
       if (isMountedRef.current) {
         setSchedule(response);

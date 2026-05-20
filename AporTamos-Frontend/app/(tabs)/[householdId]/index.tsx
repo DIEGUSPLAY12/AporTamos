@@ -336,6 +336,15 @@ export default function HouseholdDetailScreen(): JSX.Element {
                 </Pressable>
               )}
 
+              {isOwner && (
+                <Pressable
+                  style={[styles.actionButton, styles.primaryButton]}
+                  onPress={() => router.push(`/(tabs)/${householdId}/schedule` as any)}
+                >
+                  <Text style={styles.actionButtonText}>Manage Schedule</Text>
+                </Pressable>
+              )}
+
               {isMember && !isOwner && (
                 <Pressable
                   style={[styles.actionButton, styles.destructiveButton]}
