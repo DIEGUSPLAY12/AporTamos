@@ -1,6 +1,6 @@
 # Tasks: US4 — Task Completion with Photo Proof (P1)
 
-**Status**: ⬜ PENDIENTE  
+**Status**: 🔄 EN PROGRESO — T064/T065 completados  
 **Spec**: [spec.md](spec.md) | **Plan**: [plan.md](plan.md)  
 **Requiere**: US3 completado (T050–T063)
 
@@ -8,8 +8,8 @@
 
 ## Backend
 
-- [ ] T064 [P] Create TaskAssignment and TaskCompletion Pydantic models in AporTamos-Backend/app/models/task.py
-- [ ] T065 [P] Create completion service in AporTamos-Backend/app/services/completion_service.py (handle photo upload, mark complete)
+- [x] T064 [P] Create TaskAssignment and TaskCompletion Pydantic models in AporTamos-Backend/app/models/task.py
+- [x] T065 [P] Create completion service in AporTamos-Backend/app/services/completion_service.py (handle photo upload, mark complete)
 - [ ] T066 Implement GET /users/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch user's task assignments for today)
 - [ ] T067 [P] Implement GET /households/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch all household tasks for today)
 - [ ] T068 Implement POST /tasks/{assignment_id}/complete endpoint in AporTamos-Backend/app/routers/completions.py (multipart photo upload, mark complete)

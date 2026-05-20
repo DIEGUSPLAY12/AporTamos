@@ -15,6 +15,9 @@ Models:
 - TaskUpdate: Schema for updating an existing task
 - TaskResponse: Response schema for a single task
 - WeeklyTaskSchedule: Complete weekly schedule model with all fields
+- TaskAssignmentResponse: Response schema for a daily task assignment
+- TaskCompletionCreate: Schema for completing a task (photo from multipart)
+- TaskCompletionResponse: Response schema for a task completion record
 """
 
 from datetime import datetime, date
@@ -416,3 +419,42 @@ class WeeklyTaskSchedule(BaseModel):
                 "deleted_at": None
             }
         }
+
+
+class TaskAssignmentResponse(BaseModel):
+    """Response schema for a daily task assignment record."""
+
+    id: UUID = Field(..., description="Unique assignment identifier")
+    task_id: UUID = Field(..., description="Reference to the task definition")
+    household_id: UUID = Field(..., description="Reference to the household")
+    assigned_to_user_id: UUID = Field(..., description="User assigned to complete the task")
+    assignment_date: date = Field(..., description="Date this assignment is for")
+    is_completed: bool = Field(..., description="Whether the task has been completed")
+    completed_at: Optional[datetime] = Field(None, description="Timestamp of completion")
+    task: TaskResponse = Field(..., description="Embedded task definition details")
+
+    class Config:
+        from_attributes = True
+
+
+class TaskCompletionCreate(BaseModel):
+    """Schema for creating a task completion record.
+
+    assignment_id comes from the URL path, photo from multipart body,
+    and user_id is extracted from the JWT token — no request body fields needed.
+    """
+
+    pass
+
+
+class TaskCompletionResponse(BaseModel):
+    """Response schema for a task completion record."""
+
+    id: UUID = Field(..., description="Unique completion identifier")
+    assignment_id: UUID = Field(..., description="Reference to the task assignment")
+    user_id: UUID = Field(..., description="User who completed the task")
+    photo_url: str = Field(..., description="Signed URL to the proof photo in Supabase Storage")
+    completed_at: datetime = Field(..., description="Timestamp when task was completed")
+
+    class Config:
+        from_attributes = True
