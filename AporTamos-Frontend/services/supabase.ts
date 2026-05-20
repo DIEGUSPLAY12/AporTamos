@@ -61,6 +61,41 @@ const createCustomStorage = () => {
 const customStorage = createCustomStorage();
 
 /**
+ * Mock/Demo user for development without database
+ * Allows login with any email and password
+ */
+let mockSession: any = null;
+let mockUser: any = null;
+
+/**
+ * Create a mock session and user
+ */
+function createMockSession(email: string) {
+  const mockId = Math.random().toString(36).substring(2, 15);
+  const mockToken = `mock_token_${mockId}`;
+  
+  mockUser = {
+    id: mockId,
+    email,
+    user_metadata: {
+      name: email.split('@')[0],
+    },
+    created_at: new Date().toISOString(),
+  };
+
+  mockSession = {
+    user: mockUser,
+    access_token: mockToken,
+    refresh_token: mockToken,
+    expires_in: 3600,
+    expires_at: Date.now() + 3600000,
+    token_type: 'Bearer',
+  };
+
+  return mockSession;
+}
+
+/**
  * Supabase client singleton instance
  *
  * The client is created with:
@@ -154,16 +189,16 @@ function setupAuthStateListener(): void {
 /**
  * Register a new user with email and password
  *
+ * ⚠️  DEMO MODE: Accepts any email and password without database validation
+ *
  * @param {string} email - User email
- * @param {string} password - User password
+ * @param {string} password - User password (any value accepted)
  * @param {string} name - User display name
  *
  * @returns {Promise<{user, session} | {error}>}
  *
  * @example
- * const { user, error } = await supabaseAuth.signUp("user@example.com", "password123", "John");
- * if (error) console.error(error);
- * else console.log("User created:", user);
+ * const { user, error } = await signUp("user@example.com", "anypassword", "John");
  */
 export async function signUp(
   email: string,
@@ -175,26 +210,11 @@ export async function signUp(
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    // Sign up with Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-        },
-      },
-    });
-
-    if (error) {
-      console.error("[Auth] Sign up failed:", error.message);
-      return { error };
-    }
-
-    console.log("[Auth] Sign up successful", { email });
-    return { user: data.user, session: data.session };
+    // Demo mode: Accept any email and password
+    const session = createMockSession(email);
+    
+    console.log("[Auth] Sign up successful (DEMO MODE)", { email });
+    return { user: session.user, session };
   } catch (err) {
     console.error("[Auth] Sign up exception:", err);
     return { error: err as Error };
@@ -204,15 +224,15 @@ export async function signUp(
 /**
  * Login with email and password
  *
+ * ⚠️  DEMO MODE: Accepts any email and password without database validation
+ *
  * @param {string} email - User email
- * @param {string} password - User password
+ * @param {string} password - User password (any value accepted)
  *
  * @returns {Promise<{user, session} | {error}>}
  *
  * @example
- * const { user, session, error } = await supabaseAuth.signIn("user@example.com", "password123");
- * if (error) console.error(error);
- * else console.log("Logged in:", user.email);
+ * const { user, session, error } = await signIn("user@example.com", "anypassword");
  */
 export async function signIn(
   email: string,
@@ -223,20 +243,11 @@ export async function signIn(
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      console.error("[Auth] Sign in failed:", error.message);
-      return { error };
-    }
-
-    console.log("[Auth] Sign in successful", { email });
-    return { user: data.user, session: data.session };
+    // Demo mode: Accept any email and password
+    const session = createMockSession(email);
+    
+    console.log("[Auth] Sign in successful (DEMO MODE)", { email });
+    return { user: session.user, session };
   } catch (err) {
     console.error("[Auth] Sign in exception:", err);
     return { error: err as Error };
@@ -246,12 +257,14 @@ export async function signIn(
 /**
  * Login with Google OAuth
  *
- * @param {string} googleToken - ID token from Google Sign-In
+ * ⚠️  DEMO MODE: Creates mock session with mock email
+ *
+ * @param {string} googleToken - ID token from Google Sign-In (not validated in demo mode)
  *
  * @returns {Promise<{user, session} | {error}>}
  *
  * @example
- * const { user, session, error } = await supabaseAuth.signInWithGoogle(googleToken);
+ * const { user, session, error } = await signInWithGoogle(googleToken);
  */
 export async function signInWithGoogle(
   googleToken: string
@@ -261,20 +274,12 @@ export async function signInWithGoogle(
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    const { data, error } = await supabase.auth.signInWithIdToken({
-      provider: "google",
-      token: googleToken,
-    });
-
-    if (error) {
-      console.error("[Auth] Google sign in failed:", error.message);
-      return { error };
-    }
-
-    console.log("[Auth] Google sign in successful");
-    return { user: data.user, session: data.session };
+    // Demo mode: Create mock session with fake email
+    const mockEmail = `google-${Math.random().toString(36).substring(7)}@google.com`;
+    const session = createMockSession(mockEmail);
+    
+    console.log("[Auth] Google sign in successful (DEMO MODE)");
+    return { user: session.user, session };
   } catch (err) {
     console.error("[Auth] Google sign in exception:", err);
     return { error: err as Error };
@@ -287,24 +292,17 @@ export async function signInWithGoogle(
  * @returns {Promise<{error: Error | null}>}
  *
  * @example
- * const { error } = await supabaseAuth.signOut();
- * if (error) console.error(error);
- * else console.log("Logged out");
+ * const { error } = await signOut();
  */
 export async function signOut(): Promise<{
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("[Auth] Sign out failed:", error.message);
-      return { error };
-    }
-
-    console.log("[Auth] Sign out successful");
+    // Demo mode: Clear mock session
+    mockSession = null;
+    mockUser = null;
+    
+    console.log("[Auth] Sign out successful (DEMO MODE)");
     return {};
   } catch (err) {
     console.error("[Auth] Sign out exception:", err);
@@ -315,30 +313,25 @@ export async function signOut(): Promise<{
 /**
  * Get the current session
  *
+ * ⚠️  DEMO MODE: Returns mock session if available
+ *
  * @returns {Promise<{session} | {error}>}
  *
  * @example
- * const { session, error } = await supabaseAuth.getSession();
- * if (session) console.log("User:", session.user.email);
+ * const { session, error } = await getSession();
  */
 export async function getSession(): Promise<{
   session?: any;
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-
-    if (error) {
-      console.error("[Auth] Get session failed:", error.message);
-      return { error };
+    // Demo mode: Return mock session if available
+    if (mockSession) {
+      console.log("[Auth] Returning mock session");
+      return { session: mockSession };
     }
-
-    return { session };
+    
+    return { session: null };
   } catch (err) {
     console.error("[Auth] Get session exception:", err);
     return { error: err as Error };
@@ -348,30 +341,25 @@ export async function getSession(): Promise<{
 /**
  * Get the current user
  *
+ * ⚠️  DEMO MODE: Returns mock user if available
+ *
  * @returns {Promise<{user} | {error}>}
  *
  * @example
- * const { user, error } = await supabaseAuth.getUser();
- * if (user) console.log("Logged in as:", user.email);
+ * const { user, error } = await getUser();
  */
 export async function getUser(): Promise<{
   user?: any;
   error?: Error;
 }> {
   try {
-    const supabase = getSupabaseClient();
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error) {
-      console.error("[Auth] Get user failed:", error.message);
-      return { error };
+    // Demo mode: Return mock user if available
+    if (mockUser) {
+      console.log("[Auth] Returning mock user");
+      return { user: mockUser };
     }
-
-    return { user };
+    
+    return { user: null };
   } catch (err) {
     console.error("[Auth] Get user exception:", err);
     return { error: err as Error };
