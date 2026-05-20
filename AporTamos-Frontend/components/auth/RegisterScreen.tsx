@@ -218,7 +218,7 @@ export default function RegisterScreen() {
       }
 
       // Attempt registration
-      await register(name, email, password);
+      await register(email, password, name);
       // Navigation handled by auth context and root layout
     } catch (err) {
       // Error displayed from hook

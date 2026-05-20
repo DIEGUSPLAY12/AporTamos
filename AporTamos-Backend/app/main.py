@@ -324,6 +324,21 @@ async def database_exception_handler(request: Request, exc: DatabaseException):
     )
 
 
+def _make_errors_serializable(errors: list) -> list:
+    result = []
+    for error in errors:
+        safe = {}
+        for k, v in error.items():
+            if k == "ctx" and isinstance(v, dict):
+                safe[k] = {ck: str(cv) for ck, cv in v.items()}
+            elif isinstance(v, (str, int, float, bool, list, dict, type(None))):
+                safe[k] = v
+            else:
+                safe[k] = str(v)
+        result.append(safe)
+    return result
+
+
 async def validation_error_handler(request: Request, exc: RequestValidationError):
     """Handle FastAPI validation errors."""
     log_warning(
@@ -333,14 +348,14 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
             "errors_count": len(exc.errors()),
         },
     )
-    
+
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
             "error": {
                 "code": "VALIDATION_ERROR",
                 "message": "Invalid request data",
-                "details": exc.errors(),
+                "details": _make_errors_serializable(exc.errors()),
                 "timestamp": datetime.utcnow().isoformat(),
             }
         },

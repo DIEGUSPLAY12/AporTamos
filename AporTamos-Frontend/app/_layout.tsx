@@ -22,7 +22,6 @@ import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { getSupabaseClient } from '@/services/supabase';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { HouseholdProvider } from '@/context/HouseholdContext';
 
