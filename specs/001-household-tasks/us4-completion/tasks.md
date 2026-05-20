@@ -18,8 +18,8 @@
 
 ## Frontend
 
-- [ ] T071 [P] Create TaskListItem component in AporTamos-Frontend/components/task/TaskListItem.tsx (task name, effort weight, status)
-- [ ] T072 [P] Create TaskDetail component in AporTamos-Frontend/components/task/TaskDetail.tsx (full task info, "Mark Complete" button)
+- [x] T071 [P] Create TaskListItem component in AporTamos-Frontend/components/task/TaskListItem.tsx (task name, effort weight, status)
+- [x] T072 [P] Create TaskDetail component in AporTamos-Frontend/components/task/TaskDetail.tsx (full task info, "Mark Complete" button)
 - [ ] T073 Create PhotoUpload component in AporTamos-Frontend/components/task/PhotoUpload.tsx (camera or gallery picker, preview, upload)
 - [ ] T074 [P] Implement image compression in AporTamos-Frontend/services/storage.ts (JPEG, 80% quality, max 5MB)
 - [ ] T075 [P] Create CompletionStatus component in AporTamos-Frontend/components/task/CompletionStatus.tsx (pending/completed indicator, proof photo viewer)
