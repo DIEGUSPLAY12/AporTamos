@@ -1,0 +1,40 @@
+# Tasks: US4 — Task Completion with Photo Proof (P1)
+
+**Status**: ⬜ PENDIENTE  
+**Spec**: [spec.md](spec.md) | **Plan**: [plan.md](plan.md)  
+**Requiere**: US3 completado (T050–T063)
+
+---
+
+## Backend
+
+- [ ] T064 [P] Create TaskAssignment and TaskCompletion Pydantic models in AporTamos-Backend/app/models/task.py
+- [ ] T065 [P] Create completion service in AporTamos-Backend/app/services/completion_service.py (handle photo upload, mark complete)
+- [ ] T066 Implement GET /users/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch user's task assignments for today)
+- [ ] T067 [P] Implement GET /households/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch all household tasks for today)
+- [ ] T068 Implement POST /tasks/{assignment_id}/complete endpoint in AporTamos-Backend/app/routers/completions.py (multipart photo upload, mark complete)
+- [ ] T069 [P] Add photo validation (max 5MB, JPEG compression to 80% quality) before storage
+- [ ] T070 [P] Upload photos to Supabase Storage bucket task-proofs with path: /{household_id}/{task_id}/{assignment_id}.jpg
+
+## Frontend
+
+- [ ] T071 [P] Create TaskListItem component in AporTamos-Frontend/components/task/TaskListItem.tsx (task name, effort weight, status)
+- [ ] T072 [P] Create TaskDetail component in AporTamos-Frontend/components/task/TaskDetail.tsx (full task info, "Mark Complete" button)
+- [ ] T073 Create PhotoUpload component in AporTamos-Frontend/components/task/PhotoUpload.tsx (camera or gallery picker, preview, upload)
+- [ ] T074 [P] Implement image compression in AporTamos-Frontend/services/storage.ts (JPEG, 80% quality, max 5MB)
+- [ ] T075 [P] Create CompletionStatus component in AporTamos-Frontend/components/task/CompletionStatus.tsx (pending/completed indicator, proof photo viewer)
+- [ ] T076 Create MyTasks screen in AporTamos-Frontend/app/(tabs)/[householdId]/tasks.tsx (pending and completed tasks)
+- [ ] T077 [P] Implement offline queue for photo uploads in AporTamos-Frontend/services/offlineQueue.ts (retry on reconnection)
+- [ ] T078 Add error handling for photo upload failures (network error, size validation, storage errors)
+
+**Checkpoint**: ⬜ US4 pendiente — MVP core loop completo al terminar esta fase
+
+---
+
+## Acceptance Scenarios Verification
+
+- [ ] User sees assigned tasks in "My Tasks"
+- [ ] User can click task to view details
+- [ ] User can upload photo as proof
+- [ ] Task marked complete after photo upload
+- [ ] Completed tasks appear separately from pending
