@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Household Hero - Casa Madrid</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1b1b23",
+                        "secondary": "#9d4300",
+                        "inverse-primary": "#c0c1ff",
+                        "on-tertiary-container": "#fffbff",
+                        "inverse-surface": "#303038",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-surface-variant": "#464554",
+                        "surface-tint": "#494bd6",
+                        "on-secondary": "#ffffff",
+                        "background": "#fcf8ff",
+                        "tertiary-container": "#b55d00",
+                        "surface-container-low": "#f5f2fe",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fcf8ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "inverse-on-surface": "#f2effb",
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-high": "#e9e6f3",
+                        "on-primary-container": "#fffbff",
+                        "primary-fixed": "#e1e0ff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "outline": "#767586",
+                        "surface-container-highest": "#e4e1ed",
+                        "surface-container": "#efecf8",
+                        "surface": "#fcf8ff",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#904900",
+                        "primary": "#4648d4",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c4d7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e4e1ed",
+                        "on-secondary-container": "#5c2400",
+                        "surface-dim": "#dbd8e4",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "secondary-fixed": "#ffdbca",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-surface": "#1b1b23",
+                        "primary-container": "#6063ee",
+                        "secondary-container": "#fd761a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-margin": "20px",
+                        "grid-columns": "4",
+                        "inline-gap": "12px",
+                        "stack-gap": "16px",
+                        "section-padding": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "display-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md pb-[100px] md:pb-0 relative overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#F8FAFC] dark:bg-slate-950 docked full-width top-0 z-50 flex justify-between items-center w-full px-5 py-4 none flat no shadows">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden shrink-0">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="close up portrait of a young woman with natural makeup smiling softly outdoors in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX3LgMEeBidcR4cilfRXANmUADK6E3ryRe8hjzy6TpaFV2lV1BHzg9EyCPdoPlcSEbxnDmWLSfoGF4XAaGsUF8o-509qj_-opoyXwU-WLh2qPmB5xLXlHK6yIIz2V_TVDClJz4AQVqjhfa1CS_yxAIXWv_UF3HASRK6tcQqwZxHXLdf24URG9oYrbJzHDvNIlDdSU-4xe6jhGb5kFvBukwF-S_1xz4KdatGMpuZkyf5ScnaWbN9NQS6wxZmdbWDynzrn9L5C5CpmOL"/>
+</div>
+<span class="font-['Plus_Jakarta_Sans'] text-lg font-bold text-xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-400">Household Hero</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full tap-highlight-transparent active:opacity-70">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="max-w-2xl mx-auto md:pt-6">
+<!-- Header Section -->
+<section class="px-container-margin py-stack-gap flex flex-col gap-inline-gap mt-4">
+<h1 class="font-display-xl text-display-xl text-on-background">Casa Madrid</h1>
+<!-- Gamification: Streak Tracker -->
+<div class="bg-gradient-to-r from-secondary-container to-tertiary-container rounded-lg px-5 py-3 w-max shadow-[0px_10px_30px_rgba(253,118,26,0.15)] flex items-center gap-2">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-headline-md text-headline-md text-on-primary text-[16px]">Racha Diaria: 5 días 🔥</span>
+</div>
+</section>
+<!-- Members & Invite Section -->
+<section class="mx-container-margin my-stack-gap bg-surface-container-low rounded-lg p-5 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant flex flex-col md:flex-row md:items-center justify-between gap-stack-gap">
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Miembros de la Casa</h2>
+<div class="flex -space-x-3 mt-1">
+<img alt="Member" class="w-12 h-12 rounded-full border-2 border-surface-container-low object-cover z-30 shadow-sm" data-alt="close up portrait of a young woman with natural makeup smiling softly outdoors in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUrahE9lWsgwi0NQIuVjaH-BePhD8Q9SB09W2k71ciV_7AB3bw9ijkGNwMXyTZ9BBYO0kKcprRYMUwAN7cyv1BGA9SiC2ju0kBJoH6p4NdQ8fOiuQqZRAymbsx6feaHDmy4JUGSF7hIiQaULtjfD7CHqe_NnfPsTX88hvGJ-Ik5n9kydQe7manc6m-6F8k_xjwYb503t1PH60QqzoG3KGB6LY11ZiuC4oDbld4Pwoapkskxt_JV6Wi5BkZFC_qb7tapVDnS_Y-NErv"/>
+<img alt="Member" class="w-12 h-12 rounded-full border-2 border-surface-container-low object-cover z-20 shadow-sm" data-alt="portrait of a young man with short dark hair looking slightly off camera in a bright studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPe-IUo_c0GObtTsFnxtux9EyPGcajd2of2wsKWQv64YeCfPyGPtS-JiNmvt6akGJxbZbgFdw6USzW43KCj2ZUJ2KPMnQKkqmH-tJdrXw2oUOtP7rhvmE5pvdSNa8xH0_eON4Gn4ukUNfnZN1W9Al6LgUAD3_f9sxkWtrwlgVPxPPKUidBG-gTEue7QGt4OqyG4zwt5UZ6de9kSSfSIOjs9PUo51sd6727s5G838E14KuEycCLZBvncEIH6fod8YSsu3LJBn665YNj"/>
+<img alt="Member" class="w-12 h-12 rounded-full border-2 border-surface-container-low object-cover z-10 shadow-sm" data-alt="smiling woman with long brown hair looking directly at camera against a blurred natural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvr4wsX6s2uKqg5WJYc-XxAOO2MyhhzEJoAbqoqa81L1Mf6jCwLi-IY38YV6bxi-Po6Y06yrCOoCbCYlvzRT05tl63JB3bwDHvI4h-jJc2vxEQPvXImebk4uaTiLXxNiUdP6xVaVSp_0Uyo4QopSHindIMeXTtNyKAsdBaVKxVaBwmjQRTJbC3nqY8f3fPru8K6E3nDbEMGr1mtdRPHp4pUn9yKQm8pPyWe5OVpd-8_9inssyJRSGJNb7-ic-iHZruDYUJjJVhK-4S"/>
+<div class="w-12 h-12 rounded-full border-2 border-surface-container-low bg-surface-variant flex items-center justify-center z-0">
+<span class="font-label-bold text-label-bold text-on-surface-variant">+2</span>
+</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary font-label-bold text-label-bold rounded-full py-4 px-6 flex items-center justify-center gap-2 shadow-[0px_15px_35px_rgba(70,72,212,0.25)] hover:bg-primary-container transition-colors shrink-0 w-full md:w-auto">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                Invitar Miembros
+            </button>
+</section><section class="px-container-margin py-stack-gap flex flex-col gap-3">
+<button class="bg-primary text-on-primary font-label-bold text-label-bold rounded-lg py-4 px-6 flex items-center justify-center gap-2 shadow-[0px_10px_30px_rgba(70,72,212,0.2)] hover:bg-primary-container transition-colors w-full">
+<span class="material-symbols-outlined text-[20px]">add</span>
+        Añadir Nueva Tarea
+    </button>
+<button class="text-primary font-label-bold text-label-bold py-2 flex items-center justify-center gap-2 hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[20px]">history_edu</span>
+        Gestionar Rutinas
+    </button>
+</section>
+<!-- Tabs -->
+<section class="px-container-margin mt-section-padding border-b border-surface-variant">
+<div class="flex gap-inline-gap">
+<button class="font-label-bold text-label-bold text-primary border-b-2 border-primary pb-3 px-2 flex items-center gap-2">
+                    Mis Tareas de Hoy
+                </button>
+<button class="font-label-bold text-label-bold text-outline pb-3 px-2 hover:text-on-surface transition-colors">
+                    Progreso del Hogar
+                </button>
+</div>
+</section>
+<!-- Tasks List -->
+<section class="px-container-margin py-stack-gap flex flex-col gap-stack-gap">
+<!-- Task Card 1 -->
+<div class="bg-surface rounded-lg p-5 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant flex items-center gap-4 group hover:border-primary-fixed transition-colors">
+<!-- The "Big Check" -->
+<button class="w-8 h-8 rounded-full border-[3px] border-outline-variant flex items-center justify-center shrink-0 transition-colors group-hover:border-primary bg-surface-container-lowest">
+<span class="material-symbols-outlined text-transparent text-[16px]">check</span>
+</button>
+<div class="flex-1 flex flex-col gap-1">
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold leading-tight">Sacar el reciclaje y la basura</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                        Antes de las 20:00
+                    </p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<img alt="Assigned to" class="w-7 h-7 rounded-full object-cover shadow-sm" data-alt="close up portrait of a young woman with natural makeup smiling softly outdoors in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEqor3RBvFhAcKM3IG29o6mNZqaqUTcX0dKxIwglBJ7qskliKmrHOzOkBbzxlqigs7UfPgzcTSc2quH59r4vmJzy0nc1LPqrFBOHidfH20NxOqAAgPRIPi7G1ErPnddfAKsP6cwnbQq40uQQZfJcUsfZ5H-rMKKhJeSOVZtC7GqoRFemsMHRSMCinuz7aSbHJeCo4hGtg9bd-mwn5m35fqUB5w-JvgQtXlG5jBBphkmEKueKrkwLLMbqUA2XRNosgBy_vg6i0cElr4"/>
+<div class="flex items-center gap-1 bg-secondary-fixed text-secondary-container px-2 py-0.5 rounded-full">
+<span class="font-label-bold text-label-bold text-[11px]">+15</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="bg-surface rounded-lg p-5 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant flex items-center gap-4 group hover:border-primary-fixed transition-colors">
+<button class="w-8 h-8 rounded-full border-[3px] border-outline-variant flex items-center justify-center shrink-0 transition-colors group-hover:border-primary bg-surface-container-lowest">
+<span class="material-symbols-outlined text-transparent text-[16px]">check</span>
+</button>
+<div class="flex-1 flex flex-col gap-1">
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold leading-tight">Limpiar encimeras de cocina</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">room</span>
+                        Cocina
+                    </p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<img alt="Assigned to" class="w-7 h-7 rounded-full object-cover shadow-sm" data-alt="close up portrait of a young woman with natural makeup smiling softly outdoors in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzIXXJ_QHc2jgke3o5yIWMiNBHoATlmEJctvK3ReTobeBz6E7qH8CyhqNdhNpC4tvUUi6BfYa5b61X-ESbIfLJQ3JMoM0wJ41j1gxeR0Go3dEsLfUILIeiT99Dnev1XkOkAf2j639si-MNpDUroIOCCvGWiU1SImcfsFT_TMFuWhiJ4nOR2z07tf3nIAIQhjzmZ_nJQnd_H3SfAYr3tQWUIrfzOkIbo0FHlQ-lBH1MPbwtRxT2G9HYjIA4n90kr3gRsvLSyMq2RGqP"/>
+<div class="flex items-center gap-1 bg-secondary-fixed text-secondary-container px-2 py-0.5 rounded-full">
+<span class="font-label-bold text-label-bold text-[11px]">+10</span>
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+</div>
+<!-- Task Card 3 (Completed Example) -->
+<div class="bg-surface-container-low rounded-lg p-5 shadow-[0px_10px_30px_rgba(0,0,0,0.02)] border border-surface-variant flex items-center gap-4 opacity-70">
+<button class="w-8 h-8 rounded-full border-0 bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[18px]">check</span>
+</button>
+<div class="flex-1 flex flex-col gap-1 line-through decoration-outline">
+<h3 class="font-body-lg text-body-lg text-outline font-semibold leading-tight">Dar de comer al perro</h3>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-label-sm text-label-sm text-outline">Completado</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md fixed bottom-0 w-full z-50 border-t border-slate-100 dark:border-slate-800 shadow-[0px_-10px_30px_rgba(0,0,0,0.04)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 md:hidden">
+<!-- Active Nav Item -->
+<button class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 transition-all duration-300 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold text-indigo-600 font-bold mt-1">Inicio</span>
+</button>
+<!-- Inactive Nav Item 1 -->
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 px-4 py-2 rounded-lg">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold mt-1">Mis Tareas</span>
+</button>
+<!-- Inactive Nav Item 2 -->
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 px-4 py-2 rounded-lg"><span class="material-symbols-outlined">person</span><span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold mt-1">Perfil</span></button>
+</nav>
+</body></html>
