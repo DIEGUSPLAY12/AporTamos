@@ -28,7 +28,6 @@ from app.models.task import (
     WeeklyTaskSchedule,
     WeeklyTaskScheduleCreate,
     WeeklyTaskScheduleResponse,
-    Task,
     TaskCreate,
     TaskUpdate,
     TaskResponse,

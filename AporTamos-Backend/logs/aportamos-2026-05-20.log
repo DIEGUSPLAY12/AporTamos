@@ -1,0 +1,400 @@
+2026-05-20 13:04:06,341 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:04:06,341 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:09:10,716 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:09:12,007 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:09:12,007 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:09:26,988 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:09:27,993 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:09:27,993 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:09:37,519 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:09:38,502 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:09:38,502 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:09:41,796 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:09:42,798 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:09:42,799 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:09:56,770 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:10:04,521 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:10:04,522 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:10:38,137 - aportamos - ERROR - [config.py:229] - Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+2026-05-20 13:10:38,140 - aportamos - ERROR - [config.py:229] - Registration failed: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 214, in get_user_by_email
+    response = get_supabase_client().table("users").select("*").eq(
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 80, in get_supabase_client
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to initialize Supabase client: Invalid API key
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 146, in create_user
+    existing_user = await get_user_by_email(user_data.email)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 235, in get_user_by_email
+    raise AuthenticationError(f"Failed to retrieve user: {str(e)}")
+app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+2026-05-20 13:11:06,633 - aportamos - ERROR - [config.py:229] - Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+2026-05-20 13:11:06,635 - aportamos - ERROR - [config.py:229] - Registration failed: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 214, in get_user_by_email
+    response = get_supabase_client().table("users").select("*").eq(
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 80, in get_supabase_client
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to initialize Supabase client: Invalid API key
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 146, in create_user
+    existing_user = await get_user_by_email(user_data.email)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 235, in get_user_by_email
+    raise AuthenticationError(f"Failed to retrieve user: {str(e)}")
+app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+2026-05-20 13:11:34,275 - aportamos - ERROR - [config.py:229] - Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+2026-05-20 13:11:34,276 - aportamos - ERROR - [config.py:229] - Registration failed: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 214, in get_user_by_email
+    response = get_supabase_client().table("users").select("*").eq(
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 80, in get_supabase_client
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to initialize Supabase client: Invalid API key
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 146, in create_user
+    existing_user = await get_user_by_email(user_data.email)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 235, in get_user_by_email
+    raise AuthenticationError(f"Failed to retrieve user: {str(e)}")
+app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+2026-05-20 13:11:46,939 - aportamos - ERROR - [config.py:229] - Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+2026-05-20 13:11:46,940 - aportamos - ERROR - [config.py:229] - Registration failed: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 73, in get_supabase_client
+    _supabase_client = create_client(
+        supabase_url=settings.supabase_url,
+        supabase_key=key
+    )
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 332, in create_client
+    return SyncClient.create(
+           ~~~~~~~~~~~~~~~~~^
+        supabase_url=supabase_url, supabase_key=supabase_key, options=options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 102, in create
+    client = cls(supabase_url, supabase_key, options)
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\supabase\_sync\client.py", line 64, in __init__
+    raise SupabaseException("Invalid API key")
+supabase._sync.client.SupabaseException: Invalid API key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 214, in get_user_by_email
+    response = get_supabase_client().table("users").select("*").eq(
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 80, in get_supabase_client
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to initialize Supabase client: Invalid API key
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 146, in create_user
+    existing_user = await get_user_by_email(user_data.email)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 235, in get_user_by_email
+    raise AuthenticationError(f"Failed to retrieve user: {str(e)}")
+app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed to initialize Supabase client: Invalid API key
+2026-05-20 13:13:12,125 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:15:34,900 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:15:34,901 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:15:48,423 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-20 13:15:49,355 - aportamos - ERROR - [config.py:229] - Registration failed: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt'): bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 152, in create_user
+    password_hash = hash_password(user_data.password)
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 79, in hash_password
+    return pwd_context.hash(password)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\context.py", line 2258, in hash
+    return record.hash(secret, **kwds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 779, in hash
+    self.checksum = self._calc_checksum(secret)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\handlers\bcrypt.py", line 591, in _calc_checksum
+    self._stub_requires_backend()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2254, in _stub_requires_backend
+    cls.set_backend()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2156, in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2176, in set_backend
+    raise default_error
+passlib.exc.MissingBackendError: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2026-05-20 13:17:20,845 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:17:25,468 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:17:25,468 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:17:48,767 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-20 13:17:49,319 - aportamos - ERROR - [config.py:229] - Registration failed: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt'): bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 152, in create_user
+    password_hash = hash_password(user_data.password)
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 79, in hash_password
+    return pwd_context.hash(password)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\context.py", line 2258, in hash
+    return record.hash(secret, **kwds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 779, in hash
+    self.checksum = self._calc_checksum(secret)
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\handlers\bcrypt.py", line 591, in _calc_checksum
+    self._stub_requires_backend()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2254, in _stub_requires_backend
+    cls.set_backend()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2156, in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sades\AppData\Local\Programs\Python\Python314\Lib\site-packages\passlib\utils\handlers.py", line 2176, in set_backend
+    raise default_error
+passlib.exc.MissingBackendError: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2026-05-20 13:18:10,545 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:22:43,489 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:22:43,489 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:23:16,053 - aportamos - ERROR - [config.py:229] - Failed to initialize Supabase client: No module named 'websockets.asyncio'
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 68, in get_supabase_client
+    from supabase import create_client
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\supabase\__init__.py", line 13, in <module>
+    from realtime import AuthorizationError, NotConnectedError
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\realtime\__init__.py", line 9, in <module>
+    from ._async.client import AsyncRealtimeClient
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\realtime\_async\client.py", line 14, in <module>
+    from websockets.asyncio.client import ClientConnection
+ModuleNotFoundError: No module named 'websockets.asyncio'
+2026-05-20 13:23:16,055 - aportamos - ERROR - [config.py:229] - Registration failed: Failed to retrieve user: Failed to initialize Supabase client: No module named 'websockets.asyncio': Failed to retrieve user: Failed to initialize Supabase client: No module named 'websockets.asyncio'
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 68, in get_supabase_client
+    from supabase import create_client
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\supabase\__init__.py", line 13, in <module>
+    from realtime import AuthorizationError, NotConnectedError
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\realtime\__init__.py", line 9, in <module>
+    from ._async.client import AsyncRealtimeClient
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\realtime\_async\client.py", line 14, in <module>
+    from websockets.asyncio.client import ClientConnection
+ModuleNotFoundError: No module named 'websockets.asyncio'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 209, in get_user_by_email
+    response = get_supabase_client().table("users").select("*").eq(
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\dependencies.py", line 80, in get_supabase_client
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to initialize Supabase client: No module named 'websockets.asyncio'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\auth.py", line 98, in register
+    created_user = await create_user(user_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 141, in create_user
+    existing_user = await get_user_by_email(user_data.email)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\auth_service.py", line 230, in get_user_by_email
+    raise AuthenticationError(f"Failed to retrieve user: {str(e)}")
+app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed to initialize Supabase client: No module named 'websockets.asyncio'
+2026-05-20 13:23:46,072 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:23:47,111 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:23:47,111 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:24:04,495 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:24:05,794 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:24:05,794 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:24:05,942 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:24:06,836 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:24:06,836 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:24:06,987 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:24:07,886 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:24:07,886 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:24:13,008 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:24:20,618 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:24:20,618 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:24:49,869 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-20 13:24:50,952 - aportamos - INFO - [config.py:236] - User registered successfully: hugo@example.com

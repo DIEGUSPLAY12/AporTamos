@@ -22,15 +22,11 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID, uuid4
 
-from passlib.context import CryptContext
+import bcrypt
 from pydantic import EmailStr
 
 from app.models.user import User, UserCreate, UserInDB
 from app.dependencies import get_supabase_client
-
-
-# Configure password hashing context using bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 logger = logging.getLogger(__name__)
 
@@ -74,9 +70,9 @@ def hash_password(password: str) -> str:
     """
     if not password:
         raise ValueError("Password cannot be empty")
-    
+
     try:
-        return pwd_context.hash(password)
+        return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
     except Exception as e:
         logger.error(f"Error hashing password: {str(e)}")
         raise
@@ -104,12 +100,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     if not plain_password or not hashed_password:
         raise ValueError("Both password and hash cannot be empty")
-    
+
     try:
-        return pwd_context.verify(plain_password, hashed_password)
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
     except Exception as e:
         logger.error(f"Error verifying password: {str(e)}")
-        # Return False on verification error (invalid hash format, etc.)
         return False
 
 
@@ -213,7 +208,7 @@ async def get_user_by_email(email: str) -> Optional[UserInDB]:
     try:
         response = get_supabase_client().table("users").select("*").eq(
             "email", email.lower()
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if not response.data or len(response.data) == 0:
             return None
@@ -257,7 +252,7 @@ async def get_user_by_id(user_id: UUID) -> Optional[UserInDB]:
     try:
         response = get_supabase_client().table("users").select("*").eq(
             "id", str(user_id)
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if not response.data or len(response.data) == 0:
             return None
@@ -350,7 +345,7 @@ async def authenticate_user_google(google_id: str) -> UserInDB:
     try:
         response = get_supabase_client().table("users").select("*").eq(
             "google_id", google_id
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if not response.data or len(response.data) == 0:
             raise UserNotFoundError(f"User with Google ID {google_id} not found")
@@ -418,7 +413,7 @@ async def create_or_get_user_google(
         existing_by_google_id = await get_user_by_id(UUID("00000000-0000-0000-0000-000000000000"))  # Dummy to use service
         response = get_supabase_client().table("users").select("*").eq(
             "google_id", google_id
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if response.data and len(response.data) > 0:
             # User exists via Google ID

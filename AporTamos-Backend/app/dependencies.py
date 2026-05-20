@@ -68,9 +68,11 @@ def get_supabase_client() -> "Client":
             from supabase import create_client
             
             log_debug("Initializing Supabase client", extra={"url": settings.supabase_url[:20]})
+            # Use service role key to bypass RLS — the backend enforces auth itself via JWT
+            key = settings.supabase_service_role_key or settings.supabase_key
             _supabase_client = create_client(
                 supabase_url=settings.supabase_url,
-                supabase_key=settings.supabase_key
+                supabase_key=key
             )
             log_info("Supabase client initialized successfully", extra={})
         except Exception as exc:

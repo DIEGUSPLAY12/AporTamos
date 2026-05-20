@@ -25,33 +25,24 @@ from app.services.auth_service import (
     InvalidCredentialsError,
     UserNotFoundError,
 )
-from app.dependencies import get_supabase_client
-from app.config import log_info, log_warning, log_error, ValidationException, ConflictException
+from app.dependencies import get_supabase_client, create_access_token
+from app.config import log_info, log_warning, log_error, ValidationException, ConflictException, settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 logger = logging.getLogger(__name__)
 
 
 def _create_token_response(user_id: str, user_email: str, user_name: str) -> Dict[str, Any]:
-    """Create a JWT-like token response for API responses.
-    
-    Note: In a production system, this would generate real JWT tokens signed with a secret key.
-    For now, we return a placeholder that integrates with Supabase Auth.
-    
-    Args:
-        user_id: The user's UUID
-        user_email: The user's email
-        user_name: The user's name
-        
-    Returns:
-        Dict with access_token, token_type, expires_in, and user info
-    """
-    # In production with Supabase Auth, we would get the JWT token from Supabase
-    # For now, return a structured response that the frontend can use
+    token = create_access_token(data={
+        "sub": user_id,
+        "email": user_email,
+        "name": user_name,
+        "type": "access",
+    })
     return {
-        "access_token": f"placeholder_token_{user_id}",  # Would be real JWT from Supabase
+        "access_token": token,
         "token_type": "bearer",
-        "expires_in": 3600,
+        "expires_in": settings.access_token_expire_minutes * 60,
         "user": {
             "id": user_id,
             "email": user_email,

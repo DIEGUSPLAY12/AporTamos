@@ -399,7 +399,13 @@ async def shutdown_event():
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
-    
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        await startup_event()
+        yield
+        await shutdown_event()
+
     # Define middleware stack
     middleware = [
         Middleware(
@@ -439,6 +445,7 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         middleware=middleware,
         debug=settings.debug,
+        lifespan=lifespan,
     )
     
     # Add custom middleware
@@ -457,10 +464,6 @@ def create_app() -> FastAPI:
     app.add_exception_handler(DatabaseException, database_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_error_handler)
     app.add_exception_handler(Exception, general_exception_handler)
-    
-    # Register startup and shutdown events
-    app.add_event_handler("startup", startup_event)
-    app.add_event_handler("shutdown", shutdown_event)
     
     # Define routes
     
