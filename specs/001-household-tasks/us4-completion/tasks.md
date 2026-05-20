@@ -12,9 +12,9 @@
 - [x] T065 [P] Create completion service in AporTamos-Backend/app/services/completion_service.py (handle photo upload, mark complete)
 - [x] T066 Implement GET /users/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch user's task assignments for today)
 - [x] T067 [P] Implement GET /households/{id}/tasks endpoint in AporTamos-Backend/app/routers/tasks.py (fetch all household tasks for today)
-- [ ] T068 Implement POST /tasks/{assignment_id}/complete endpoint in AporTamos-Backend/app/routers/completions.py (multipart photo upload, mark complete)
-- [ ] T069 [P] Add photo validation (max 5MB, JPEG compression to 80% quality) before storage
-- [ ] T070 [P] Upload photos to Supabase Storage bucket task-proofs with path: /{household_id}/{task_id}/{assignment_id}.jpg
+- [x] T068 Implement POST /tasks/{assignment_id}/complete endpoint in AporTamos-Backend/app/routers/completions.py (multipart photo upload, mark complete)
+- [x] T069 [P] Add photo validation (max 5MB, JPEG compression to 80% quality) before storage
+- [x] T070 [P] Upload photos to Supabase Storage bucket task-proofs with path: /{household_id}/{task_id}/{assignment_id}.jpg
 
 ## Frontend
 
