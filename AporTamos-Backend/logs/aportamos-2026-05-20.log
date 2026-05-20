@@ -499,3 +499,8 @@ app.services.auth_service.AuthenticationError: Failed to retrieve user: Failed t
 2026-05-20 13:45:56,060 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
 2026-05-20 13:45:56,060 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
 2026-05-20 13:46:34,538 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-20 13:46:38,713 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-20 13:46:38,713 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-20 13:48:07,116 - aportamos - WARNING - [config.py:246] - Request validation failed
+2026-05-20 13:50:32,491 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-20 13:50:34,216 - aportamos - INFO - [config.py:236] - User registered successfully: diego@gmail.com
