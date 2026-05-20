@@ -34,6 +34,8 @@ from app.models.task import (
     TaskResponse,
     DayOfWeek,
     AssignmentType,
+    TaskSummaryItem,
+    TaskListResponse,
 )
 from app.dependencies import get_supabase_client
 from app.config import (
@@ -958,3 +960,190 @@ async def _get_household_or_fail(supabase, household_id: UUID, user_id: UUID) ->
         if isinstance(exc, ScheduleAccessError):
             raise
         raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+
+
+async def get_user_tasks(
+    household_id: UUID,
+    user_id: UUID,
+    target_date: Optional[date] = None,
+) -> TaskListResponse:
+    """Fetch the current user's task assignments for a given date.
+
+    Queries task_assignments filtered by household, user, and date, then
+    joins task definitions and the assigned user's name to build the response.
+
+    Args:
+        household_id: Household to query
+        user_id: Only return assignments for this user
+        target_date: Date to query (defaults to today)
+
+    Returns:
+        TaskListResponse with tasks and completion percentage
+
+    Raises:
+        ScheduleAccessError: If the household is not found or user has no access
+        DatabaseException: On unexpected database errors
+    """
+    if target_date is None:
+        target_date = date.today()
+
+    date_str = target_date.isoformat()
+
+    try:
+        supabase = get_supabase_client()
+
+        # Fetch household (also verifies access)
+        household = await _get_household_or_fail(supabase, household_id, user_id)
+        household_name = household.get("name", "")
+
+        # Fetch assignments for this user on this date, embedding task + user name
+        response = (
+            supabase
+            .table("task_assignments")
+            .select("id, is_completed, assignment_date, tasks(id, name, effort_weight), users!assigned_to_user_id(name)")
+            .eq("household_id", str(household_id))
+            .eq("assigned_to_user_id", str(user_id))
+            .eq("assignment_date", date_str)
+            .execute()
+        )
+
+        rows = response.data or []
+
+        total_weight = 0
+        completed_weight = 0
+        items: List[TaskSummaryItem] = []
+
+        for row in rows:
+            task_data = row.get("tasks") or {}
+            user_data = row.get("users") or {}
+            effort = task_data.get("effort_weight", 1)
+            is_done = row.get("is_completed", False)
+
+            total_weight += effort
+            if is_done:
+                completed_weight += effort
+
+            items.append(TaskSummaryItem(
+                task_id=task_data["id"],
+                assignment_id=row["id"],
+                name=task_data.get("name", ""),
+                effort_weight=effort,
+                is_completed=is_done,
+                assigned_to=user_data.get("name", ""),
+                assignment_date=date.fromisoformat(row["assignment_date"]),
+            ))
+
+        pct = round((completed_weight / total_weight) * 100, 1) if total_weight > 0 else 0.0
+
+        return TaskListResponse(
+            date=date_str,
+            household_id=household_id,
+            household_name=household_name,
+            daily_completion_pct=pct,
+            tasks=items,
+        )
+
+    except ScheduleAccessError:
+        raise
+    except Exception as exc:
+        log_error(
+            "Failed to fetch user tasks",
+            exc,
+            extra={"household_id": str(household_id), "user_id": str(user_id), "date": date_str},
+        )
+        raise DatabaseException(
+            f"Failed to fetch user tasks: {str(exc)}",
+            operation="get_user_tasks",
+        ) from exc
+
+
+async def get_household_tasks(
+    household_id: UUID,
+    user_id: UUID,
+    target_date: Optional[date] = None,
+) -> TaskListResponse:
+    """Fetch all household task assignments for a given date (all members).
+
+    Similar to get_user_tasks but returns every member's assignments, not just
+    the requesting user's.
+
+    Args:
+        household_id: Household to query
+        user_id: Requesting user (used for access check only)
+        target_date: Date to query (defaults to today)
+
+    Returns:
+        TaskListResponse with all tasks and completion percentage
+
+    Raises:
+        ScheduleAccessError: If household not found or user has no access
+        DatabaseException: On unexpected database errors
+    """
+    if target_date is None:
+        target_date = date.today()
+
+    date_str = target_date.isoformat()
+
+    try:
+        supabase = get_supabase_client()
+
+        household = await _get_household_or_fail(supabase, household_id, user_id)
+        household_name = household.get("name", "")
+
+        response = (
+            supabase
+            .table("task_assignments")
+            .select("id, is_completed, assignment_date, tasks(id, name, effort_weight), users!assigned_to_user_id(name)")
+            .eq("household_id", str(household_id))
+            .eq("assignment_date", date_str)
+            .execute()
+        )
+
+        rows = response.data or []
+
+        total_weight = 0
+        completed_weight = 0
+        items: List[TaskSummaryItem] = []
+
+        for row in rows:
+            task_data = row.get("tasks") or {}
+            user_data = row.get("users") or {}
+            effort = task_data.get("effort_weight", 1)
+            is_done = row.get("is_completed", False)
+
+            total_weight += effort
+            if is_done:
+                completed_weight += effort
+
+            items.append(TaskSummaryItem(
+                task_id=task_data["id"],
+                assignment_id=row["id"],
+                name=task_data.get("name", ""),
+                effort_weight=effort,
+                is_completed=is_done,
+                assigned_to=user_data.get("name", ""),
+                assignment_date=date.fromisoformat(row["assignment_date"]),
+            ))
+
+        pct = round((completed_weight / total_weight) * 100, 1) if total_weight > 0 else 0.0
+
+        return TaskListResponse(
+            date=date_str,
+            household_id=household_id,
+            household_name=household_name,
+            daily_completion_pct=pct,
+            tasks=items,
+        )
+
+    except ScheduleAccessError:
+        raise
+    except Exception as exc:
+        log_error(
+            "Failed to fetch household tasks",
+            exc,
+            extra={"household_id": str(household_id), "date": date_str},
+        )
+        raise DatabaseException(
+            f"Failed to fetch household tasks: {str(exc)}",
+            operation="get_household_tasks",
+        ) from exc

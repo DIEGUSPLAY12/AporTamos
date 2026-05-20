@@ -27,6 +27,7 @@ from app.models.task import (
     TaskCreate,
     TaskUpdate,
     TaskResponse,
+    TaskListResponse,
 )
 from app.services.task_service import (
     create_schedule,
@@ -35,6 +36,8 @@ from app.services.task_service import (
     update_task,
     get_task_by_id,
     generate_daily_assignments_batch,
+    get_user_tasks,
+    get_household_tasks,
     ScheduleNotFoundError,
     TaskNotFoundError,
     ScheduleAccessError,
@@ -660,6 +663,104 @@ async def update_task_endpoint(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update task"
+        )
+
+
+# Task assignment endpoints
+
+
+@router.get(
+    "/{household_id}/tasks",
+    response_model=TaskListResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_my_tasks_endpoint(
+    household_id: UUID = Path(..., description="Household ID"),
+    date: Optional[str] = None,
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> TaskListResponse:
+    """Get the current user's task assignments for today (or a specific date).
+
+    Query Parameters:
+        date (optional): ISO date YYYY-MM-DD. Defaults to today.
+
+    Returns:
+        TaskListResponse with tasks filtered to the current user and completion %.
+    """
+    from datetime import date as date_type
+    target_date = None
+    if date:
+        try:
+            target_date = date_type.fromisoformat(date)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid date format. Expected YYYY-MM-DD.",
+            )
+
+    try:
+        return await get_user_tasks(
+            household_id=household_id,
+            user_id=current_user_id,
+            target_date=target_date,
+        )
+    except ScheduleAccessError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Household not found or access denied.",
+        )
+    except DatabaseException as e:
+        log_error("Error fetching user tasks", e, extra={"household_id": str(household_id)})
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch tasks.",
+        )
+
+
+@router.get(
+    "/{household_id}/tasks/all",
+    response_model=TaskListResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_household_tasks_endpoint(
+    household_id: UUID = Path(..., description="Household ID"),
+    date: Optional[str] = None,
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> TaskListResponse:
+    """Get all household task assignments for today (or a specific date).
+
+    Returns tasks for every member of the household.
+
+    Query Parameters:
+        date (optional): ISO date YYYY-MM-DD. Defaults to today.
+    """
+    from datetime import date as date_type
+    target_date = None
+    if date:
+        try:
+            target_date = date_type.fromisoformat(date)
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid date format. Expected YYYY-MM-DD.",
+            )
+
+    try:
+        return await get_household_tasks(
+            household_id=household_id,
+            user_id=current_user_id,
+            target_date=target_date,
+        )
+    except ScheduleAccessError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Household not found or access denied.",
+        )
+    except DatabaseException as e:
+        log_error("Error fetching household tasks", e, extra={"household_id": str(household_id)})
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch tasks.",
         )
 
 

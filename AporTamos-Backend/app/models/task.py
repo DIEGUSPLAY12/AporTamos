@@ -458,3 +458,31 @@ class TaskCompletionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class TaskSummaryItem(BaseModel):
+    """Summary of a single task assignment as shown in task lists."""
+
+    task_id: UUID = Field(..., description="Task definition ID")
+    assignment_id: UUID = Field(..., description="TaskAssignment record ID")
+    name: str = Field(..., description="Task name")
+    effort_weight: int = Field(..., description="Effort weight (1–10)")
+    is_completed: bool = Field(..., description="Whether the assignment is completed")
+    assigned_to: str = Field(..., description="Name of the assigned user")
+    assignment_date: date = Field(..., description="Date of the assignment")
+
+    class Config:
+        from_attributes = True
+
+
+class TaskListResponse(BaseModel):
+    """Response for GET /households/{id}/tasks and /tasks/all."""
+
+    date: str = Field(..., description="ISO date the list is for (YYYY-MM-DD)")
+    household_id: UUID = Field(..., description="Household ID")
+    household_name: str = Field(..., description="Household name")
+    daily_completion_pct: float = Field(..., description="Percentage of effort weight completed today (0–100)")
+    tasks: List[TaskSummaryItem] = Field(default_factory=list, description="Task assignments")
+
+    class Config:
+        from_attributes = True
