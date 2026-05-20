@@ -35,7 +35,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/theme';
 import type { User } from '@/types/models';
 
 const ASSIGNMENT_TYPES = [

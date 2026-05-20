@@ -51,7 +51,7 @@ import {
   Platform,
 } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/theme';
 import type { TaskCreate, User } from '@/types/models';
 
 const DAYS_OF_WEEK = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];

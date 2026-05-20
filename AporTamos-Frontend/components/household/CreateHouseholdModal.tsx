@@ -42,7 +42,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import Colors from '@/constants/Colors';
+import { Colors } from '@/constants/theme';
 import { createHousehold, ApiError } from '@/services/api';
 import type { Household, CreateHouseholdRequest } from '@/types/models';
 
