@@ -24,6 +24,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getSupabaseClient } from '@/services/supabase';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { HouseholdProvider } from '@/context/HouseholdContext';
 
 /**
  * Splash screen component shown while checking authentication state
@@ -107,7 +108,9 @@ export const unstable_settings = {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootStackLayout />
+      <HouseholdProvider>
+        <RootStackLayout />
+      </HouseholdProvider>
     </AuthProvider>
   );
 }
