@@ -32,10 +32,11 @@
   - api.ts extendido con getSchedule, createSchedule, updateSchedule
   - types/models.ts extendido con WeeklyTaskScheduleResponse, TaskCreate, TaskListResponse, etc.
 
-- [ ] T063 Add validation that explicit assignments have user_id and random assignments don't
-  - Validar en TaskForm antes de submit
-  - Mostrar error claro si explicit sin usuario seleccionado
-  - Ocultar/deshabilitar user picker cuando assignment=random
+- [x] T063 Add validation that explicit assignments have user_id and random assignments don't
+  - Ya implementado en ScheduleEditor.validateTask(), TaskForm.validateForm(), y AssignmentSelector
+  - User picker oculto (return null) cuando assignment_type !== 'explicit' en los tres componentes
+  - assigned_user_id limpiado a null automáticamente al cambiar a random
+  - Error messages mostrados en submit si la combinación es inválida
 
 **Checkpoint**: ⬜ US3 pendiente completar (T062, T063)
 

@@ -12,7 +12,7 @@
 | [00-setup/](00-setup/tasks.md) | Setup & Foundational Infrastructure | T001–T022 | ✅ Completo |
 | [us1-auth/](us1-auth/tasks.md) | US1: Authentication (P1) | T023–T035 | ✅ Completo |
 | [us2-households/](us2-households/tasks.md) | US2: Households (P1) | T036–T049 | ✅ Completo |
-| [us3-schedule/](us3-schedule/tasks.md) | US3: Weekly Schedule (P1) | T050–T063 | 🔄 En progreso |
+| [us3-schedule/](us3-schedule/tasks.md) | US3: Weekly Schedule (P1) | T050–T063 | ✅ Completo |
 | [us4-completion/](us4-completion/tasks.md) | US4: Task Completion + Photo (P1) | T064–T078 | ⬜ Pendiente |
 | [us5-stats/](us5-stats/tasks.md) | US5: Statistics & Gamification (P2) | T079–T092 | ⬜ Pendiente |
 | [us6-chat/](us6-chat/tasks.md) | US6: Real-Time Chat (P2) | T093–T109 | ⬜ Pendiente |
@@ -20,13 +20,6 @@
 ---
 
 ## Próximas tareas
-
-### Terminar US3 (2 tareas)
-
-Ver [us3-schedule/tasks.md](us3-schedule/tasks.md):
-
-- **T062** — `app/(tabs)/[householdId]/schedule.tsx` — Pantalla owner-only con ScheduleEditor
-- **T063** — Validación frontend: explicit=user_id obligatorio, random=user_id null
 
 ### Empezar US4 (siguiente sprint)
 
@@ -52,7 +45,7 @@ Ver [us4-completion/tasks.md](us4-completion/tasks.md): T064 → T065 → T066/T
 
 1. ✅ User can register and login
 2. ✅ User can create household and invite members
-3. 🔄 Owner can create weekly schedule with tasks
+3. ✅ Owner can create weekly schedule with tasks
 4. ⬜ User can view assigned tasks and complete with photo
 
 ---
