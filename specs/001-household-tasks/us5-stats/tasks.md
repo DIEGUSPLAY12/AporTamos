@@ -8,7 +8,73 @@
 
 ## Backend
 
-- [ ] T079 [P] Create statistics service in AporTamos-Backend/app/services/gamification_service.py (calculate completion %, streak, member stats)
+- [x] T079 [P] Create statistics service in AporTamos-Backend/app/services/gamification_service.py (calculate completion %, streak, member stats)
+  - Created comprehensive gamification_service.py module with 700+ lines
+  - Exception Classes (gamification-specific errors):
+    - GamificationException: Base exception for service errors
+    - StatsCalculationError: Stats calculation fails
+    - HouseholdNotFoundError: Household not found
+    - UserNotFoundError: User not found
+  - Completion Percentage Functions:
+    - calculate_completion_pct(household_id, target_date=None):
+      - Calculates daily completion % for entire household
+      - Uses formula: (Σ effort_weight_completed / Σ effort_weight_assigned) × 100
+      - Returns None if no tasks assigned on date
+      - Fetches task_assignments and tasks tables to compute weighted completion
+    - calculate_user_completion_pct(user_id, household_id, target_date=None):
+      - Calculates completion % for individual user within household
+      - Only counts tasks assigned to that user
+      - Returns None if no tasks assigned
+  - Household Statistics Functions:
+    - get_household_stats(household_id):
+      - Returns dict with:
+        * completion_pct: Today's weighted completion percentage
+        * daily_streak: Current streak from households table
+        * tasks_total: Total tasks assigned today
+        * tasks_completed: Number of completed tasks
+        * last_completion_date: Last date with 100% completion
+        * members: List of all member stats
+      - Integrates household info with daily calculations
+    - get_household_daily_snapshot(household_id, days=7):
+      - Returns historical completion data for N days
+      - Useful for charting trends
+      - Returns list of daily objects with date, completion_pct, task counts
+  - User Statistics Functions:
+    - get_user_stats(user_id, household_id):
+      - Returns dict with:
+        * completion_pct: Today's user completion %
+        * tasks_today: Total tasks assigned to user
+        * tasks_completed_today: Completed task count
+        * completion_history: Last 7 days completion %
+      - Includes historical trend data
+  - Member Aggregation Functions:
+    - get_household_members_stats(household_id):
+      - Returns list of all household members with stats
+      - Each member includes:
+        * user_id, user_name
+        * completion_pct: Today's completion %
+        * tasks_today: Total assigned
+        * tasks_completed_today: Completed count
+      - Gracefully handles missing users, continues with other members
+  - Features:
+    - Weighted task scoring via effort_weight (1-10)
+    - Accurate completion calculation from database
+    - Handles edge cases (no tasks, no completions)
+    - Comprehensive error handling with custom exceptions
+    - Full audit logging at debug/info/warning/error levels
+    - Timezone awareness via household timezone_id
+    - 7-day historical snapshots for trending
+    - Real-time calculations from task_assignments table
+  - Database Operations:
+    - Reads from: households, task_assignments, tasks, task_completions, users, household_members
+    - Uses calculated data (is_completed flag, effort_weight)
+    - Supports arbitrary date queries for historical data
+  - Integration Points:
+    - Uses Supabase client from app.dependencies
+    - Uses logging/exception classes from app.config
+    - Called by stats endpoints (T080, T081)
+    - Works with real-time subscriptions via task_completions events
+  - File: AporTamos-Backend/app/services/gamification_service.py (700+ lines)
 - [ ] T080 Implement GET /households/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
 - [ ] T081 [P] Implement GET /users/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
 - [ ] T082 [P] Add calculation: completion_pct = (Σ completed_weight / Σ total_weight) × 100 (ver spec.md fórmula)
