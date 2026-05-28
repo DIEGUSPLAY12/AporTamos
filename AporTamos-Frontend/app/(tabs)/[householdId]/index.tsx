@@ -6,7 +6,6 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
-  Pressable,
   Alert,
   TouchableOpacity,
 } from 'react-native';
@@ -16,6 +15,8 @@ import { useAuthState } from '@/hooks/useAuth';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
 import * as api from '@/services/api';
 import type { HouseholdDetail, HouseholdMember } from '@/types/models';
+import HouseholdHeader from '@/components/household/HouseholdHeader';
+import StreakDisplay from '@/components/stats/StreakDisplay';
 
 export default function HouseholdDetailScreen(): JSX.Element {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
@@ -143,11 +144,8 @@ export default function HouseholdDetailScreen(): JSX.Element {
       <View style={styles.headerSection}>
         <Text style={[styles.householdName, { color: colors.onSurface }]}>{household.name}</Text>
 
-        {/* Streak badge */}
-        <View style={[styles.streakBadge, { backgroundColor: colors.streak, ...Shadows.streak }]}>
-          <Text style={styles.streakIcon}>🔥</Text>
-          <Text style={styles.streakText}>Racha Diaria: {household.daily_streak} días 🔥</Text>
-        </View>
+        {/* Streak badge — animated */}
+        <StreakDisplay streak={household.daily_streak} size="default" />
       </View>
 
       {/* Members Card */}
@@ -245,12 +243,10 @@ export default function HouseholdDetailScreen(): JSX.Element {
       )}
 
       {activeTab === 'progress' && (
-        <View style={styles.taskSection}>
-          <View style={[styles.progressCard, { backgroundColor: colors.surfaceContainerLowest, borderColor: colors.outlineVariant }]}>
-            <Text style={[styles.progressLabel, { color: colors.subtext }]}>Completado hoy</Text>
-            <Text style={[styles.progressValue, { color: colors.primary }]}>0%</Text>
-          </View>
-        </View>
+        <HouseholdHeader
+          householdId={household.id}
+          householdName={household.name}
+        />
       )}
 
       {/* Leave household (non-owners) */}

@@ -137,7 +137,12 @@
   - streak taken from selectedHousehold.daily_streak (already in Household type)
   - Widget only shown when selectedHousehold exists; hidden otherwise (no household yet)
   - useCallback deps updated: adds selectedHousehold, userStats, isLoadingStats, containerPadding
-- [ ] T090 Add HouseholdStats to household header in AporTamos-Frontend/components/household/HouseholdHeader.tsx
+- [x] T090 Add HouseholdStats to household header in AporTamos-Frontend/components/household/HouseholdHeader.tsx
+  - Created HouseholdHeader.tsx: connected wrapper that calls useHouseholdStats(householdId) and renders HouseholdStats
+  - Props: householdId (required), householdName (fallback when stats not yet loaded)
+  - Error state: shows "No se pudieron cargar las estadísticas" without crashing
+  - Integrated in [householdId]/index.tsx: replaces 0% progress tab placeholder with HouseholdHeader
+  - Bonus: replaced basic streak badge in header with animated StreakDisplay component
 - [ ] T091 [P] Subscribe to task_completions real-time events to update stats instantly (<5s)
 - [ ] T092 Add MembersSection with individual stats in AporTamos-Frontend/components/household/MembersSection.tsx
 
