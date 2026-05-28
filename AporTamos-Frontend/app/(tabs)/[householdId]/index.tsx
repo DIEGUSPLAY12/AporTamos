@@ -16,6 +16,7 @@ import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
 import * as api from '@/services/api';
 import type { HouseholdDetail, HouseholdMember } from '@/types/models';
 import HouseholdHeader from '@/components/household/HouseholdHeader';
+import MembersSection from '@/components/household/MembersSection';
 import StreakDisplay from '@/components/stats/StreakDisplay';
 
 export default function HouseholdDetailScreen(): JSX.Element {
@@ -148,45 +149,18 @@ export default function HouseholdDetailScreen(): JSX.Element {
         <StreakDisplay streak={household.daily_streak} size="default" />
       </View>
 
-      {/* Members Card */}
-      <View style={[styles.card, { backgroundColor: colors.surfaceContainerLow, borderColor: colors.outlineVariant }]}>
-        <Text style={[styles.cardTitle, { color: colors.onSurface }]}>Miembros de la Casa</Text>
-        <View style={styles.membersRow}>
-          {/* Avatar stack */}
-          <View style={styles.avatarStack}>
-            {visibleMembers.map((m, i) => (
-              <TouchableOpacity
-                key={m.user_id}
-                style={[
-                  styles.memberAvatar,
-                  { backgroundColor: colors.primaryFixed, borderColor: colors.surfaceContainerLow, zIndex: 3 - i },
-                  { marginLeft: i === 0 ? 0 : -12 },
-                ]}
-                onLongPress={() => isOwner && handleRemoveMember(m)}
-              >
-                <Text style={styles.memberAvatarText}>{m.name.charAt(0).toUpperCase()}</Text>
-              </TouchableOpacity>
-            ))}
-            {extraCount > 0 && (
-              <View style={[
-                styles.memberAvatar,
-                { backgroundColor: colors.surfaceVariant, borderColor: colors.surfaceContainerLow, marginLeft: -12, zIndex: 0 },
-              ]}>
-                <Text style={[styles.memberAvatarText, { color: colors.onSurfaceVariant, fontSize: 12 }]}>
-                  +{extraCount}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {/* Invite button */}
-          <TouchableOpacity
-            style={[styles.pill, { backgroundColor: colors.primary, ...Shadows.primary, flex: 1 }]}
-            onPress={() => Alert.alert('Invitar', 'Esta función estará disponible pronto.')}
-          >
-            <Text style={styles.pillText}>👥  Invitar Miembros</Text>
-          </TouchableOpacity>
-        </View>
+      {/* Members Section — with individual stats, invite, and remove */}
+      <View style={{ paddingHorizontal: Spacing.xl }}>
+        <MembersSection
+          householdId={household.id}
+          currentUserId={user?.id}
+          isOwner={isOwner}
+          onInvitePress={() => Alert.alert('Invitar', 'Esta función estará disponible pronto.')}
+          onRemoveMember={(userId, userName) => {
+            const member = household.members.find(m => m.user_id === userId);
+            if (member) handleRemoveMember(member);
+          }}
+        />
       </View>
 
       {/* Action Buttons */}

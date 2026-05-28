@@ -143,8 +143,17 @@
   - Error state: shows "No se pudieron cargar las estadísticas" without crashing
   - Integrated in [householdId]/index.tsx: replaces 0% progress tab placeholder with HouseholdHeader
   - Bonus: replaced basic streak badge in header with animated StreakDisplay component
-- [ ] T091 [P] Subscribe to task_completions real-time events to update stats instantly (<5s)
-- [ ] T092 Add MembersSection with individual stats in AporTamos-Frontend/components/household/MembersSection.tsx
+- [x] T091 [P] Subscribe to task_completions real-time events to update stats instantly (<5s)
+  - Implemented in T088 (useStats.ts): subscribeToTaskAssignments(householdId) fires refetch when is_completed=true
+  - Wired into useHouseholdStats + useUserStats; both HouseholdHeader (T090) and UserStatsWidget (T089) auto-update
+  - task_completions lacks household_id → correct approach is task_assignments UPDATE (verified in T088)
+  - SC-005 satisfied: refetch triggered synchronously on realtime event (<5s)
+- [x] T092 Add MembersSection with individual stats in AporTamos-Frontend/components/household/MembersSection.tsx
+  - Connected component: uses useHouseholdStats(householdId) internally
+  - Shows each member: avatar initial, name, "(tú)" self-label, completion %, animated ProgressBar, task count
+  - Includes Invitar button (onInvitePress prop) + owner remove button (✕, not shown for self)
+  - Loading state via ActivityIndicator; empty state text
+  - Replaces the basic avatar-stack card in [householdId]/index.tsx
 
 **Checkpoint**: ⬜ US5 pendiente — gamification metrics visible and updating in real-time
 
