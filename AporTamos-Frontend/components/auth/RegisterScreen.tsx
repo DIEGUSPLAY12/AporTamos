@@ -37,6 +37,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRegister, useGoogleAuth, useAuthError } from '@/hooks/useAuth';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
@@ -122,6 +123,7 @@ export default function RegisterScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
 
   // Auth hooks
   const { register, isLoading } = useRegister();
@@ -265,7 +267,7 @@ export default function RegisterScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <ThemedView style={styles.container}>
+        <ThemedView style={[styles.container, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 20 }]}>
           {/* Header */}
           <View style={styles.header}>
             <ThemedText type="title" style={styles.title}>

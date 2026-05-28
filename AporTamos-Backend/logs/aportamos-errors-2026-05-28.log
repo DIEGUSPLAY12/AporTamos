@@ -1,0 +1,16 @@
+2026-05-28 11:50:52,106 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:52:05,133 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}

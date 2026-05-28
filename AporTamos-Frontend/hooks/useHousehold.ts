@@ -81,7 +81,7 @@ interface UseHouseholdState {
 export function useHousehold(householdId: string, skip = false) {
   const [state, setState] = useState<UseHouseholdState>({
     household: null,
-    isLoading: true,
+    isLoading: !skip,  // don't start loading if skipped
     error: null,
     isRefetching: false,
   });

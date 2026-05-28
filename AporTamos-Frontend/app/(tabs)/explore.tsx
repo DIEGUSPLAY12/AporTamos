@@ -1,28 +1,43 @@
 /**
- * Chat Tab - Real-time Messaging Interface
- *
- * Displays a list of active chat channels for the user's households.
- * Allows viewing household coordination messages and engaging with family members.
- *
- * Features (Future Implementation):
- * - List of household chat channels
- * - Real-time message updates via Supabase subscriptions
- * - Message search and filtering
- * - Channel creation and management
- *
- * Status: Placeholder - Awaiting US6 implementation (Real-time Chat Communication)
+ * Mis Tareas tab — redirects to the selected household's daily task list.
+ * If no household is selected yet, shows a prompt to select one.
  */
-
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useSelectedHousehold } from '@/context/HouseholdContext';
 
-export default function ExploreScreen() {
+export default function MisTareasScreen() {
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
+  const selectedHousehold = useSelectedHousehold();
+
+  useEffect(() => {
+    if (selectedHousehold?.id) {
+      router.replace(`/(tabs)/${selectedHousehold.id}/tasks` as any);
+    }
+  }, [selectedHousehold?.id]);
+
+  if (!selectedHousehold) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText type="title" style={styles.title}>Mis Tareas</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          Ve a Inicio y selecciona un hogar para ver tus tareas de hoy.
+        </ThemedText>
+      </ThemedView>
+    );
+  }
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">Explore</ThemedText>
-      <ThemedText>Household explore features coming soon...</ThemedText>
-    </ThemedView>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ActivityIndicator size="large" color={colors.primary} />
+    </View>
   );
 }
 
@@ -31,6 +46,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 24,
+    gap: 12,
+  },
+  title: {
+    textAlign: 'center',
+  },
+  subtitle: {
+    textAlign: 'center',
+    opacity: 0.7,
+    maxWidth: 260,
   },
 });

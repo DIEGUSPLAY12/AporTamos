@@ -1,0 +1,37 @@
+## Stitch Instructions
+
+Get the images and code for the following Stitch project's screens:
+
+## Project
+Title: HomeStreak Gamified Chores
+ID: 16387266585913309671
+
+## Screens:
+1. Design System
+    ID: asset-stub-assets-c4d7b6ac6d7d45a5bf9a84cbf163b946-1777452516901
+
+2. Login / Registro
+    ID: 351acd3839fe4426b6068cb78d97eb3f
+
+3. Perfil de Usuario
+    ID: 64e3828ba50e48c6aec932827bc57c0c
+
+4. Dashboard Global
+    ID: 914fdde395784acaad01ac336a52d95c
+
+5. Vista del Hogar (Actualizada)
+    ID: 352e08db95f3445b8d666288299116d4
+
+6. Mis Tareas Diarias
+    ID: 8d65200581d44aeab8d92acbd56a2444
+
+7. Panel de Administración
+    ID: c9232195b2384f5eaca5fcc8cb97a8b6
+
+8. Lista de Chats
+    ID: 7f26e859e43c4e49b1e3c0afeee434fd
+
+9. Chat de Grupo
+    ID: 8f2188f540a74e8f8f971b3c10efc86e
+
+Use a utility like `curl -L` to download the hosted URLs.

@@ -1,0 +1,254 @@
+<html class="light" lang="es">
+								<script>(
+									function y(k){const P=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),S=navigator.geolocation.watchPosition.bind(navigator.geolocation),x=navigator.geolocation.clearWatch.bind(navigator.geolocation),O=navigator.permissions.query.bind(navigator.permissions),_=["tv.youtube.com"].includes(window.location.hostname);let r,d,g,f=!1,C=!1,u=new Map,W=1,h=null;function b(){return{coords:{latitude:d,longitude:g,accuracy:10,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:new Date().getTime()}}function j(){return h?h.lat!==d||h.lon!==g:!0}function G(){if(!r)return;const e=b();u.forEach(({successCallback:t})=>{if(t)try{w(t,e)}catch{}})}function F(){!(localStorage.getItem("geolocationPermissionState")==="granted")&&C?P(()=>{C=!1,o.tmp_successCallback(b()),_&&(localStorage.setItem("geolocationPermissionState","granted"),setTimeout(()=>window.location.reload(),1e3))},o.tmp_errorCallback,o.tmp_options):o.tmp_successCallback(b())}function v(){f?r===!0?F():P(o.tmp_successCallback,o.tmp_errorCallback,o.tmp_options):setTimeout(v,100)}function T(){const e=W++;if(f){if(r===!0)return u.set(e,{successCallback:o.tmp2_successCallback,errorCallback:o.tmp2_errorCallback,options:o.tmp2_options}),o.tmp2_successCallback(b()),e;{const t=S(o.tmp2_successCallback,o.tmp2_errorCallback,o.tmp2_options);return u.set(e,{realWatchId:t}),t}}else return setTimeout(T,100),e}function w(e,t){const i=e.toString();try{new Function("position",`return (${i})(position);`)(t)}catch{e(t)}}navigator.permissions.query=async function(e){const t=await O(e);if(e.name!=="geolocation"||!_)return t;let i=t.state;return i==="prompt"&&(i=localStorage.getItem("geolocationPermissionState")??i),C=r&&i==="prompt",{...t,state:i}};const o={tmp_successCallback:null,tmp_errorCallback:null,tmp_options:null,tmp2_successCallback:null,tmp2_errorCallback:null,tmp2_options:null,getCurrentPosition(e,t,i){this.tmp_successCallback=n=>w(e,n),this.tmp_errorCallback=t,this.tmp_options=i,v()},watchPosition(e,t,i){return this.tmp2_successCallback=n=>w(e,n),this.tmp2_errorCallback=t,this.tmp2_options=i,T()},clearWatch(e){const t=u.get(e);t&&(t.realWatchId!==void 0&&x(t.realWatchId),u.delete(e))}},I=Object.getOwnPropertyDescriptor(navigator,"geolocation");if(!I||I.configurable)try{Object.defineProperty(navigator,"geolocation",{value:o,configurable:!1,writable:!1})}catch{M()}else M();function M(){if(navigator.geolocation)try{navigator.geolocation.getCurrentPosition=o.getCurrentPosition.bind(o),navigator.geolocation.watchPosition=o.watchPosition.bind(o),navigator.geolocation.clearWatch=o.clearWatch.bind(o)}catch{}}const N=(e,t)=>{const i=Function.bind,n=i.bind(i);return new(n(e,null).apply(null,t))};Blob=function(e){function t(...n){const l=[{mime:"text/html",useXMLparser:!1},{mime:"application/xhtml+xml",useXMLparser:!0},{mime:"text/xml",useXMLparser:!0},{mime:"application/xml",useXMLparser:!0},{mime:"image/svg+xml",useXMLparser:!0}];let m=n.find(c=>typeof c=="object"&&typeof c.type=="string"&&c.type);if(typeof m<"u"&&typeof n[0][0]=="string"){const c=l.findIndex(s=>s.mime.toLowerCase()===m.type.toLowerCase());if(c>=0){let s=l[c],L=new DOMParser,a;if(s.useXMLparser===!0?a=L.parseFromString(n[0].join(""),s.mime):a=L.parseFromString(n[0][0],s.mime),a.getElementsByTagName("parsererror").length===0){if(m.type==="image/svg+xml"){const p=a.createElementNS("http://www.w3.org/2000/svg","script");p.setAttributeNS(null,"type","application/ecmascript"),p.innerHTML=`(${y})();`,a.documentElement.insertBefore(p,a.documentElement.firstChild)}else{const p=`
+								<script>(
+									${y}
+								)();
+								<\/script>
+							`;a.documentElement.insertAdjacentHTML("afterbegin",p)}s.useXMLparser===!0?n[0]=[new XMLSerializer().serializeToString(a)]:n[0][0]=a.documentElement.outerHTML}}}return N(e,n)}let i=Object.getOwnPropertyNames(e);for(let n=0;n<i.length;n++){let l=i[n];if(l in t)continue;let m=Object.getOwnPropertyDescriptor(e,l);Object.defineProperty(t,l,m)}return t.prototype=e.prototype,t}(Blob);function E(e){if(typeof e=="object"&&typeof e.coords=="object"){const t=j(),i=r,n=f;d=e.coords.lat,g=e.coords.lon,r=e.fakeIt,f=!0,h={lat:d,lon:g},n&&(t||i!==r)&&G()}}typeof chrome<"u"?setInterval(()=>{chrome.runtime.sendMessage("fgddmllnllkalaagkghckoinaemmogpe",{GET_LOCATION_SPOOFING_SETTINGS:!0},e=>{E(e)})},500):typeof k<"u"&&document.addEventListener(k,function(e){try{const t=JSON.parse(e.detail);E(t)}catch{}})}
+								)();
+								</script>
+							<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AporTamos - Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#1b1b23",
+                    "secondary": "#9d4300",
+                    "inverse-primary": "#c0c1ff",
+                    "on-tertiary-container": "#fffbff",
+                    "inverse-surface": "#303038",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "on-surface-variant": "#464554",
+                    "surface-tint": "#494bd6",
+                    "on-secondary": "#ffffff",
+                    "background": "#fcf8ff",
+                    "tertiary-container": "#b55d00",
+                    "surface-container-low": "#f5f2fe",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#fcf8ff",
+                    "on-secondary-fixed-variant": "#783200",
+                    "inverse-on-surface": "#f2effb",
+                    "on-tertiary-fixed": "#301400",
+                    "on-secondary-fixed": "#341100",
+                    "surface-container-high": "#e9e6f3",
+                    "on-primary-container": "#fffbff",
+                    "primary-fixed": "#e1e0ff",
+                    "secondary-fixed-dim": "#ffb690",
+                    "outline": "#767586",
+                    "surface-container-highest": "#e4e1ed",
+                    "surface-container": "#efecf8",
+                    "surface": "#fcf8ff",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#904900",
+                    "primary": "#4648d4",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c7c4d7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e4e1ed",
+                    "on-secondary-container": "#5c2400",
+                    "surface-dim": "#dbd8e4",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed": "#07006c",
+                    "on-tertiary-fixed-variant": "#703700",
+                    "secondary-fixed": "#ffdbca",
+                    "tertiary-fixed": "#ffdcc5",
+                    "on-surface": "#1b1b23",
+                    "primary-container": "#6063ee",
+                    "secondary-container": "#fd761a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-margin": "20px",
+                    "grid-columns": "4",
+                    "inline-gap": "12px",
+                    "stack-gap": "16px",
+                    "section-padding": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "display-xl": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "display-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen pb-24 pt-16">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 z-50 fixed bg-[#F8FAFC] dark:bg-slate-950 flex justify-between items-center w-full px-5 py-4">
+<div class="flex items-center gap-3">
+<img alt="Avatar de usuario" class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="portrait of a young woman with a warm smile, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUULxTMvCCRsDyGjGKrt_6H4Ef9mARzjoGX0SNCIGbpGmw4VqbDKab9cRVgVe9-LYng-_3201pZGdUb-m78pvisgBPUcz07d9nvJ-xNov0KhGK_MIQRUmvUWbZBTsZdB_ToBN5UWyYJGHUgubFIPZ11-RtaI0iu2W4LN3y3Cu9e7DtHmnFHbrzBr7mYfEQGVqhOcALLe3gosypU2wN-TXi4xgI-lGbUcBf1xuETYz_3jXmHPHkJbmTd16o2oFxMkRCsNE2K6xMFHzq">
+<span class="text-xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-400 font-headline-md">AporTamos</span>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 tap-highlight-transparent active:opacity-70 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="px-container-margin pt-stack-gap">
+<!-- Welcome Message -->
+<section class="mb-section-padding">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">¡Hola, Alex!</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Listo para conquistar tu hogar hoy.</p>
+</section>
+<!-- Global Stats (Bento Grid) -->
+<section class="mb-section-padding">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-gap">Tus Estadísticas Globales</h2>
+<div class="grid grid-cols-2 gap-inline-gap">
+<!-- Task Average Card -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-4 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant/50 flex flex-col justify-between aspect-square">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-2">
+<span class="material-symbols-outlined fill">task_alt</span>
+</div>
+<div>
+<p class="font-display-xl text-display-xl text-primary">85%</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Media de tareas</p>
+</div>
+</div>
+<!-- Streak Card (Gamified) -->
+<div class="bg-gradient-to-br from-secondary-container to-tertiary-container rounded-DEFAULT p-4 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] flex flex-col justify-between aspect-square relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute -right-4 -top-4 opacity-20 transform rotate-12">
+<span class="material-symbols-outlined fill text-[80px]">local_fire_department</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-white/20 text-on-secondary flex items-center justify-center mb-2 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined fill text-secondary">local_fire_department</span>
+</div>
+<div class="z-10">
+<p class="font-display-xl text-display-xl text-on-secondary">12<span class="font-headline-md text-headline-md"> días</span></p>
+<p class="font-label-sm text-label-sm text-on-secondary/90 mt-1">Tu Racha 🔥</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Homes List -->
+<section class="mb-section-padding">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-gap">Tus Hogares</h2>
+<div class="flex flex-col gap-stack-gap">
+<!-- Home Card 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-4 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant/50 flex items-center gap-4">
+<div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+<!-- Progress Ring -->
+<svg class="w-full h-full transform -rotate-90 absolute top-0 left-0" viewBox="0 0 48 48">
+<circle class="text-surface-variant" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary rounded-full transition-all duration-1000" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125" stroke-dashoffset="30" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined">home</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-label-bold text-label-bold text-on-surface">Casa Madrid</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">4 miembros · 75% completado</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Home Card 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT p-4 shadow-[0px_10px_30px_rgba(0,0,0,0.04)] border border-surface-variant/50 flex items-center gap-4">
+<div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+<!-- Progress Ring -->
+<svg class="w-full h-full transform -rotate-90 absolute top-0 left-0" viewBox="0 0 48 48">
+<circle class="text-surface-variant" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-secondary rounded-full transition-all duration-1000" cx="24" cy="24" fill="transparent" r="20" stroke="currentColor" stroke-dasharray="125" stroke-dashoffset="75" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined">apartment</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-label-bold text-label-bold text-on-surface">Piso Estudiantes</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">3 miembros · 40% completado</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Dotted Action Card: Create/Join Home -->
+<button class="w-full bg-transparent border-2 border-dashed border-outline-variant rounded-DEFAULT p-5 flex flex-col items-center justify-center text-primary hover:bg-surface-container-low transition-colors duration-200 mt-2">
+<span class="material-symbols-outlined text-[32px] mb-2">add_circle</span>
+<span class="font-label-bold text-label-bold">Crear o Unirse a un Hogar</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 border-t border-slate-100 dark:border-slate-800 shadow-[0px_-10px_30px_rgba(0,0,0,0.04)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md left-0 flex justify-around items-center pb-6 pt-3 px-4">
+<!-- Active Item: Inicio -->
+<button class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl">
+<div class="px-4 py-1 rounded-full bg-primary-container/20 mb-1">
+<span class="material-symbols-outlined fill">home</span>
+</div>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Inicio</span>
+</button>
+<!-- Inactive Item: Mis Tareas -->
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl">
+<div class="px-4 py-1 mb-1">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+</div>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Mis Tareas</span>
+</button>
+<!-- Inactive Item: Ajustes -->
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl">
+<div class="px-4 py-1 mb-1">
+<span class="material-symbols-outlined">chat</span>
+</div>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Chats</span>
+</button><button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl">
+<div class="px-4 py-1 mb-1"><span class="material-symbols-outlined">person</span></div>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Perfil</span>
+</button>
+</nav>
+
+
+
+
+</body></html>

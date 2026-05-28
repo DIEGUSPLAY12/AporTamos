@@ -1,0 +1,117 @@
+2026-05-28 10:55:45,538 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 10:55:45,539 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:01:52,036 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:01:53,317 - aportamos - WARNING - [config.py:246] - Registration failed: Email diego@gmail.com already exists
+2026-05-28 11:02:36,295 - aportamos - INFO - [config.py:236] - User registered successfully: holamigo@gmail.com
+2026-05-28 11:10:03,851 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:11:15,919 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:11:15,919 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:14:47,861 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:14:48,858 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-05-28 11:16:16,779 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:16:18,147 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:16:18,147 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:16:24,517 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:16:25,445 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:16:25,445 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:16:29,889 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:16:30,776 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:16:30,776 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:16:38,304 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:16:39,167 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:16:39,167 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:16:53,136 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:16:53,801 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:16:53,885 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:17:16,786 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:17:21,965 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:17:21,965 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:17:46,986 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:17:47,611 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:17:47,687 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:18:32,007 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:18:37,162 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:18:37,163 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:22:47,282 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:22:48,572 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-05-28 11:22:49,916 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:22:50,014 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:23:02,672 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:31:21,308 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:31:21,393 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:33:33,303 - aportamos - WARNING - [config.py:246] - Household creation failed: Failed to create household: {'code': '23505', 'details': 'Key (household_id)=(932bea1c-d154-4105-8052-e7f270c5bf46) already exists.', 'hint': None, 'message': 'duplicate key value violates unique constraint "chat_channels_household_id_key"'}
+2026-05-28 11:39:28,447 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:39:28,659 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:39:28,952 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:39:29,124 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:39:29,303 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:39:34,067 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:39:37,154 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:39:38,576 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:39:39,905 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:42:15,312 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:42:41,500 - aportamos - WARNING - [config.py:246] - Household creation failed: Failed to create household: {'code': '23505', 'details': 'Key (household_id)=(d9df0e47-40cc-49c0-b0c5-78a239a8f877) already exists.', 'hint': None, 'message': 'duplicate key value violates unique constraint "chat_channels_household_id_key"'}
+2026-05-28 11:42:47,528 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:42:47,934 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:42:51,371 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:42:52,429 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:43:06,098 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:43:34,216 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:43:34,217 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:46:49,552 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:46:50,663 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-05-28 11:46:51,461 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:46:51,624 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:46:51,793 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:46:51,973 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:46:52,125 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:47:12,333 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:47:59,039 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:47:59,203 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:47:59,776 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:47:59,935 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:48:00,099 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:48:05,001 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:48:19,013 - aportamos - WARNING - [config.py:246] - Household creation failed: Failed to create household: {'code': '23505', 'details': 'Key (household_id)=(e01caa73-d713-49ca-b080-62860c01bc59) already exists.', 'hint': None, 'message': 'duplicate key value violates unique constraint "chat_channels_household_id_key"'}
+2026-05-28 11:48:51,768 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:48:52,434 - aportamos - WARNING - [config.py:246] - Household retrieval failed: Failed to retrieve household: {'code': '22007', 'details': None, 'hint': None, 'message': 'invalid input syntax for type timestamp with time zone: "null"'}
+2026-05-28 11:50:18,958 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:50:20,422 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:50:20,422 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:50:23,921 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:50:24,843 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:50:24,844 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:50:32,712 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:50:33,616 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:50:33,616 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:50:50,585 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:50:51,203 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 11:50:52,106 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:50:52,125 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 11:50:52,125 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 11:50:52,125 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 11:50:56,344 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:50:58,870 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:51:07,305 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:51:21,902 - aportamos - INFO - [config.py:236] - Household created successfully
+2026-05-28 11:51:22,427 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:51:45,046 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:52:05,133 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:52:05,134 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 11:52:05,134 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 11:52:05,134 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 11:52:15,885 - aportamos - INFO - [config.py:236] - Shutting down AporTamos

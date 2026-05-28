@@ -1,408 +1,337 @@
-/**
- * Home Tab - Household Dashboard
- *
- * Displays a list of households the user is a member of.
- * Users can:
- * - View all their households with streaks and member counts
- * - Create a new household
- * - Navigate to household details for managing tasks and members
- *
- * Features:
- * - List of user's households via HouseholdContext
- * - Create household button (opens CreateHouseholdModal)
- * - HouseholdCard for each household with visual feedback
- * - Navigation to household detail screen (T044)
- * - Loading and error states
- * - Empty state message when no households
- * - Pull-to-refresh functionality
- * - Dark mode support
- * - Responsive design for mobile/tablet/web
- *
- * Integration Points:
- * - Uses HouseholdContext (T048) for household list and creation
- * - Uses HouseholdCard (T043) to display each household
- * - Uses CreateHouseholdModal (T045) for new household creation
- * - Navigates to HouseholdDetail screen (T044) on card press
- *
- * Status: Implements User Story 2 - Create and Join Households
- */
-
 import React, { useState, useCallback } from 'react';
 import {
-  FlatList,
-  RefreshControl,
   View,
+  Text,
+  ScrollView,
   StyleSheet,
-  Pressable,
+  TouchableOpacity,
+  RefreshControl,
   ActivityIndicator,
-  useWindowDimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
+import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { HouseholdCard } from '@/components/household/HouseholdCard';
-import CreateHouseholdModal from '@/components/household/CreateHouseholdModal';
 import { useHouseholdContext, useSelectedHousehold } from '@/context/HouseholdContext';
 import { useAuthState } from '@/hooks/useAuth';
-import UserStatsWidget from '@/components/stats/UserStatsWidget';
 import { useUserStats } from '@/hooks/useStats';
-import { Spacing } from '@/constants/theme';
+import CreateHouseholdModal from '@/components/household/CreateHouseholdModal';
 
-/**
- * HomeScreen Component - Displays list of user's households
- *
- * @returns {JSX.Element} Home screen with household list
- */
+// ─── Circular ring component (pure RN, no SVG) ────────────────────────────────
+
+function RingProgress({ value, size = 72, color, bg }: { value: number; size?: number; color: string; bg: string }) {
+  const clamp = Math.min(100, Math.max(0, value));
+  const strokeW = size * 0.1;
+  const inner = size - strokeW * 2;
+
+  // We fake a "filled ring" by layering:
+  // 1. outer circle (full, light bg track)
+  // 2. clipped fill using the half-rotation trick with overflow hidden
+  const half = size / 2;
+
+  return (
+    <View style={{ width: size, height: size }}>
+      {/* Track */}
+      <View style={{
+        position: 'absolute', width: size, height: size,
+        borderRadius: half, borderWidth: strokeW, borderColor: bg,
+      }} />
+      {/* Hole (creates donut look) */}
+      {/* Fill — approximation: solid colored ring for >50%, half for <=50% */}
+      <View style={{
+        position: 'absolute', width: size, height: size,
+        borderRadius: half,
+        borderWidth: strokeW,
+        borderColor: color,
+        opacity: clamp > 0 ? 1 : 0,
+        // Rotate so fill starts from top; use borderRightColor trick for rough arcs
+        borderRightColor: clamp >= 25 ? color : 'transparent',
+        borderBottomColor: clamp >= 50 ? color : 'transparent',
+        borderLeftColor: clamp >= 75 ? color : 'transparent',
+        transform: [{ rotate: '-90deg' }],
+      }} />
+      {/* Inner white hole */}
+      <View style={{
+        position: 'absolute',
+        top: strokeW, left: strokeW,
+        width: inner, height: inner,
+        borderRadius: inner / 2,
+        backgroundColor: bg === 'transparent' ? 'transparent' : undefined,
+      }} />
+    </View>
+  );
+}
+
+// ─── Home Screen ──────────────────────────────────────────────────────────────
+
 export default function HomeScreen() {
-  // Theme and layout
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
-  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  // Get user from auth
   const { user: authUser } = useAuthState();
-
-  // Household context
-  const {
-    households,
-    isLoading,
-    isLoadingHouseholds,
-    error,
-    loadHouseholds,
-    refreshSelectedHousehold,
-    clearError,
-  } = useHouseholdContext();
-
-  // Stats for the auto-selected household
+  const { households, isLoading, error, loadHouseholds, clearError } = useHouseholdContext();
   const selectedHousehold = useSelectedHousehold();
   const { stats: userStats, isLoading: isLoadingStats } = useUserStats(
     authUser?.id ?? null,
     selectedHousehold?.id ?? null
   );
 
-  // Local state
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
-  // Responsive layout
-  const isSmallScreen = width < 400;
-  const containerPadding = isSmallScreen ? 12 : 16;
+  const firstName = authUser?.name?.split(' ')[0] ?? 'Usuario';
+  const completionPct = userStats?.completionPct ?? 0;
+  const streak = selectedHousehold?.daily_streak ?? 0;
 
-  /**
-   * Load households when screen is focused
-   */
   useFocusEffect(
     useCallback(() => {
-      if (authUser?.id) {
-        loadHouseholds();
-      }
+      if (authUser?.id) loadHouseholds();
     }, [authUser?.id, loadHouseholds])
   );
 
-  /**
-   * Handle pull-to-refresh
-   */
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    try {
-      await loadHouseholds();
-    } finally {
-      setIsRefreshing(false);
-    }
+    try { await loadHouseholds(); } finally { setIsRefreshing(false); }
   }, [loadHouseholds]);
 
-  /**
-   * Handle household card press - navigate to household detail
-   * @param householdId - ID of household to navigate to
-   */
-  const handleHouseholdPress = useCallback(
-    (householdId: string) => {
-      clearError();
-      router.push(householdId as any);
-    },
-    [router, clearError]
-  );
-
-  /**
-   * Handle create household success
-   */
-  const handleCreateHouseholdSuccess = useCallback(() => {
-    setCreateModalVisible(false);
-    loadHouseholds();
-  }, [loadHouseholds]);
-
-  /**
-   * Render household card item
-   */
-  const renderHouseholdItem = useCallback(
-    ({ item }: { item: any }) => (
-      <HouseholdCard
-        household={item}
-        memberCount={item.daily_streak} // Note: Using streak as placeholder for member count from list view
-        onPress={() => handleHouseholdPress(item.id)}
-        showOwnerBadge={item.owner_id === authUser?.id}
-        testID={`household-card-${item.id}`}
-      />
-    ),
-    [authUser?.id, handleHouseholdPress]
-  );
-
-  /**
-   * Render header with title and create button
-   */
-  const renderHeader = useCallback(() => {
-    return (
-      <View style={{ paddingHorizontal: containerPadding }}>
-        {/* Title row */}
-        <View style={styles.header}>
-          <View style={styles.titleSection}>
-            <ThemedText type="title">My Households</ThemedText>
-            <ThemedText style={styles.subtitle}>
-              {households.length === 0
-                ? 'Create your first household to get started'
-                : `You have ${households.length} household${households.length === 1 ? '' : 's'}`}
-            </ThemedText>
-          </View>
-
-          {/* Create Household Button */}
-          <Pressable
-            style={({ pressed }) => [
-              styles.createButton,
-              {
-                backgroundColor: colors.tint,
-                opacity: pressed ? 0.7 : 1,
-              },
-            ]}
-            onPress={() => setCreateModalVisible(true)}
-            accessibilityRole="button"
-            accessibilityLabel="Create new household"
-            accessibilityHint="Opens form to create a new household">
-            <ThemedText style={styles.createButtonText}>+ Create</ThemedText>
-          </Pressable>
-        </View>
-
-        {/* Stats widget — only shown when user has a selected household */}
-        {selectedHousehold ? (
-          <View style={styles.statsWidgetContainer}>
-            <UserStatsWidget
-              completionPct={userStats?.completionPct ?? 0}
-              tasksToday={userStats?.tasksToday ?? 0}
-              tasksCompleted={userStats?.tasksCompletedToday ?? 0}
-              streak={selectedHousehold.daily_streak}
-              isLoading={isLoadingStats}
-            />
-          </View>
-        ) : null}
-      </View>
-    );
-  }, [colors.tint, households.length, selectedHousehold, userStats, isLoadingStats, containerPadding]);
-
-  /**
-   * Render empty state
-   */
-  const renderEmptyState = useCallback(() => {
-    return (
-      <View style={[styles.emptyState, { paddingHorizontal: containerPadding }]}>
-        <ThemedText style={styles.emptyTitle}>No Households Yet</ThemedText>
-        <ThemedText style={styles.emptyMessage}>
-          Create a new household to start managing tasks with your family or group.
-        </ThemedText>
-        <Pressable
-          style={({ pressed }) => [
-            styles.emptyButton,
-            {
-              backgroundColor: colors.tint,
-              opacity: pressed ? 0.7 : 1,
-            },
-          ]}
-          onPress={() => setCreateModalVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Create first household">
-          <ThemedText style={styles.createButtonText}>Create Household</ThemedText>
-        </Pressable>
-      </View>
-    );
-  }, [containerPadding, colors.tint]);
-
-  /**
-   * Render loading state
-   */
   if (isLoading && households.length === 0) {
     return (
-      <ThemedView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.tint} />
-          <ThemedText style={styles.loadingText}>Loading your households...</ThemedText>
-        </View>
-      </ThemedView>
+      <View style={[styles.centered, { backgroundColor: colors.background, paddingTop: insets.top }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={[styles.loadingText, { color: colors.onSurfaceVariant }]}>
+          Cargando tus hogares...
+        </Text>
+      </View>
     );
   }
 
-  /**
-   * Render error state
-   */
-  if (error) {
-    return (
-      <ThemedView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <ThemedText style={styles.errorTitle}>Error</ThemedText>
-          <ThemedText style={styles.errorMessage}>{error}</ThemedText>
-          <Pressable
-            style={({ pressed }) => [
-              styles.retryButton,
-              {
-                backgroundColor: colors.tint,
-                opacity: pressed ? 0.7 : 1,
-              },
-            ]}
-            onPress={() => {
-              clearError();
-              loadHouseholds();
-            }}
-            accessibilityRole="button"
-            accessibilityLabel="Retry loading households">
-            <ThemedText style={styles.createButtonText}>Retry</ThemedText>
-          </Pressable>
-        </View>
-      </ThemedView>
-    );
-  }
-
-  /**
-   * Main render - household list
-   */
   return (
-    <ThemedView style={styles.container}>
-      <FlatList
-        data={households}
-        renderItem={renderHouseholdItem}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={renderHeader}
-        ListEmptyComponent={renderEmptyState}
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.scroll, { paddingTop: insets.top, paddingBottom: insets.bottom + 24 }]}
         refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.tint}
-            colors={[colors.tint]}
-          />
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} tintColor={colors.primary} colors={[colors.primary]} />
         }
-        contentContainerStyle={[
-          styles.listContent,
-          { paddingHorizontal: containerPadding },
-        ]}
-        scrollEnabled={households.length > 0}
-        testID="household-list"
-      />
+      >
+        {/* ── Top Bar ── */}
+        <View style={styles.topBar}>
+          <View style={styles.topBarLeft}>
+            <View style={[styles.avatarBadge, { backgroundColor: colors.primaryFixed }]}>
+              <Text style={{ fontSize: 18 }}>🏠</Text>
+            </View>
+            <Text style={[styles.brandName, { color: colors.primary }]}>AporTamos</Text>
+          </View>
+          <TouchableOpacity style={styles.bellButton} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Text style={{ fontSize: 22, color: colors.primary }}>🔔</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Create Household Modal */}
+        {/* ── Greeting ── */}
+        <View style={styles.greeting}>
+          <Text style={[styles.greetingTitle, { color: colors.onSurface }]}>¡Hola, {firstName}!</Text>
+          <Text style={[styles.greetingSubtitle, { color: colors.onSurfaceVariant }]}>
+            Listo para conquistar tu hogar hoy.
+          </Text>
+        </View>
+
+        {/* ── Global Stats ── */}
+        <Text style={[styles.sectionTitle, { color: colors.onSurface }]}>Tus Estadísticas Globales</Text>
+        <View style={styles.statsRow}>
+          {/* Completion card */}
+          <View style={[styles.statsCard, { backgroundColor: colors.surfaceContainerLowest }, Shadows.card]}>
+            {isLoadingStats ? (
+              <ActivityIndicator color={colors.primary} style={{ marginBottom: 8 }} />
+            ) : (
+              <RingProgress
+                value={completionPct}
+                size={68}
+                color={colors.primary}
+                bg={colors.primaryFixed}
+              />
+            )}
+            <Text style={[styles.statsNumber, { color: colors.primary }]}>
+              {Math.round(completionPct)}%
+            </Text>
+            <Text style={[styles.statsLabel, { color: colors.onSurfaceVariant }]}>Media de tareas</Text>
+          </View>
+
+          {/* Streak card */}
+          <View style={[styles.statsCard, styles.streakCard, { backgroundColor: colors.streak }, Shadows.streak]}>
+            <Text style={styles.streakNumber}>{streak}</Text>
+            <Text style={styles.streakUnit}>días</Text>
+            <Text style={styles.streakCaption}>Tu Racha 🔥</Text>
+          </View>
+        </View>
+
+        {/* ── Households ── */}
+        <Text style={[styles.sectionTitle, { color: colors.onSurface }]}>Tus Hogares</Text>
+
+        {error ? (
+          <View style={[styles.errorBox, { backgroundColor: colors.errorContainer, borderRadius: Radius.md }]}>
+            <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
+            <TouchableOpacity onPress={() => { clearError(); loadHouseholds(); }}>
+              <Text style={[styles.retryText, { color: colors.primary }]}>Reintentar</Text>
+            </TouchableOpacity>
+          </View>
+        ) : households.length === 0 ? (
+          <View style={[styles.emptyBox, { borderColor: colors.outlineVariant }]}>
+            <Text style={{ fontSize: 32 }}>🏘️</Text>
+            <Text style={[styles.emptyTitle, { color: colors.onSurface }]}>Sin hogares aún</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.onSurfaceVariant }]}>
+              Crea tu primer hogar para empezar
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.householdList}>
+            {households.map((h) => (
+              <TouchableOpacity
+                key={h.id}
+                style={[styles.householdRow, { backgroundColor: colors.surfaceContainerLowest, borderColor: colors.outlineVariant }, Shadows.card]}
+                onPress={() => router.push(h.id as any)}
+                activeOpacity={0.75}
+              >
+                {/* Icon */}
+                <View style={[styles.householdIcon, { backgroundColor: colors.primaryFixed }]}>
+                  <Text style={{ fontSize: 20 }}>🏠</Text>
+                </View>
+
+                {/* Info */}
+                <View style={styles.householdInfo}>
+                  <Text style={[styles.householdName, { color: colors.onSurface }]} numberOfLines={1}>
+                    {h.name}
+                  </Text>
+                  <Text style={[styles.householdMeta, { color: colors.onSurfaceVariant }]}>
+                    {h.daily_streak > 0 ? `🔥 ${h.daily_streak} días de racha` : 'Sin racha activa'}
+                  </Text>
+                </View>
+
+                {/* Arrow */}
+                <Text style={[styles.arrow, { color: colors.outline }]}>›</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {/* ── Add Household Button ── */}
+        <TouchableOpacity
+          style={[styles.addButton, { borderColor: colors.primary }]}
+          onPress={() => setCreateModalVisible(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.addButtonText, { color: colors.primary }]}>＋</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
       <CreateHouseholdModal
         visible={createModalVisible}
         onClose={() => setCreateModalVisible(false)}
-        onSuccess={handleCreateHouseholdSuccess}
+        onSuccess={() => { setCreateModalVisible(false); loadHouseholds(); }}
       />
-    </ThemedView>
+    </View>
   );
 }
 
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  listContent: {
-    paddingTop: 8,
-    paddingBottom: 24,
-  },
-  header: {
+  root: { flex: 1 },
+  scroll: { paddingHorizontal: 20 },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
+  loadingText: { fontSize: 14, fontWeight: '500' },
+
+  // Top bar
+  topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 16,
+    paddingBottom: 4,
+  },
+  topBarLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  avatarBadge: {
+    width: 40, height: 40,
+    borderRadius: Radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  brandName: { fontSize: 18, fontWeight: '800', letterSpacing: -0.3 },
+  bellButton: { padding: 4 },
+
+  // Greeting
+  greeting: { paddingTop: 20, paddingBottom: 8, gap: 4 },
+  greetingTitle: { fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
+  greetingSubtitle: { fontSize: 15, fontWeight: '400' },
+
+  // Section titles
+  sectionTitle: { fontSize: 18, fontWeight: '700', marginTop: 24, marginBottom: 12 },
+
+  // Stats
+  statsRow: { flexDirection: 'row', gap: 12 },
+  statsCard: {
+    flex: 1,
+    borderRadius: Radius.lg,
+    padding: Spacing.xl,
     alignItems: 'flex-start',
-    marginBottom: 20,
-    marginTop: 8,
+    gap: 6,
+    minHeight: 160,
   },
-  statsWidgetContainer: {
-    marginBottom: Spacing.lg,
-  },
-  titleSection: {
-    flex: 1,
-    marginRight: 12,
-  },
-  subtitle: {
-    fontSize: 13,
-    marginTop: 4,
-    opacity: 0.7,
-  },
-  createButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
+  statsNumber: { fontSize: 34, fontWeight: '800', lineHeight: 40 },
+  statsLabel: { fontSize: 13, fontWeight: '500' },
+
+  streakCard: { alignItems: 'flex-start', justifyContent: 'flex-end' },
+  streakNumber: { color: '#fff', fontSize: 48, fontWeight: '800', lineHeight: 52, marginTop: 'auto' as any },
+  streakUnit: { color: '#fff', fontSize: 18, fontWeight: '600', marginTop: -4 },
+  streakCaption: { color: '#fff', fontSize: 13, fontWeight: '600' },
+
+  // Households
+  householdList: { gap: 10 },
+  householdRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    padding: 14,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    gap: 12,
   },
-  createButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: 'white',
-  },
-  emptyState: {
+  householdIcon: {
+    width: 48, height: 48,
+    borderRadius: Radius.full,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
+    flexShrink: 0,
   },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  emptyMessage: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 24,
-    opacity: 0.7,
-    maxWidth: 280,
-  },
-  emptyButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    justifyContent: 'center',
+  householdInfo: { flex: 1 },
+  householdName: { fontSize: 15, fontWeight: '700' },
+  householdMeta: { fontSize: 13, marginTop: 2 },
+  arrow: { fontSize: 24, fontWeight: '300', flexShrink: 0 },
+
+  // Empty / Error
+  emptyBox: {
     alignItems: 'center',
+    paddingVertical: 40,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: Radius.lg,
+    gap: 8,
   },
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  errorContainer: {
-    flex: 1,
+  emptyTitle: { fontSize: 16, fontWeight: '700' },
+  emptySubtitle: { fontSize: 14, textAlign: 'center', maxWidth: 220 },
+  errorBox: { padding: 16, gap: 8, alignItems: 'center' },
+  errorText: { fontSize: 14, textAlign: 'center' },
+  retryText: { fontSize: 14, fontWeight: '600' },
+
+  // Add button
+  addButton: {
+    marginTop: 16,
+    height: 56,
+    borderRadius: Radius.full,
+    borderWidth: 2,
+    borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
   },
-  errorTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  errorMessage: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 20,
-    opacity: 0.7,
-  },
-  retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  addButtonText: { fontSize: 28, fontWeight: '300', lineHeight: 32 },
 });

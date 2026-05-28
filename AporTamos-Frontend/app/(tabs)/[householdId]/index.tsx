@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthState } from '@/hooks/useAuth';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
@@ -24,6 +25,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
   const { user } = useAuthState();
 
   const [household, setHousehold] = useState<HouseholdDetail | null>(null);
@@ -91,7 +93,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
 
   if (isLoading && !household) {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+      <View style={[styles.centered, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -99,7 +101,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
 
   if (error && !household) {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+      <View style={[styles.centered, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <Text style={[styles.errorTitle, { color: colors.text }]}>Error</Text>
         <Text style={[styles.errorMsg, { color: colors.subtext }]}>{error}</Text>
         <TouchableOpacity
@@ -122,7 +124,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ paddingBottom: 32 }}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 32, paddingTop: insets.top }}
       refreshControl={
         <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} tintColor={colors.primary} />
       }

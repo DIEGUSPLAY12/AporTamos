@@ -12,7 +12,7 @@ All endpoints require authentication and validate user access permissions.
 """
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status, Path
@@ -26,6 +26,7 @@ from app.models.household import (
 from app.services.household_service import (
     create_household,
     get_household,
+    get_user_households,
     invite_member,
     accept_invitation,
     remove_member,
@@ -42,6 +43,20 @@ from app.config import log_info, log_warning, log_error
 
 router = APIRouter(prefix="/households", tags=["Households"])
 logger = logging.getLogger(__name__)
+
+
+@router.get("", response_model=List[HouseholdResponse])
+async def list_households_endpoint(
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> List[HouseholdResponse]:
+    """List all households where the current user is a member."""
+    try:
+        households = await get_user_households(current_user_id)
+        log_info("User households listed", extra={"user_id": str(current_user_id), "count": len(households)})
+        return households
+    except HouseholdError as exc:
+        log_error("Failed to list households", exc, extra={"user_id": str(current_user_id)})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch households.")
 
 
 @router.post("", response_model=HouseholdResponse, status_code=status.HTTP_201_CREATED)

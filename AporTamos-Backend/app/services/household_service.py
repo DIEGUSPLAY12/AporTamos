@@ -136,15 +136,7 @@ async def create_household(
             "updated_at": now.isoformat(),
         }).execute()
         
-        # Create ChatChannel for household
-        channel_id = uuid4()
-        get_supabase_client().table("chat_channels").insert({
-            "id": str(channel_id),
-            "household_id": str(household_id),
-            "created_at": now.isoformat(),
-            "updated_at": now.isoformat(),
-        }).execute()
-        
+        # Chat channel is created automatically by the DB trigger on household INSERT
         logger.info(f"Household created: {household_record['id']} by user {user_id}")
         
         return HouseholdResponse(
@@ -163,6 +155,46 @@ async def create_household(
             raise
         logger.error(f"Error creating household: {str(e)}")
         raise HouseholdError(f"Failed to create household: {str(e)}")
+
+
+async def get_user_households(user_id: UUID) -> List[HouseholdResponse]:
+    """Return all active households where user_id is a member.
+
+    Raises:
+        HouseholdError: If database query fails
+    """
+    try:
+        supabase = get_supabase_client()
+
+        members_resp = supabase.table("household_members").select(
+            "household_id"
+        ).eq("user_id", str(user_id)).execute()
+
+        household_ids = [m["household_id"] for m in (members_resp.data or [])]
+        if not household_ids:
+            return []
+
+        households_resp = supabase.table("households").select(
+            "id, owner_id, name, timezone_id, daily_streak, last_completion_date, created_at, updated_at"
+        ).in_("id", household_ids).execute()
+
+        result = []
+        for h in (households_resp.data or []):
+            result.append(HouseholdResponse(
+                id=UUID(h["id"]),
+                owner_id=UUID(h["owner_id"]),
+                name=h["name"],
+                timezone_id=h["timezone_id"],
+                daily_streak=h["daily_streak"],
+                last_completion_date=h.get("last_completion_date"),
+                created_at=datetime.fromisoformat(h["created_at"]),
+                updated_at=datetime.fromisoformat(h["updated_at"]),
+            ))
+        return result
+
+    except Exception as e:
+        logger.error(f"Error fetching user households: {str(e)}")
+        raise HouseholdError(f"Failed to fetch households for user {user_id}: {str(e)}")
 
 
 async def get_household(household_id: UUID) -> Optional[HouseholdDetail]:
@@ -188,7 +220,7 @@ async def get_household(household_id: UUID) -> Optional[HouseholdDetail]:
         # Get household record
         response = get_supabase_client().table("households").select("*").eq(
             "id", str(household_id)
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if not response.data or len(response.data) == 0:
             return None
@@ -564,7 +596,7 @@ async def remove_member_by_email(
         # Look up user by email
         response = get_supabase_client().table("users").select("id").eq(
             "email", member_email.lower()
-        ).eq("deleted_at", "null").execute()
+        ).is_("deleted_at", "null").execute()
         
         if not response.data:
             raise HouseholdMemberError(f"User with email {member_email} not found")

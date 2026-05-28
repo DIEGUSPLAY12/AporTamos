@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLogin, useGoogleAuth, useAuthError } from '@/hooks/useAuth';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
@@ -24,6 +25,7 @@ export default function LoginScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
+  const insets = useSafeAreaInsets();
   const { login, isLoading } = useLogin();
   const { googleLogin, isLoading: isGoogleLoading } = useGoogleAuth();
   const { error: contextError, clearError } = useAuthError();
@@ -65,7 +67,7 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top + Spacing.lg, paddingBottom: insets.bottom + Spacing.xl }]}>
 
           {/* Logo */}
           <View style={styles.logoArea}>

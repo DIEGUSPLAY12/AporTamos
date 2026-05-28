@@ -226,16 +226,7 @@ export async function getHouseholdDetails(householdId: string): Promise<Househol
  * const households = await getUserHouseholds();
  */
 export async function getUserHouseholds(): Promise<Household[]> {
-  try {
-    // TODO: Implement GET /users/{user_id}/households endpoint in backend
-    // This endpoint should return list of all households user is member of
-    // For now, return empty array - will be updated when backend endpoint available
-    console.warn('[API] getUserHouseholds: Backend endpoint not yet implemented');
-    return [];
-  } catch (error) {
-    console.error('[API] Failed to fetch user households:', error);
-    throw error;
-  }
+  return get('/households');
 }
 
 /**
