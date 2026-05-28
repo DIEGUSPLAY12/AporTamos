@@ -130,7 +130,13 @@
   - snake_case → camelCase mappers (mapHouseholdStats, mapUserStats)
   - isMounted guard on all setState calls; auto-cleanup of RT subscription on unmount
   - All 3 hooks follow same pattern as existing useTasks.ts
-- [ ] T089 Add UserStatsWidget to home screen in AporTamos-Frontend/app/(tabs)/index.tsx
+- [x] T089 Add UserStatsWidget to home screen in AporTamos-Frontend/app/(tabs)/index.tsx
+  - Imports: UserStatsWidget, useUserStats, useSelectedHousehold, Spacing
+  - Calls useUserStats(authUser?.id, selectedHousehold?.id) at component level
+  - Renders UserStatsWidget in renderHeader below the title/create-button row
+  - streak taken from selectedHousehold.daily_streak (already in Household type)
+  - Widget only shown when selectedHousehold exists; hidden otherwise (no household yet)
+  - useCallback deps updated: adds selectedHousehold, userStats, isLoadingStats, containerPadding
 - [ ] T090 Add HouseholdStats to household header in AporTamos-Frontend/components/household/HouseholdHeader.tsx
 - [ ] T091 [P] Subscribe to task_completions real-time events to update stats instantly (<5s)
 - [ ] T092 Add MembersSection with individual stats in AporTamos-Frontend/components/household/MembersSection.tsx

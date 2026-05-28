@@ -44,8 +44,11 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { HouseholdCard } from '@/components/household/HouseholdCard';
 import CreateHouseholdModal from '@/components/household/CreateHouseholdModal';
-import { useHouseholdContext } from '@/context/HouseholdContext';
+import { useHouseholdContext, useSelectedHousehold } from '@/context/HouseholdContext';
 import { useAuthState } from '@/hooks/useAuth';
+import UserStatsWidget from '@/components/stats/UserStatsWidget';
+import { useUserStats } from '@/hooks/useStats';
+import { Spacing } from '@/constants/theme';
 
 /**
  * HomeScreen Component - Displays list of user's households
@@ -72,6 +75,13 @@ export default function HomeScreen() {
     refreshSelectedHousehold,
     clearError,
   } = useHouseholdContext();
+
+  // Stats for the auto-selected household
+  const selectedHousehold = useSelectedHousehold();
+  const { stats: userStats, isLoading: isLoadingStats } = useUserStats(
+    authUser?.id ?? null,
+    selectedHousehold?.id ?? null
+  );
 
   // Local state
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -145,34 +155,50 @@ export default function HomeScreen() {
    */
   const renderHeader = useCallback(() => {
     return (
-      <View style={[styles.header, { paddingHorizontal: containerPadding }]}>
-        <View style={styles.titleSection}>
-          <ThemedText type="title">My Households</ThemedText>
-          <ThemedText style={styles.subtitle}>
-            {households.length === 0
-              ? 'Create your first household to get started'
-              : `You have ${households.length} household${households.length === 1 ? '' : 's'}`}
-          </ThemedText>
+      <View style={{ paddingHorizontal: containerPadding }}>
+        {/* Title row */}
+        <View style={styles.header}>
+          <View style={styles.titleSection}>
+            <ThemedText type="title">My Households</ThemedText>
+            <ThemedText style={styles.subtitle}>
+              {households.length === 0
+                ? 'Create your first household to get started'
+                : `You have ${households.length} household${households.length === 1 ? '' : 's'}`}
+            </ThemedText>
+          </View>
+
+          {/* Create Household Button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.createButton,
+              {
+                backgroundColor: colors.tint,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
+            onPress={() => setCreateModalVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Create new household"
+            accessibilityHint="Opens form to create a new household">
+            <ThemedText style={styles.createButtonText}>+ Create</ThemedText>
+          </Pressable>
         </View>
 
-        {/* Create Household Button */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.createButton,
-            {
-              backgroundColor: colors.tint,
-              opacity: pressed ? 0.7 : 1,
-            },
-          ]}
-          onPress={() => setCreateModalVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Create new household"
-          accessibilityHint="Opens form to create a new household">
-          <ThemedText style={styles.createButtonText}>+ Create</ThemedText>
-        </Pressable>
+        {/* Stats widget — only shown when user has a selected household */}
+        {selectedHousehold ? (
+          <View style={styles.statsWidgetContainer}>
+            <UserStatsWidget
+              completionPct={userStats?.completionPct ?? 0}
+              tasksToday={userStats?.tasksToday ?? 0}
+              tasksCompleted={userStats?.tasksCompletedToday ?? 0}
+              streak={selectedHousehold.daily_streak}
+              isLoading={isLoadingStats}
+            />
+          </View>
+        ) : null}
       </View>
     );
-  }, [colors.tint, households.length]);
+  }, [colors.tint, households.length, selectedHousehold, userStats, isLoadingStats, containerPadding]);
 
   /**
    * Render empty state
@@ -296,6 +322,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
     marginTop: 8,
+  },
+  statsWidgetContainer: {
+    marginBottom: Spacing.lg,
   },
   titleSection: {
     flex: 1,
