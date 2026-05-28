@@ -75,7 +75,13 @@
     - Called by stats endpoints (T080, T081)
     - Works with real-time subscriptions via task_completions events
   - File: AporTamos-Backend/app/services/gamification_service.py (700+ lines)
-- [ ] T080 Implement GET /households/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
+- [x] T080 Implement GET /households/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
+  - Created AporTamos-Backend/app/routers/stats.py with GET /households/{household_id}/stats
+  - Verifies caller is a household member (403 if not)
+  - Calls get_household_stats() from gamification_service; maps result to HouseholdStatsResponse
+  - Handles HouseholdNotFoundError (404) and StatsCalculationError (500)
+  - Created AporTamos-Backend/app/models/stats.py with HouseholdStatsResponse, MemberStats, UserStatsResponse, DailyCompletionEntry
+  - Registered stats_router in app/routers/__init__.py and app/main.py
 - [ ] T081 [P] Implement GET /users/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
 - [ ] T082 [P] Add calculation: completion_pct = (Σ completed_weight / Σ total_weight) × 100 (ver spec.md fórmula)
 - [ ] T083 [P] Verify streak logic: increment if 100% completion, reset to 0 if <100%, handled by pg_cron trigger
