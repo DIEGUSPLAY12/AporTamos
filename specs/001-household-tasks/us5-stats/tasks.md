@@ -123,7 +123,13 @@
   - Animated.timing on value/trackWidth changes (useNativeDriver: false — layout property)
   - Snaps immediately on first layout (no animation from 0)
   - Color defaults to primary (violet) and auto-switches to streak (orange) at 100%
-- [ ] T088 [P] Create useStats hook in AporTamos-Frontend/hooks/useStats.ts (fetch + real-time via task_completions subscription)
+- [x] T088 [P] Create useStats hook in AporTamos-Frontend/hooks/useStats.ts (fetch + real-time via task_completions subscription)
+  - Exports: useHouseholdStats(householdId), useUserStats(userId, householdId), useStats(userId, householdId) (combined)
+  - Real-time: subscribeToTaskAssignments(householdId) — task_assignments UPDATE when is_completed=true triggers refetch
+    (task_completions lacks household_id column; task_assignments is the correct table for filtered RT)
+  - snake_case → camelCase mappers (mapHouseholdStats, mapUserStats)
+  - isMounted guard on all setState calls; auto-cleanup of RT subscription on unmount
+  - All 3 hooks follow same pattern as existing useTasks.ts
 - [ ] T089 Add UserStatsWidget to home screen in AporTamos-Frontend/app/(tabs)/index.tsx
 - [ ] T090 Add HouseholdStats to household header in AporTamos-Frontend/components/household/HouseholdHeader.tsx
 - [ ] T091 [P] Subscribe to task_completions real-time events to update stats instantly (<5s)
