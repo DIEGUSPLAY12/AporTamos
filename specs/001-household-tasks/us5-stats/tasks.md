@@ -110,7 +110,13 @@
   - Member list: avatar initial + name + mini progress bar + % per member (MemberStat[])
   - Progress bar + percentage turn orange (streak color) at 100%
   - Loading state with ActivityIndicator; fully themed
-- [ ] T086 [P] Create StreakDisplay component in AporTamos-Frontend/components/stats/StreakDisplay.tsx (animated, celebration on milestone)
+- [x] T086 [P] Create StreakDisplay component in AporTamos-Frontend/components/stats/StreakDisplay.tsx (animated, celebration on milestone)
+  - Props: streak (number), size ('compact' | 'default' | 'large')
+  - Milestones: 7, 30, 100 días → spring scale × 1.35 + glow halo + label "¡1 semana!" / "¡1 mes!" / "¡100 días!"
+  - Normal streak change: subtle pulse (scale × 1.15)
+  - Milestone badge turns solid orange; normal badge uses orange tint bg
+  - Days sub-label hidden in compact mode; milestone label auto-clears after 3s
+  - All animations via Animated API (useNativeDriver: true), no extra dependencies
 - [ ] T087 Create ProgressBar component in AporTamos-Frontend/components/stats/ProgressBar.tsx
 - [ ] T088 [P] Create useStats hook in AporTamos-Frontend/hooks/useStats.ts (fetch + real-time via task_completions subscription)
 - [ ] T089 Add UserStatsWidget to home screen in AporTamos-Frontend/app/(tabs)/index.tsx
