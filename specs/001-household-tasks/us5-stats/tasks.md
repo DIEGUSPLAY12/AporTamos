@@ -82,9 +82,20 @@
   - Handles HouseholdNotFoundError (404) and StatsCalculationError (500)
   - Created AporTamos-Backend/app/models/stats.py with HouseholdStatsResponse, MemberStats, UserStatsResponse, DailyCompletionEntry
   - Registered stats_router in app/routers/__init__.py and app/main.py
-- [ ] T081 [P] Implement GET /users/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
-- [ ] T082 [P] Add calculation: completion_pct = (Σ completed_weight / Σ total_weight) × 100 (ver spec.md fórmula)
-- [ ] T083 [P] Verify streak logic: increment if 100% completion, reset to 0 if <100%, handled by pg_cron trigger
+- [x] T081 [P] Implement GET /users/{id}/stats endpoint in AporTamos-Backend/app/routers/stats.py
+  - Added GET /users/{user_id}/stats?household_id={id} in stats.py
+  - Calls get_user_stats(user_id, household_id) → UserStatsResponse (completion_pct, tasks_today, tasks_completed_today, completion_history)
+  - Verifies both requester AND target user_id are household members (prevents IDOR)
+  - HouseholdError from access check is now caught and returns 500
+  - Uses model_validate() (Pydantic v2 idiomatic) instead of **stats
+- [x] T082 [P] Add calculation: completion_pct = (Σ completed_weight / Σ total_weight) × 100 (ver spec.md fórmula)
+  - Formula already implemented in gamification_service.py: calculate_completion_pct() (line 148) and calculate_user_completion_pct() (line 259)
+  - DB-side equivalent in contracts/database-schema.md: calculate_household_completion() SQL function uses same weighted formula
+  - Verified consistent across Python service layer and SQL trigger
+- [x] T083 [P] Verify streak logic: increment if 100% completion, reset to 0 if <100%, handled by pg_cron trigger
+  - Confirmed in contracts/database-schema.md: update_household_streaks() function increments daily_streak if completion=100%, resets to 0 otherwise
+  - Scheduled via pg_cron at 12:05 AM UTC daily: cron.schedule('update-household-streaks', '5 0 * * *', ...)
+  - Python service reads daily_streak from households table (read-only); DB owns the mutation
 
 ## Frontend
 
