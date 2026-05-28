@@ -117,7 +117,12 @@
   - Milestone badge turns solid orange; normal badge uses orange tint bg
   - Days sub-label hidden in compact mode; milestone label auto-clears after 3s
   - All animations via Animated API (useNativeDriver: true), no extra dependencies
-- [ ] T087 Create ProgressBar component in AporTamos-Frontend/components/stats/ProgressBar.tsx
+- [x] T087 Create ProgressBar component in AporTamos-Frontend/components/stats/ProgressBar.tsx
+  - Props: value (0-100), height (default 8), color (override), trackColor (override), animated (default true), duration (default 400ms)
+  - Uses onLayout to measure real track width → converts % to absolute px for Animated.Value
+  - Animated.timing on value/trackWidth changes (useNativeDriver: false — layout property)
+  - Snaps immediately on first layout (no animation from 0)
+  - Color defaults to primary (violet) and auto-switches to streak (orange) at 100%
 - [ ] T088 [P] Create useStats hook in AporTamos-Frontend/hooks/useStats.ts (fetch + real-time via task_completions subscription)
 - [ ] T089 Add UserStatsWidget to home screen in AporTamos-Frontend/app/(tabs)/index.tsx
 - [ ] T090 Add HouseholdStats to household header in AporTamos-Frontend/components/household/HouseholdHeader.tsx
