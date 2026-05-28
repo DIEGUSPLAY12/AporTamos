@@ -99,7 +99,11 @@
 
 ## Frontend
 
-- [ ] T084 [P] Create UserStatsWidget component in AporTamos-Frontend/components/stats/UserStatsWidget.tsx
+- [x] T084 [P] Create UserStatsWidget component in AporTamos-Frontend/components/stats/UserStatsWidget.tsx
+  - Props: completionPct, tasksToday, tasksCompleted, streak, isLoading
+  - Shows: percentage label, large % number, animated progress bar (violet → orange at 100%), task count, streak badge
+  - Loading state with ActivityIndicator
+  - Fully themed (Colors, Spacing, Radius, Shadows from constants/theme)
 - [ ] T085 [P] Create HouseholdStats component in AporTamos-Frontend/components/stats/HouseholdStats.tsx
 - [ ] T086 [P] Create StreakDisplay component in AporTamos-Frontend/components/stats/StreakDisplay.tsx (animated, celebration on milestone)
 - [ ] T087 Create ProgressBar component in AporTamos-Frontend/components/stats/ProgressBar.tsx
