@@ -104,7 +104,12 @@
   - Shows: percentage label, large % number, animated progress bar (violet → orange at 100%), task count, streak badge
   - Loading state with ActivityIndicator
   - Fully themed (Colors, Spacing, Radius, Shadows from constants/theme)
-- [ ] T085 [P] Create HouseholdStats component in AporTamos-Frontend/components/stats/HouseholdStats.tsx
+- [x] T085 [P] Create HouseholdStats component in AporTamos-Frontend/components/stats/HouseholdStats.tsx
+  - Props: householdName, completionPct, streak, tasksTotal, tasksCompleted, members[], isLoading
+  - Shows: household name + "Progreso del hogar" label, streak badge, large % number, progress bar, task count
+  - Member list: avatar initial + name + mini progress bar + % per member (MemberStat[])
+  - Progress bar + percentage turn orange (streak color) at 100%
+  - Loading state with ActivityIndicator; fully themed
 - [ ] T086 [P] Create StreakDisplay component in AporTamos-Frontend/components/stats/StreakDisplay.tsx (animated, celebration on milestone)
 - [ ] T087 Create ProgressBar component in AporTamos-Frontend/components/stats/ProgressBar.tsx
 - [ ] T088 [P] Create useStats hook in AporTamos-Frontend/hooks/useStats.ts (fetch + real-time via task_completions subscription)
