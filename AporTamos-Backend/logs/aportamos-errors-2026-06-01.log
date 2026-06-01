@@ -311,3 +311,39 @@ Traceback (most recent call last):
   File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
     raise APIError(r.json())
 postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-06-01 12:30:06,124 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-06-01 12:30:06,127 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 257, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-06-01 12:56:35,018 - aportamos - ERROR - [config.py:229] - Avatar update failed: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'avatar_url' column of 'users' in the schema cache"}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 161, in update_my_avatar_endpoint
+    }).eq("id", str(current_user_id)).execute()
+                                      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'avatar_url' column of 'users' in the schema cache"}

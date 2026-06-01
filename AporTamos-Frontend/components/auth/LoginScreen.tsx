@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useLogin, useGoogleAuth, useAuthError } from '@/hooks/useAuth';
+import { useLogin, useAuthError } from '@/hooks/useAuth';
+import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
 
@@ -27,7 +28,7 @@ export default function LoginScreen() {
 
   const insets = useSafeAreaInsets();
   const { login, isLoading } = useLogin();
-  const { googleLogin, isLoading: isGoogleLoading } = useGoogleAuth();
+  const { signIn: googleSignIn, isLoading: isGoogleLoading, error: googleError } = useGoogleSignIn();
   const { error: contextError, clearError } = useAuthError();
 
   const [email, setEmail] = useState('');
@@ -35,7 +36,7 @@ export default function LoginScreen() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const error = localError || contextError;
+  const error = localError || contextError || googleError;
   const isLoggingIn = isLoading || isGoogleLoading;
 
   const handleLogin = useCallback(async () => {
@@ -54,11 +55,11 @@ export default function LoginScreen() {
     }
   }, [email, password, login, clearError]);
 
-  const handleGoogleLogin = useCallback(async () => {
+  const handleGoogleLogin = useCallback(() => {
     setLocalError(null);
     clearError();
-    setLocalError('Integración con Google próximamente. Usa correo y contraseña.');
-  }, [googleLogin, clearError]);
+    googleSignIn(); // hook surfaces a clear message if not configured for this platform
+  }, [googleSignIn, clearError]);
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
@@ -174,22 +175,20 @@ export default function LoginScreen() {
               <View style={[styles.dividerLine, { backgroundColor: colors.outlineVariant }]} />
             </View>
 
-            {/* Social Buttons */}
+            {/* Google Sign-In */}
             <TouchableOpacity
-              style={[styles.socialButton, { backgroundColor: colors.surfaceContainer, borderColor: colors.outlineVariant }]}
+              style={[styles.socialButton, { backgroundColor: colors.surfaceContainer, borderColor: colors.outlineVariant, opacity: isLoggingIn ? 0.7 : 1 }]}
               onPress={handleGoogleLogin}
-              disabled={isGoogleLoading}
+              disabled={isLoggingIn}
             >
-              <Text style={[styles.socialButtonIcon, { color: colors.onSurface }]}>G</Text>
-              <Text style={[styles.socialButtonText, { color: colors.onSurface }]}>Continuar con Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.socialButton, { backgroundColor: colors.surfaceContainer, borderColor: colors.outlineVariant }]}
-              disabled
-            >
-              <Text style={[styles.socialButtonIcon, { color: colors.onSurface }]}>⌘</Text>
-              <Text style={[styles.socialButtonText, { color: colors.onSurface }]}>Continuar con Apple</Text>
+              {isGoogleLoading ? (
+                <ActivityIndicator color={colors.onSurface} size="small" />
+              ) : (
+                <>
+                  <Text style={[styles.socialButtonIcon, { color: colors.onSurface }]}>G</Text>
+                  <Text style={[styles.socialButtonText, { color: colors.onSurface }]}>Continuar con Google</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
 

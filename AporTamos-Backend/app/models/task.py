@@ -25,7 +25,11 @@ from typing import Optional, List
 from uuid import UUID
 from enum import Enum
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, computed_field
+
+# Each unit of effort_weight is worth this many points.
+# effort_weight 1→5, 2→10, … 10→50.
+POINTS_PER_EFFORT = 5
 
 
 class DayOfWeek(str, Enum):
@@ -233,7 +237,13 @@ class TaskResponse(BaseModel):
     frequency: TaskFrequency = Field(..., description="Task frequency")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-    
+
+    @computed_field
+    @property
+    def points(self) -> int:
+        """Points awarded for completing this task (effort_weight × 5)."""
+        return self.effort_weight * POINTS_PER_EFFORT
+
     class Config:
         from_attributes = True
         json_schema_extra = {
@@ -470,6 +480,12 @@ class TaskSummaryItem(BaseModel):
     is_completed: bool = Field(..., description="Whether the assignment is completed")
     assigned_to: str = Field(..., description="Name of the assigned user")
     assignment_date: date = Field(..., description="Date of the assignment")
+
+    @computed_field
+    @property
+    def points(self) -> int:
+        """Points awarded for completing this task (effort_weight × 5)."""
+        return self.effort_weight * POINTS_PER_EFFORT
 
     class Config:
         from_attributes = True

@@ -38,7 +38,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRegister, useGoogleAuth, useAuthError } from '@/hooks/useAuth';
+import { useRegister, useAuthError } from '@/hooks/useAuth';
+import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
@@ -127,7 +128,7 @@ export default function RegisterScreen() {
 
   // Auth hooks
   const { register, isLoading } = useRegister();
-  const { googleLogin, isLoading: isGoogleLoading } = useGoogleAuth();
+  const { signIn: googleSignIn, isLoading: isGoogleLoading, error: googleError } = useGoogleSignIn();
   const { error: contextError, clearError } = useAuthError();
 
   // Local state
@@ -141,7 +142,7 @@ export default function RegisterScreen() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   // Combine errors
-  const error = localError || contextError;
+  const error = localError || contextError || googleError;
 
   // Calculate password strength
   const passwordStrength = useMemo(
@@ -231,22 +232,11 @@ export default function RegisterScreen() {
   /**
    * Handle Google OAuth registration
    */
-  const handleGoogleRegister = useCallback(async () => {
-    try {
-      setLocalError(null);
-      clearError();
-
-      // Show placeholder message
-      setLocalError('Google OAuth integration coming soon. Please use email/password for now.');
-
-      // When Google Sign-In is integrated:
-      // const { user, idToken } = await GoogleSignIn.signIn();
-      // await googleLogin(idToken);
-    } catch (err) {
-      console.error('[RegisterScreen] Google registration error:', err);
-      setLocalError('Google registration failed. Please try again.');
-    }
-  }, [googleLogin, clearError]);
+  const handleGoogleRegister = useCallback(() => {
+    setLocalError(null);
+    clearError();
+    googleSignIn(); // hook surfaces a clear message if not configured for this platform
+  }, [googleSignIn, clearError]);
 
   /**
    * Navigate to login screen

@@ -10,6 +10,7 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  avatar_url?: string | null;
 }
 
 interface AuthContextType {
@@ -23,6 +24,7 @@ interface AuthContextType {
   signInWithGoogle: (googleToken: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
+  updateAvatar: (avatarUrl: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -117,9 +119,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function handleSignInWithGoogle(_googleToken: string) {
-    setError('Inicio de sesión con Google próximamente.');
-    throw new Error('Google login not implemented');
+  async function handleSignInWithGoogle(idToken: string) {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { access_token, user: u } = await apiAuth('/auth/google-login', { google_token: idToken });
+      await persist(access_token, u);
+    } catch (err: any) {
+      const msg = err.message || 'Error al iniciar sesión con Google';
+      setError(msg);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function handleSignOut() {
@@ -150,6 +162,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {}
   }
 
+  async function handleUpdateAvatar(avatarUrl: string) {
+    if (!token || !user) return;
+    const res = await fetch(`${API_BASE}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ avatar_url: avatarUrl }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.detail || 'No se pudo actualizar el avatar');
+    }
+    const updated = { ...user, avatar_url: avatarUrl };
+    setUser(updated);
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
+  }
+
   const value: AuthContextType = {
     user,
     session: token ? { access_token: token } : null,
@@ -161,6 +189,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signInWithGoogle: handleSignInWithGoogle,
     signOut: handleSignOut,
     refreshSession: handleRefreshSession,
+    updateAvatar: handleUpdateAvatar,
     clearError: () => setError(null),
   };
 

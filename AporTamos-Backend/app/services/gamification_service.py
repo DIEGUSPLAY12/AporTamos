@@ -175,6 +175,55 @@ async def calculate_completion_pct(
         ) from exc
 
 
+# Each unit of effort_weight is worth this many points when a task is completed.
+# effort_weight 1→5, 2→10, … 10→50. (Matches TaskResponse.points)
+POINTS_PER_WEIGHT = 5
+
+
+async def calculate_user_total_points(user_id: UUID) -> int:
+    """Sum lifetime points for a user across ALL households.
+
+    Points = Σ (effort_weight × POINTS_PER_WEIGHT) over every completed
+    task assignment for the user, regardless of date or household.
+    """
+    try:
+        supabase = get_supabase_client()
+
+        # All completed assignments for this user (any household, any date)
+        assignments = supabase.table("task_assignments").select(
+            "task_id"
+        ).eq("assigned_to_user_id", str(user_id)).eq("is_completed", True).execute()
+
+        rows = assignments.data or []
+        if not rows:
+            return 0
+
+        task_ids = list({str(r["task_id"]) for r in rows})
+
+        # Fetch effort weights for those tasks
+        tasks_resp = supabase.table("tasks").select(
+            "id, effort_weight"
+        ).in_("id", task_ids).execute()
+        weights = {str(t["id"]): (t.get("effort_weight") or 1) for t in (tasks_resp.data or [])}
+
+        total_points = 0
+        for r in rows:
+            total_points += weights.get(str(r["task_id"]), 1) * POINTS_PER_WEIGHT
+
+        log_info(
+            "User total points calculated",
+            extra={"user_id": str(user_id), "points": total_points, "completed_tasks": len(rows)}
+        )
+        return total_points
+
+    except Exception as exc:
+        log_error("Failed to calculate user total points", exc, extra={"user_id": str(user_id)})
+        raise StatsCalculationError(
+            f"Failed to calculate points for user {user_id}: {str(exc)}",
+            operation="calculate_user_total_points"
+        ) from exc
+
+
 async def update_streak_if_complete(household_id: UUID) -> Optional[int]:
     """Increment the household's daily streak if today reached 100% completion.
 

@@ -25,7 +25,7 @@ class UserCreate(BaseModel):
     Attributes:
         email: Valid email address (must be unique)
         password: Plain text password (will be hashed before storage)
-        name: User's display name (1-100 characters)
+         : User's display name (1-100 characters)
     """
     
     email: EmailStr = Field(..., description="Valid email address for account login")
@@ -154,6 +154,7 @@ class User(BaseModel):
     email: str = Field(..., description="User's email address (unique)")
     name: str = Field(..., description="User's display name")
     google_id: Optional[str] = Field(None, description="Google account ID for OAuth login")
+    avatar_url: Optional[str] = Field(None, description="Chosen avatar URL (e.g. DiceBear)")
     created_at: datetime = Field(..., description="Account creation timestamp")
     updated_at: datetime = Field(..., description="Last profile update timestamp")
     deleted_at: Optional[datetime] = Field(None, description="Soft delete timestamp (null if active)")

@@ -691,3 +691,255 @@ postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 
 2026-06-01 11:51:03,004 - aportamos - INFO - [config.py:236] - Task completed successfully
 2026-06-01 11:51:03,004 - aportamos - INFO - [config.py:236] - Task completed
 2026-06-01 11:51:05,740 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:54:34,942 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:54:35,876 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:54:35,876 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:00:08,113 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:03:04,630 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:03:05,523 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:03:05,523 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:03:10,599 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:03:11,402 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:03:11,402 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:03:21,557 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:03:22,326 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:03:22,326 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:04:10,461 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:04:25,221 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:06:53,230 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:06:54,114 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:06:54,114 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:09:18,997 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:09:19,813 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:09:19,813 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:09:20,291 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:09:21,134 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:09:21,134 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:09:36,769 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:09:37,523 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:09:37,524 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:24:26,468 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:24:30,987 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:24:30,988 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:29:35,665 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:29:36,938 - aportamos - INFO - [config.py:236] - User registered successfully: hsolistorrijos@gmail.com
+2026-06-01 12:29:37,341 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:37,436 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:47,313 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:57,991 - aportamos - INFO - [config.py:236] - Household created successfully
+2026-06-01 12:29:58,240 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:58,585 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:58,739 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:29:59,177 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:30:01,545 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:30:02,470 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:02,470 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:03,047 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:03,048 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:05,927 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-06-01 12:30:06,124 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-06-01 12:30:06,127 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 257, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-06-01 12:30:06,385 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:30:27,357 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-06-01 12:30:27,900 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-06-01 12:30:27,984 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-06-01 12:30:28,063 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-06-01 12:30:28,284 - aportamos - INFO - [config.py:236] - Generated daily task assignments
+2026-06-01 12:30:28,284 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-06-01 12:30:28,683 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:30:35,422 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:30:37,169 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:37,170 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:38,366 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:38,366 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:39,081 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:39,081 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:40,549 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:30:47,005 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:47,005 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:47,740 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:30:47,741 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:31:38,356 - aportamos - INFO - [config.py:236] - Photo uploaded to Supabase Storage
+2026-06-01 12:31:38,434 - aportamos - INFO - [config.py:236] - Task completion record created
+2026-06-01 12:31:38,663 - aportamos - INFO - [config.py:236] - Task completed successfully
+2026-06-01 12:31:38,663 - aportamos - INFO - [config.py:236] - Task completed
+2026-06-01 12:31:45,546 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:31:50,208 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:31:50,208 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 12:32:16,390 - aportamos - INFO - [config.py:236] - Photo uploaded to Supabase Storage
+2026-06-01 12:32:16,486 - aportamos - INFO - [config.py:236] - Task completion record created
+2026-06-01 12:32:16,928 - aportamos - INFO - [config.py:236] - Household streak updated after 100% completion
+2026-06-01 12:32:16,928 - aportamos - INFO - [config.py:236] - Task completed successfully
+2026-06-01 12:32:16,928 - aportamos - INFO - [config.py:236] - Task completed
+2026-06-01 12:32:19,057 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:32:25,793 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:34:49,866 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:34:50,924 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:34:50,924 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:34:58,440 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:34:59,256 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:34:59,256 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:35:06,972 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:35:07,789 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:35:07,789 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:35:16,255 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:35:16,997 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:35:16,997 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:36:45,766 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:37:52,898 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:37:53,815 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:37:53,815 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:38:08,527 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:38:09,009 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:38:09,383 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:38:14,452 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:38:15,246 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:38:15,247 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:38:56,198 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:39:09,143 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:39:09,143 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:41:20,869 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:41:21,438 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:41:21,583 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:41:21,846 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:41:22,302 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:41:22,895 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:41:51,766 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-06-01 12:41:52,461 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:41:52,756 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:42:57,144 - aportamos - WARNING - [config.py:246] - Missing authorization header
+2026-06-01 12:45:13,577 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:45:13,766 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:45:14,082 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:45:15,625 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:45:16,205 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:46:11,947 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:46:12,782 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:46:12,782 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:46:21,712 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:46:22,226 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:46:47,481 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:46:52,229 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:46:52,229 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:47:07,244 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:47:07,710 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:07,857 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:08,095 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:09,605 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:47:10,395 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:17,200 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:47:41,294 - aportamos - INFO - [config.py:236] - User logged in: hsolistorrijos@gmail.com
+2026-06-01 12:47:42,198 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:42,345 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:45,070 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:47:48,103 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:47:52,536 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:48:06,192 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:48:11,698 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:50:06,822 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:50:07,687 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:50:07,687 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:50:26,231 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:50:26,924 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:50:31,415 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:51:35,265 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:51:36,067 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:51:36,067 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:51:46,099 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:51:46,831 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:51:46,831 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:51:58,728 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:51:59,473 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:51:59,474 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:05,790 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:06,533 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:06,533 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:11,248 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:11,991 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:11,991 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:21,894 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:22,646 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:22,646 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:27,364 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:28,127 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:28,127 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:35,109 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:35,835 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:35,835 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:52:41,435 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:52:42,226 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:52:42,226 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:53:04,558 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:53:05,078 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:53:05,350 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 12:53:05,507 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:53:20,542 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:53:21,024 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 12:56:12,658 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:56:17,337 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:56:17,337 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:56:18,217 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 12:56:18,915 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 12:56:35,018 - aportamos - ERROR - [config.py:229] - Avatar update failed: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'avatar_url' column of 'users' in the schema cache"}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 161, in update_my_avatar_endpoint
+    }).eq("id", str(current_user_id)).execute()
+                                      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'avatar_url' column of 'users' in the schema cache"}
+2026-06-01 12:57:14,155 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:57:15,070 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:57:15,070 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:57:31,174 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:57:31,970 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:57:31,970 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:59:16,420 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:59:17,264 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:59:17,265 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:59:30,179 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:59:30,978 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:59:30,978 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 12:59:55,388 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 12:59:59,927 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 12:59:59,927 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 13:03:34,990 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 13:03:36,222 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-06-01 13:03:38,174 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:03:38,326 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:03:39,546 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:03:40,680 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 13:03:41,309 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:03:47,462 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 13:03:54,401 - aportamos - INFO - [config.py:236] - Avatar updated
+2026-06-01 13:04:28,544 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-06-01 13:04:30,087 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:04:30,275 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 13:04:37,084 - aportamos - INFO - [config.py:236] - User total points calculated
+2026-06-01 13:04:42,364 - aportamos - INFO - [config.py:236] - User households listed

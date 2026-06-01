@@ -6,21 +6,28 @@ GET /users/{user_id}/stats           — User completion % and task history with
 """
 
 import logging
+from datetime import datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from pydantic import BaseModel, Field
 
 from app.models.stats import HouseholdStatsResponse, UserStatsResponse
 from app.services.gamification_service import (
     get_household_stats,
     get_user_stats,
+    calculate_user_total_points,
     HouseholdNotFoundError,
     UserNotFoundError,
     StatsCalculationError,
 )
 from app.services.household_service import check_user_household_access, HouseholdError
-from app.dependencies import get_current_user_id
+from app.dependencies import get_current_user_id, get_supabase_client
 from app.config import log_error, log_info
+
+
+class AvatarUpdate(BaseModel):
+    avatar_url: str = Field(..., max_length=500, description="Avatar image URL")
 
 router = APIRouter(tags=["Stats"])
 logger = logging.getLogger(__name__)
@@ -138,4 +145,44 @@ async def get_user_stats_endpoint(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to calculate user statistics.",
+        )
+
+
+@router.patch("/users/me/avatar")
+async def update_my_avatar_endpoint(
+    body: AvatarUpdate,
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> dict:
+    """Update the authenticated user's avatar URL."""
+    try:
+        get_supabase_client().table("users").update({
+            "avatar_url": body.avatar_url,
+            "updated_at": datetime.utcnow().isoformat(),
+        }).eq("id", str(current_user_id)).execute()
+        log_info("Avatar updated", extra={"user_id": str(current_user_id)})
+        return {"avatar_url": body.avatar_url}
+    except Exception as exc:
+        log_error("Avatar update failed", exc, extra={"user_id": str(current_user_id)})
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update avatar.",
+        )
+
+
+@router.get("/users/me/points")
+async def get_my_points_endpoint(
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> dict:
+    """Total lifetime points for the authenticated user, across all households.
+
+    Points are weighted by each completed task's effort_weight (effort × 5).
+    """
+    try:
+        points = await calculate_user_total_points(current_user_id)
+        return {"user_id": str(current_user_id), "total_points": points}
+    except StatsCalculationError as exc:
+        log_error("Points calculation failed", exc, extra={"user_id": str(current_user_id)})
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to calculate points.",
         )

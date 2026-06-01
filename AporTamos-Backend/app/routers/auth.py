@@ -32,7 +32,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 logger = logging.getLogger(__name__)
 
 
-def _create_token_response(user_id: str, user_email: str, user_name: str) -> Dict[str, Any]:
+def _create_token_response(user_id: str, user_email: str, user_name: str, avatar_url: str = None) -> Dict[str, Any]:
     token = create_access_token(data={
         "sub": user_id,
         "email": user_email,
@@ -47,6 +47,7 @@ def _create_token_response(user_id: str, user_email: str, user_name: str) -> Dic
             "id": user_id,
             "email": user_email,
             "name": user_name,
+            "avatar_url": avatar_url,
         },
     }
 
@@ -203,6 +204,7 @@ async def login(user_data: UserLogin) -> Dict[str, Any]:
             user_id=str(authenticated_user.id),
             user_email=authenticated_user.email,
             user_name=authenticated_user.name,
+            avatar_url=authenticated_user.avatar_url,
         )
         
     except UserNotFoundError:
@@ -279,44 +281,58 @@ async def google_login(google_data: GoogleLogin) -> Dict[str, Any]:
         }
     """
     try:
-        # In a production system, we would verify the Google token signature here
-        # For now, we assume the frontend has already validated the token
-        # and we extract the user info from it
-        
-        # TODO: Implement actual Google token verification using google-auth library
-        # For now, this is a placeholder that would be called from frontend with decoded token
-        
-        # Extract user info from token (in real implementation, use google.auth.transport.requests)
-        # This would normally be done via:
-        # from google.auth.transport import requests
-        # id_info = id_token.verify_oauth2_token(google_data.google_token, requests.Request(), settings.google_client_id)
-        
-        # For now, assume token is validated by frontend and we get user info from Supabase
-        # In production, you'd parse the JWT and verify signature
-        
-        # In a real implementation, you would parse the token here
-        # For now, we'll demonstrate the flow with placeholder values
-        # The frontend would send the ID token, and we'd verify it with Google
-        
-        log_warning(
-            "Google login called - token verification not yet implemented",
-            extra={"token_length": len(google_data.google_token)},
+        from google.oauth2 import id_token as google_id_token
+        from google.auth.transport import requests as google_requests
+
+        # Verify the Google ID token signature + expiry against Google's certs
+        try:
+            id_info = google_id_token.verify_oauth2_token(
+                google_data.google_token,
+                google_requests.Request(),
+                clock_skew_in_seconds=10,
+            )
+        except ValueError as verify_exc:
+            log_warning("Google token verification failed", extra={"error": str(verify_exc)})
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired Google token",
+            )
+
+        # Optional audience check: if client IDs are configured, the token's
+        # `aud` must match one of them (comma-separated web/android/ios IDs).
+        allowed_ids = [c.strip() for c in (settings.google_client_id or "").split(",") if c.strip()]
+        if allowed_ids and id_info.get("aud") not in allowed_ids:
+            log_warning("Google token audience mismatch", extra={"aud": id_info.get("aud")})
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Google token was issued for a different app",
+            )
+
+        # Require a verified email
+        if not id_info.get("email_verified", False):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Google account email is not verified",
+            )
+
+        google_sub = id_info["sub"]
+        email = id_info["email"]
+        name = id_info.get("name") or email.split("@")[0]
+
+        # Find or create the user by google_id
+        user, is_new_user = await create_or_get_user_google(google_sub, email, name)
+
+        log_info(
+            "Google login successful",
+            extra={"user_id": str(user.id), "email": email, "is_new_user": is_new_user},
         )
-        
-        # Placeholder for real token verification
-        # In production, implement with:
-        # from google.auth.transport import requests
-        # from google.oauth2 import id_token
-        # id_info = id_token.verify_oauth2_token(google_data.google_token, requests.Request(), settings.google_client_id)
-        # google_id = id_info['sub']
-        # email = id_info['email']
-        # name = id_info.get('name', email.split('@')[0])
-        
-        raise HTTPException(
-            status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            detail="Google OAuth token verification requires backend configuration with Google client credentials",
-        )
-        
+
+        response = _create_token_response(str(user.id), user.email, user.name, user.avatar_url)
+        response["is_new_user"] = is_new_user
+        return response
+
+    except HTTPException:
+        raise
     except InvalidCredentialsError as exc:
         log_warning(
             f"Google login failed: Invalid credentials - {str(exc)}",

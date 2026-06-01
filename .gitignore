@@ -1,0 +1,33 @@
+# Environment files with secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+
+# Keep templates
+!.env.example
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Logs
+*.log
+logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

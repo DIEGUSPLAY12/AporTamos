@@ -173,6 +173,7 @@ async def create_user(user_data: UserCreate) -> UserInDB:
             email=user_record["email"],
             password_hash=user_record["password_hash"],
             google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
             name=user_record["name"],
             created_at=datetime.fromisoformat(user_record["created_at"]),
             updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -219,6 +220,7 @@ async def get_user_by_email(email: str) -> Optional[UserInDB]:
             email=user_record["email"],
             password_hash=user_record.get("password_hash"),
             google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
             name=user_record["name"],
             created_at=datetime.fromisoformat(user_record["created_at"]),
             updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -263,6 +265,7 @@ async def get_user_by_id(user_id: UUID) -> Optional[UserInDB]:
             email=user_record["email"],
             password_hash=user_record.get("password_hash"),
             google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
             name=user_record["name"],
             created_at=datetime.fromisoformat(user_record["created_at"]),
             updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -358,6 +361,7 @@ async def authenticate_user_google(google_id: str) -> UserInDB:
             email=user_record["email"],
             password_hash=user_record.get("password_hash"),
             google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
             name=user_record["name"],
             created_at=datetime.fromisoformat(user_record["created_at"]),
             updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -410,7 +414,6 @@ async def create_or_get_user_google(
     
     try:
         # Try to find existing user by google_id
-        existing_by_google_id = await get_user_by_id(UUID("00000000-0000-0000-0000-000000000000"))  # Dummy to use service
         response = get_supabase_client().table("users").select("*").eq(
             "google_id", google_id
         ).is_("deleted_at", "null").execute()
@@ -426,6 +429,7 @@ async def create_or_get_user_google(
                     email=user_record["email"],
                     password_hash=user_record.get("password_hash"),
                     google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
                     name=user_record["name"],
                     created_at=datetime.fromisoformat(user_record["created_at"]),
                     updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -467,6 +471,7 @@ async def create_or_get_user_google(
                 email=user_record["email"],
                 password_hash=user_record.get("password_hash"),
                 google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
                 name=user_record["name"],
                 created_at=datetime.fromisoformat(user_record["created_at"]),
                 updated_at=datetime.fromisoformat(user_record["updated_at"]),
@@ -535,6 +540,7 @@ async def update_user(user_id: UUID, **fields) -> UserInDB:
             email=user_record["email"],
             password_hash=user_record.get("password_hash"),
             google_id=user_record.get("google_id"),
+            avatar_url=user_record.get("avatar_url"),
             name=user_record["name"],
             created_at=datetime.fromisoformat(user_record["created_at"]),
             updated_at=datetime.fromisoformat(user_record["updated_at"]),

@@ -19,6 +19,7 @@ python-jose>=3.3.0
 passlib>=1.7.0
 python-multipart>=0.0.6
 cryptography>=40.0.0
+google-auth>=2.0.0
 
 # Async and HTTP
 httpx>=0.24.1
