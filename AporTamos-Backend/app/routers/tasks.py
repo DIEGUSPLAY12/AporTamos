@@ -490,7 +490,16 @@ async def add_task_endpoint(
         
         # Add task to schedule
         task = await add_task_to_schedule(schedule.id, household_id, task_data)
-        
+
+        # Generate today's assignment for the new task if it matches today's day
+        try:
+            await generate_daily_assignments(schedule_id=schedule.id, household_id=household_id)
+        except Exception as assign_exc:
+            log_warning(
+                "Could not regenerate daily assignments after adding task",
+                extra={"task_id": str(task.id), "error": str(assign_exc)}
+            )
+
         log_info(
             "Successfully added task to schedule",
             extra={
@@ -499,7 +508,7 @@ async def add_task_endpoint(
                 "household_id": str(household_id)
             }
         )
-        
+
         return task
         
     except HTTPException:

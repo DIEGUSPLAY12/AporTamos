@@ -396,10 +396,14 @@ export function subscribeToTable(
 ): { unsubscribe: () => Promise<void> } {
   const supabase = getSupabaseClient();
 
+  // Each subscription gets a unique channel name so Supabase doesn't reuse
+  // an already-subscribed channel when two hooks subscribe to the same table+filter.
+  const uniqueId = Math.random().toString(36).slice(2, 8);
   let channelName = `public.${tableName}`;
   if (filter) {
     channelName += `:${filter.replace("=", ".")}`;
   }
+  channelName += `:${uniqueId}`;
 
   console.log(`[Realtime] Subscribing to ${channelName} for ${event}`);
 

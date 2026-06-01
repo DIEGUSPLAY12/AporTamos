@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthState } from '@/hooks/useAuth';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
@@ -18,7 +19,21 @@ import * as api from '@/services/api';
 import type { HouseholdDetail, HouseholdMember } from '@/types/models';
 import HouseholdHeader from '@/components/household/HouseholdHeader';
 import MembersSection from '@/components/household/MembersSection';
+import InviteMembersModal from '@/components/household/InviteMembersModal';
 import StreakDisplay from '@/components/stats/StreakDisplay';
+import TaskListItem from '@/components/task/TaskListItem';
+
+const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+
+interface TaskSummaryItem {
+  task_id: string;
+  assignment_id: string;
+  name: string;
+  effort_weight: number;
+  is_completed: boolean;
+  assigned_to: string;
+  assignment_date: string;
+}
 
 export default function HouseholdDetailScreen(): JSX.Element {
   const { householdId } = useLocalSearchParams<{ householdId: string }>();
@@ -33,6 +48,29 @@ export default function HouseholdDetailScreen(): JSX.Element {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'tasks' | 'progress'>('tasks');
+  const [inviteModalVisible, setInviteModalVisible] = useState(false);
+
+  // Tasks state
+  const [tasks, setTasks] = useState<TaskSummaryItem[]>([]);
+  const [isLoadingTasks, setIsLoadingTasks] = useState(false);
+
+  const fetchTasks = useCallback(async () => {
+    if (!householdId) return;
+    setIsLoadingTasks(true);
+    try {
+      const token = await AsyncStorage.getItem('auth_token');
+      const res = await fetch(`${API_BASE}/households/${householdId}/tasks`, {
+        headers: { Authorization: `Bearer ${token ?? ''}` },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      setTasks(json.tasks ?? []);
+    } catch (e: any) {
+      console.error('[Tasks] Failed to load:', e.message);
+    } finally {
+      setIsLoadingTasks(false);
+    }
+  }, [householdId]);
 
   const fetchHouseholdDetails = useCallback(async () => {
     if (!householdId) {
@@ -59,6 +97,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
   }, [fetchHouseholdDetails]);
 
   useEffect(() => { fetchHouseholdDetails(); }, [fetchHouseholdDetails]);
+  useEffect(() => { fetchTasks(); }, [fetchTasks]);
 
   const handleRemoveMember = useCallback((member: HouseholdMember) => {
     if (!household || !user?.id) return;
@@ -122,6 +161,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
   const extraCount = Math.max(0, household.members.length - 3);
 
   return (
+    <>
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ paddingBottom: insets.bottom + 32, paddingTop: insets.top }}
@@ -157,7 +197,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
           householdId={household.id}
           currentUserId={user?.id}
           isOwner={isOwner}
-          onInvitePress={() => Alert.alert('Invitar', 'Esta función estará disponible pronto.')}
+          onInvitePress={() => setInviteModalVisible(true)}
           onRemoveMember={(userId, userName) => {
             const member = household.members.find(m => m.user_id === userId);
             if (member) handleRemoveMember(member);
@@ -169,7 +209,7 @@ export default function HouseholdDetailScreen(): JSX.Element {
       <View style={styles.actionsSection}>
         <TouchableOpacity
           style={[styles.actionButtonPrimary, { backgroundColor: colors.primary, ...Shadows.primary }]}
-          onPress={() => Alert.alert('Nueva Tarea', 'Esta función estará disponible pronto.')}
+          onPress={() => router.push(`/(tabs)/${householdId}/schedule` as any)}
         >
           <Text style={styles.actionButtonText}>+  Añadir Nueva Tarea</Text>
         </TouchableOpacity>
@@ -204,17 +244,40 @@ export default function HouseholdDetailScreen(): JSX.Element {
         ))}
       </View>
 
-      {/* Task list placeholder */}
+      {/* Task list */}
       {activeTab === 'tasks' && (
         <View style={styles.taskSection}>
-          {/* Empty state */}
-          <View style={[styles.emptyTask, { backgroundColor: colors.surfaceContainerLowest, borderColor: colors.outlineVariant }]}>
-            <View style={[styles.taskCheckEmpty, { borderColor: colors.outlineVariant }]} />
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.taskName, { color: colors.onSurface }]}>No hay tareas asignadas hoy</Text>
-              <Text style={[styles.taskMeta, { color: colors.subtext }]}>¡Añade tareas al horario semanal!</Text>
+          {isLoadingTasks ? (
+            <ActivityIndicator color={colors.primary} style={{ marginTop: Spacing.xl }} />
+          ) : tasks.length === 0 ? (
+            <View style={[styles.emptyTask, { backgroundColor: colors.surfaceContainerLowest, borderColor: colors.outlineVariant }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.taskName, { color: colors.onSurface }]}>No hay tareas asignadas hoy</Text>
+                <Text style={[styles.taskMeta, { color: colors.subtext }]}>¡Añade tareas al horario semanal!</Text>
+              </View>
             </View>
-          </View>
+          ) : (
+            <View style={{ gap: Spacing.sm }}>
+              {tasks.map((task) => (
+                <TaskListItem
+                  key={task.assignment_id}
+                  taskId={task.task_id}
+                  assignmentId={task.assignment_id}
+                  name={task.name}
+                  effortWeight={task.effort_weight}
+                  isCompleted={task.is_completed}
+                  assignedTo={task.assigned_to}
+                  onPress={() => router.push(`/(tabs)/${householdId}/tasks` as any)}
+                />
+              ))}
+              <TouchableOpacity
+                style={[styles.viewAllButton, { borderColor: colors.primary }]}
+                onPress={() => router.push(`/(tabs)/${householdId}/tasks` as any)}
+              >
+                <Text style={[styles.viewAllText, { color: colors.primary }]}>Ver todas las tareas →</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       )}
 
@@ -258,6 +321,20 @@ export default function HouseholdDetailScreen(): JSX.Element {
         </View>
       )}
     </ScrollView>
+
+    {/* Invite Members Modal */}
+    {household && (
+      <InviteMembersModal
+        visible={inviteModalVisible}
+        householdId={household.id}
+        onClose={() => setInviteModalVisible(false)}
+        onSuccess={() => {
+          setInviteModalVisible(false);
+          fetchHouseholdDetails();
+        }}
+      />
+    )}
+    </>
   );
 }
 
@@ -411,6 +488,14 @@ const styles = StyleSheet.create({
   },
   taskName: { fontSize: 15, fontWeight: '600', marginBottom: 2 },
   taskMeta: { fontSize: 12 },
+  viewAllButton: {
+    borderWidth: 1,
+    borderRadius: Radius.full,
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+    marginTop: Spacing.sm,
+  },
+  viewAllText: { fontSize: 14, fontWeight: '600' },
 
   // Progress
   progressCard: {

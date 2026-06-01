@@ -115,3 +115,1276 @@ postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 
 2026-05-28 11:52:05,134 - aportamos - INFO - [config.py:236] - Household stats retrieved
 2026-05-28 11:52:05,134 - aportamos - INFO - [config.py:236] - Household stats retrieved
 2026-05-28 11:52:15,885 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 11:57:54,262 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 11:57:54,263 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 11:59:43,099 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 11:59:43,938 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:59:44,076 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:59:44,309 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:59:44,446 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 11:59:44,664 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 11:59:45,055 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:59:45,059 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:59:45,061 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:59:55,780 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 11:59:56,780 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 11:59:56,781 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 11:59:56,781 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 11:59:56,782 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:00:54,550 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:00:54,754 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:00:55,288 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:00:55,451 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:00:55,792 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:00:55,793 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:00:55,794 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:01:03,874 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:01:04,505 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:01:04,506 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:01:04,506 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:01:04,506 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:01:33,505 - aportamos - INFO - [config.py:236] - Invitation sent
+2026-05-28 12:01:34,091 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:01:45,076 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:01:45,184 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: Failed to check household access: 'APIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 914, in _check_household_access
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'APIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 218, in get_schedule
+    await _check_household_access(user_id, household_id)
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 929, in _check_household_access
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to check household access: 'APIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:01:45,185 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: Failed to check household access: 'APIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 914, in _check_household_access
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'APIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 218, in get_schedule
+    await _check_household_access(user_id, household_id)
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 929, in _check_household_access
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to check household access: 'APIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 256, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: Failed to check household access: 'APIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:01:45,424 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:02:33,350 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:02:33,474 - aportamos - ERROR - [config.py:229] - Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:02:33,475 - aportamos - ERROR - [config.py:229] - Database error creating schedule: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 146, in create_schedule_endpoint
+    schedule = await create_schedule(household_id, current_user_id, schedule_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 195, in create_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:02:44,768 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:02:44,886 - aportamos - ERROR - [config.py:229] - Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:02:44,888 - aportamos - ERROR - [config.py:229] - Database error creating schedule: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 146, in create_schedule_endpoint
+    schedule = await create_schedule(household_id, current_user_id, schedule_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 195, in create_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:02:53,981 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:02:54,092 - aportamos - ERROR - [config.py:229] - Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:02:54,093 - aportamos - ERROR - [config.py:229] - Database error creating schedule: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 942, in _get_household_or_fail
+    response = await (
+               ^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+TypeError: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 118, in create_schedule
+    household = await _get_household_or_fail(supabase, household_id, user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 961, in _get_household_or_fail
+    raise ScheduleAccessError(f"Household not found or no access: {str(exc)}") from exc
+app.services.task_service.ScheduleAccessError: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 146, in create_schedule_endpoint
+    schedule = await create_schedule(household_id, current_user_id, schedule_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 195, in create_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to create schedule: Household not found or no access: 'SingleAPIResponse[TypeVar]' object can't be awaited
+2026-05-28 12:04:14,714 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:11:17,972 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:11:17,973 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:11:28,263 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:11:29,187 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:11:29,187 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:12:05,846 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:12:06,646 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 12:12:07,744 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-05-28 12:12:07,830 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-05-28 12:12:07,830 - aportamos - WARNING - [config.py:246] - Could not determine day of week for task assignment
+2026-05-28 12:12:07,831 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-05-28 12:12:08,162 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:22,729 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:24,537 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:25,191 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:12:25,195 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:12:25,195 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:25,195 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:26,420 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:27,194 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:27,835 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:12:27,836 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:12:27,836 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:27,836 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:28,421 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:28,683 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:29,324 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:12:29,324 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:12:29,325 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:29,325 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:32,231 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:33,046 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:33,662 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:12:33,663 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:12:33,663 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:33,663 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:36,242 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:39,875 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:40,505 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:12:40,506 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:12:40,506 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:40,506 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:12:41,748 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:41,750 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:12:41,910 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:12:41,912 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 256, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:12:49,776 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:12:50,121 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-05-28 12:12:50,200 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-05-28 12:12:50,200 - aportamos - WARNING - [config.py:246] - Could not determine day of week for task assignment
+2026-05-28 12:12:50,201 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-05-28 12:12:50,597 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:12:54,059 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:12:56,532 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:14:18,729 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:14:27,654 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:14:28,367 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:14:28,368 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:14:28,369 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:14:28,369 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:14:39,053 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:14:39,876 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:14:39,877 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:14:39,877 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:14:39,877 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:14:54,025 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:15:03,908 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:15:28,955 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:15:28,956 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:15:28,956 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:15:28,956 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:15:47,743 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:15:48,060 - aportamos - WARNING - [config.py:246] - Attempt to create schedule when active schedule exists
+2026-05-28 12:15:48,060 - aportamos - WARNING - [config.py:246] - Schedule validation failed
+2026-05-28 12:15:58,029 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:16:00,528 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:16:01,140 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:16:01,141 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:16:01,142 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:16:01,142 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:16:02,062 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:16:02,306 - aportamos - INFO - [config.py:236] - Successfully retrieved weekly schedule
+2026-05-28 12:16:02,544 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:16:13,452 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:16:13,732 - aportamos - WARNING - [config.py:246] - Attempt to create schedule when active schedule exists
+2026-05-28 12:16:13,733 - aportamos - WARNING - [config.py:246] - Schedule validation failed
+2026-05-28 12:16:26,550 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:16:26,845 - aportamos - WARNING - [config.py:246] - Attempt to create schedule when active schedule exists
+2026-05-28 12:16:26,845 - aportamos - WARNING - [config.py:246] - Schedule validation failed
+2026-05-28 12:16:30,149 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:16:30,403 - aportamos - WARNING - [config.py:246] - Attempt to create schedule when active schedule exists
+2026-05-28 12:16:30,403 - aportamos - WARNING - [config.py:246] - Schedule validation failed
+2026-05-28 12:16:34,294 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:16:36,583 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:16:37,196 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:16:37,197 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:16:37,197 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:16:37,197 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:16:37,200 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:16:37,355 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:16:37,356 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 256, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:16:37,590 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:16:46,192 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:16:46,555 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-05-28 12:16:46,637 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-05-28 12:16:46,638 - aportamos - WARNING - [config.py:246] - Could not determine day of week for task assignment
+2026-05-28 12:16:46,638 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-05-28 12:16:46,996 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:16:51,788 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:16:52,581 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:16:54,150 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:16:55,000 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:16:56,757 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:16:58,134 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:17:00,912 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:20:17,204 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:20:19,771 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:30,481 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:30,483 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:30,484 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:30,484 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:46,079 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:46,080 - aportamos - WARNING - [config.py:246] - Missing authorization header
+2026-05-28 12:22:50,730 - aportamos - WARNING - [config.py:246] - Missing authorization header
+2026-05-28 12:22:50,731 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:55,652 - aportamos - WARNING - [config.py:246] - JWT token verification failed
+2026-05-28 12:22:55,652 - aportamos - WARNING - [config.py:246] - Missing authorization header
+2026-05-28 12:25:27,653 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:25:58,072 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:25:58,072 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:29:02,754 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 12:29:03,751 - aportamos - INFO - [config.py:236] - User logged in: holamigo@gmail.com
+2026-05-28 12:29:05,069 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:05,250 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:06,201 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:06,347 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:06,492 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:06,831 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:06,836 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:06,838 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:33,183 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:37,958 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:38,675 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:38,676 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:38,677 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:38,677 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:41,786 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:41,787 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:41,787 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:41,787 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:43,699 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:45,932 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:46,657 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:46,658 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:46,659 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:46,659 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:47,154 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:47,155 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:47,155 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:47,155 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:50,064 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:51,698 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:52,284 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:52,285 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:52,285 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:52,285 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:52,968 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:54,068 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:54,844 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:54,845 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:54,845 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:54,845 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:55,174 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:29:55,851 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:29:56,545 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:29:56,546 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:29:56,546 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:56,546 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:29:58,198 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:06,892 - aportamos - INFO - [config.py:236] - Household created successfully
+2026-05-28 12:30:07,409 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:09,557 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:30:10,243 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:30:10,244 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:30:10,245 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:30:10,245 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:30:37,410 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:37,589 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:37,758 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:38,000 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:30:38,574 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:30:39,032 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:30:39,033 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:30:39,034 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:30:41,405 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:30:42,447 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:30:42,448 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:30:42,448 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:30:42,448 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:30:44,819 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:30:44,998 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:30:45,000 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 256, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:30:45,259 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:30:58,096 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:30:58,536 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-05-28 12:30:58,612 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-05-28 12:30:58,612 - aportamos - WARNING - [config.py:246] - Could not determine day of week for task assignment
+2026-05-28 12:30:58,612 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-05-28 12:30:58,907 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:31:03,429 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:31:06,890 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:31:08,970 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:31:10,065 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:31:10,066 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:31:10,066 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:31:10,066 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:32:56,890 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:33:27,886 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:33:28,969 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:33:28,969 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:33:40,755 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:33:41,605 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:33:41,606 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:36:23,987 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:36:24,868 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:36:24,868 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:36:36,590 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 12:36:37,566 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:36:37,711 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:36:37,980 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:36:38,119 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:36:38,352 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:36:38,915 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:36:38,917 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:36:38,918 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:37:02,001 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:37:02,161 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:37:02,429 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:37:02,662 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:37:02,813 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:37:03,193 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:37:03,194 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:37:03,195 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:37:32,568 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-05-28 12:37:44,740 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-05-28 12:37:44,740 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-05-28 12:38:11,613 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-05-28 12:38:12,111 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:12,254 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:12,553 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:38:12,690 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:12,828 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:13,107 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:13,111 - aportamos - ERROR - [config.py:229] - Failed to fetch user stats: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:13,113 - aportamos - ERROR - [config.py:229] - Stats calculation failed: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 449, in get_user_stats
+    completion_pct = await calculate_user_completion_pct(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        user_id, household_id, today
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 283, in calculate_user_completion_pct
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\stats.py", line 116, in get_user_stats_endpoint
+    stats = await get_user_stats(user_id, household_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 513, in get_user_stats
+    raise StatsCalculationError(
+    ...<2 lines>...
+    ) from exc
+app.services.gamification_service.StatsCalculationError: Failed to fetch stats for user 4cf6b876-df0d-43ba-a375-f259274f28a7: Failed to calculate completion for user 4cf6b876-df0d-43ba-a375-f259274f28a7: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:19,263 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:38:20,152 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:20,153 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:38:20,153 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:20,153 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:22,624 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:22,624 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:38:22,625 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:22,625 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:25,777 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:40,393 - aportamos - INFO - [config.py:236] - Household created successfully
+2026-05-28 12:38:40,623 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:38:43,819 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:38:44,566 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:38:44,567 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:38:44,567 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:44,567 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:38:46,040 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:38:46,042 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-05-28 12:38:46,199 - aportamos - ERROR - [config.py:229] - Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:38:46,201 - aportamos - ERROR - [config.py:229] - Database error retrieving schedule: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 229, in get_schedule
+    .execute()
+     ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 127, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\routers\tasks.py", line 256, in get_schedule_endpoint
+    schedule = await get_schedule(household_id, current_user_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\task_service.py", line 264, in get_schedule
+    raise DatabaseException(
+    ...<2 lines>...
+    ) from exc
+app.config.DatabaseException: Failed to retrieve schedule: {'code': 'PGRST116', 'details': 'The result contains 0 rows', 'hint': None, 'message': 'Cannot coerce the result to a single JSON object'}
+2026-05-28 12:39:03,584 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:39:04,189 - aportamos - INFO - [config.py:236] - Created weekly task schedule
+2026-05-28 12:39:04,280 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-05-28 12:39:04,515 - aportamos - INFO - [config.py:236] - Generated daily task assignments
+2026-05-28 12:39:04,515 - aportamos - INFO - [config.py:236] - Successfully created weekly schedule
+2026-05-28 12:39:04,951 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:39:17,661 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:39:20,599 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:39:22,678 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-05-28 12:39:26,578 - aportamos - ERROR - [config.py:229] - Failed to calculate user completion percentage: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+Traceback (most recent call last):
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\app\services\gamification_service.py", line 226, in calculate_user_completion_pct
+    ).execute()
+      ~~~~~~~^^
+  File "C:\Alten-Projects\AporTamos\AporTamos-Backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 78, in execute
+    raise APIError(r.json())
+postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 'message': 'column task_assignments.user_id does not exist'}
+2026-05-28 12:39:26,579 - aportamos - WARNING - [config.py:246] - Failed to fetch stats for household member
+2026-05-28 12:39:26,579 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:39:26,580 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-05-28 12:39:34,325 - aportamos - INFO - [config.py:236] - User households listed
+2026-05-28 12:39:52,300 - aportamos - INFO - [config.py:236] - Creating weekly schedule
+2026-05-28 12:39:52,565 - aportamos - WARNING - [config.py:246] - Attempt to create schedule when active schedule exists
+2026-05-28 12:39:52,565 - aportamos - WARNING - [config.py:246] - Schedule validation failed
+2026-05-28 12:40:10,009 - aportamos - INFO - [config.py:236] - Shutting down AporTamos

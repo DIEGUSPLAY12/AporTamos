@@ -40,7 +40,7 @@ import {
 } from 'react-native';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
-import { createSchedule, updateSchedule, ApiError } from '@/services/api';
+import { createSchedule, addTaskToSchedule, ApiError } from '@/services/api';
 import type {
   CreateWeeklyTaskScheduleRequest,
   TaskCreate,
@@ -280,21 +280,29 @@ export default function ScheduleEditor({
     setGlobalError('');
 
     try {
-      // Build request payload
-      const requestTasks = tasks.map(({ id, ...task }) => task);
-      const payload: CreateWeeklyTaskScheduleRequest = { tasks: requestTasks };
-
-      let result: WeeklyTaskScheduleResponse;
-
       if (existingSchedule) {
-        // Update existing schedule
-        result = await updateSchedule(householdId, payload);
-      } else {
-        // Create new schedule
-        result = await createSchedule(householdId, payload);
-      }
+        // Add only the NEW tasks (temp IDs) to the existing schedule one by one
+        const newTasks = tasks.filter(t => t.id.startsWith('temp-'));
 
-      onSuccess(result);
+        if (newTasks.length === 0) {
+          Alert.alert('Sin cambios', 'No hay tareas nuevas para guardar.');
+          setIsLoading(false);
+          return;
+        }
+
+        for (const task of newTasks) {
+          const { id, ...taskData } = task;
+          await addTaskToSchedule(householdId, taskData);
+        }
+
+        // Return the existing schedule (with the count updated conceptually)
+        onSuccess(existingSchedule);
+      } else {
+        // Create brand new schedule with all tasks
+        const requestTasks = tasks.map(({ id, ...task }) => task);
+        const result = await createSchedule(householdId, { tasks: requestTasks });
+        onSuccess(result);
+      }
     } catch (error) {
       const apiError = error as ApiError;
       const message =

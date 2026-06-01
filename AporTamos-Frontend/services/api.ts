@@ -21,12 +21,19 @@ import type {
   InviteMemberRequest,
   WeeklyTaskScheduleResponse,
   CreateWeeklyTaskScheduleRequest,
+  TaskCreate,
 } from '@/types/models';
 
 /**
  * API Configuration
  */
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+
+// Called by AuthContext to react when a 401 clears the stored token
+let _onUnauthorized: (() => void) | null = null;
+export function setUnauthorizedHandler(handler: () => void): void {
+  _onUnauthorized = handler;
+}
 const REQUEST_TIMEOUT = 10000; // 10 seconds
 const MAX_RETRIES = 2;
 
@@ -106,6 +113,11 @@ async function request(
 
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
+      // Token expired or invalid — clear stored credentials so app redirects to login
+      if (response.status === 401) {
+        await AsyncStorage.multiRemove(['auth_token', 'auth_user']);
+        _onUnauthorized?.();
+      }
       throw new ApiError(
         response.status,
         data.detail || `HTTP ${response.status}`,
@@ -303,6 +315,13 @@ export async function updateSchedule(
   data: CreateWeeklyTaskScheduleRequest,
 ): Promise<WeeklyTaskScheduleResponse> {
   return post(`/households/${householdId}/schedule`, data);
+}
+
+export async function addTaskToSchedule(
+  householdId: string,
+  taskData: TaskCreate,
+): Promise<any> {
+  return post(`/households/${householdId}/schedule/tasks`, taskData);
 }
 
 /**

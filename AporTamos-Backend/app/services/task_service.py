@@ -125,7 +125,7 @@ async def create_schedule(
             raise ScheduleOwnerError("Only household owner can create schedules")
         
         # Check if active schedule already exists
-        active_schedules = await supabase.table("weekly_task_schedules").select("*").eq(
+        active_schedules = supabase.table("weekly_task_schedules").select("*").eq(
             "household_id", str(household_id)
         ).is_("active_until", "null").execute()
         
@@ -153,7 +153,7 @@ async def create_schedule(
             "deleted_at": None,
         }
         
-        await supabase.table("weekly_task_schedules").insert(schedule_record).execute()
+        supabase.table("weekly_task_schedules").insert(schedule_record).execute()
         
         log_info(
             "Created weekly task schedule",
@@ -218,7 +218,7 @@ async def get_schedule(household_id: UUID, user_id: UUID) -> WeeklyTaskScheduleR
         await _check_household_access(user_id, household_id)
         
         # Get active schedule
-        response = await (
+        response = (
             get_supabase_client()
             .table("weekly_task_schedules")
             .select("*")
@@ -232,7 +232,7 @@ async def get_schedule(household_id: UUID, user_id: UUID) -> WeeklyTaskScheduleR
         schedule_data = response.data
         
         # Get tasks for schedule
-        tasks_response = await (
+        tasks_response = (
             get_supabase_client()
             .table("tasks")
             .select("*")
@@ -281,7 +281,7 @@ async def get_schedule_by_id(schedule_id: UUID) -> WeeklyTaskScheduleResponse:
         DatabaseException: If database operation fails
     """
     try:
-        response = await (
+        response = (
             get_supabase_client()
             .table("weekly_task_schedules")
             .select("*")
@@ -293,7 +293,7 @@ async def get_schedule_by_id(schedule_id: UUID) -> WeeklyTaskScheduleResponse:
         schedule_data = response.data
         
         # Get tasks
-        tasks_response = await (
+        tasks_response = (
             get_supabase_client()
             .table("tasks")
             .select("*")
@@ -367,7 +367,7 @@ async def add_task_to_schedule(
             "updated_at": datetime.utcnow().isoformat() + "Z",
         }
         
-        response = await supabase.table("tasks").insert(task_record).execute()
+        response = supabase.table("tasks").insert(task_record).execute()
         
         created_task = response.data[0] if response.data else task_record
         
@@ -446,7 +446,7 @@ async def update_task(
         # Add update timestamp
         update_data["updated_at"] = datetime.utcnow().isoformat() + "Z"
         
-        response = await supabase.table("tasks").update(update_data).eq("id", str(task_id)).execute()
+        response = supabase.table("tasks").update(update_data).eq("id", str(task_id)).execute()
         
         if not response.data:
             raise TaskNotFoundError(f"Task {task_id} not found")
@@ -500,7 +500,7 @@ async def get_task_by_id(task_id: UUID) -> TaskResponse:
         DatabaseException: If database operation fails
     """
     try:
-        response = await (
+        response = (
             get_supabase_client()
             .table("tasks")
             .select("*")
@@ -561,29 +561,19 @@ async def generate_daily_assignments(schedule_id: UUID, household_id: UUID) -> N
     
     try:
         today = date.today()
-        day_name = today.strftime("%a").upper()[:3]
-        
-        # Map day names to schedule format (MON, TUE, etc)
-        day_mapping = {
-            "Mon": DayOfWeek.MON.value,
-            "Tue": DayOfWeek.TUE.value,
-            "Wed": DayOfWeek.WED.value,
-            "Thu": DayOfWeek.THU.value,
-            "Fri": DayOfWeek.FRI.value,
-            "Sat": DayOfWeek.SAT.value,
-            "Sun": DayOfWeek.SUN.value,
-        }
-        
-        today_day_of_week = day_mapping.get(day_name)
-        if not today_day_of_week:
+        # strftime("%a") returns "Mon","Tue"… ; .upper()[:3] gives "MON","TUE"…
+        # DayOfWeek enum values are already "MON","TUE"… so use directly
+        today_day_of_week = today.strftime("%a").upper()[:3]
+        valid_days = {d.value for d in DayOfWeek}
+        if today_day_of_week not in valid_days:
             log_warning(
                 "Could not determine day of week for task assignment",
-                extra={"today": str(today)}
+                extra={"today": str(today), "computed": today_day_of_week}
             )
             return
         
         # Get tasks for today
-        tasks_response = await (
+        tasks_response = (
             supabase
             .table("tasks")
             .select("*")
@@ -600,7 +590,7 @@ async def generate_daily_assignments(schedule_id: UUID, household_id: UUID) -> N
             return
         
         # Get household members for random assignment
-        members_response = await (
+        members_response = (
             supabase
             .table("household_members")
             .select("user_id")
@@ -645,7 +635,7 @@ async def generate_daily_assignments(schedule_id: UUID, household_id: UUID) -> N
                 assignments_to_create.append(assignment)
         
         if assignments_to_create:
-            await supabase.table("task_assignments").insert(assignments_to_create).execute()
+            supabase.table("task_assignments").insert(assignments_to_create).execute()
             
             log_info(
                 "Generated daily task assignments",
@@ -693,21 +683,8 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
     if target_date is None:
         target_date = date.today()
     
-    day_name = target_date.strftime("%a").upper()[:3]
-    
-    # Map day names to schedule format (MON, TUE, etc)
-    day_mapping = {
-        "Mon": DayOfWeek.MON.value,
-        "Tue": DayOfWeek.TUE.value,
-        "Wed": DayOfWeek.WED.value,
-        "Thu": DayOfWeek.THU.value,
-        "Fri": DayOfWeek.FRI.value,
-        "Sat": DayOfWeek.SAT.value,
-        "Sun": DayOfWeek.SUN.value,
-    }
-    
-    today_day_of_week = day_mapping.get(day_name)
-    if not today_day_of_week:
+    today_day_of_week = target_date.strftime("%a").upper()[:3]
+    if today_day_of_week not in {d.value for d in DayOfWeek}:
         log_error(
             "Could not determine day of week for batch assignment generation",
             Exception("Invalid day mapping"),
@@ -724,7 +701,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
     
     try:
         # Get all active schedules
-        schedules_response = await (
+        schedules_response = (
             supabase
             .table("weekly_task_schedules")
             .select("id, household_id")
@@ -736,7 +713,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
         schedules = schedules_response.data if schedules_response.data else []
         
         # Get all households for statistics
-        households_response = await (
+        households_response = (
             supabase
             .table("households")
             .select("id")
@@ -767,7 +744,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
                 schedule_id = schedule["id"]
                 
                 # Get tasks for this day
-                tasks_response = await (
+                tasks_response = (
                     supabase
                     .table("tasks")
                     .select("*")
@@ -784,7 +761,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
                     continue
                 
                 # Get household members for random assignment
-                members_response = await (
+                members_response = (
                     supabase
                     .table("household_members")
                     .select("user_id")
@@ -803,7 +780,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
                     continue
                 
                 # Check if assignments already exist for this date
-                existing_response = await (
+                existing_response = (
                     supabase
                     .table("task_assignments")
                     .select("id")
@@ -850,7 +827,7 @@ async def generate_daily_assignments_batch(target_date: Optional[date] = None) -
                         assignments_to_create.append(assignment)
                 
                 if assignments_to_create:
-                    await supabase.table("task_assignments").insert(assignments_to_create).execute()
+                    supabase.table("task_assignments").insert(assignments_to_create).execute()
                     total_assignments_created += len(assignments_to_create)
                 
                 households_processed += 1
@@ -911,7 +888,7 @@ async def _check_household_access(user_id: UUID, household_id: UUID) -> None:
     supabase = get_supabase_client()
     
     try:
-        response = await (
+        response = (
             supabase
             .table("household_members")
             .select("id")
@@ -939,7 +916,7 @@ async def _get_household_or_fail(supabase, household_id: UUID, user_id: UUID) ->
         ScheduleAccessError: If household not found or no access
     """
     try:
-        response = await (
+        response = (
             supabase
             .table("households")
             .select("*")
