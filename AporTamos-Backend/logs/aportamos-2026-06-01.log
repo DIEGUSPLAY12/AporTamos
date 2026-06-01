@@ -474,3 +474,220 @@ postgrest.exceptions.APIError: {'code': '42703', 'details': None, 'hint': None, 
 2026-06-01 11:22:30,439 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
 2026-06-01 11:22:31,304 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
 2026-06-01 11:22:31,304 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:26:01,615 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:26:02,405 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:26:02,405 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:26:38,271 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:26:38,995 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:26:38,996 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:26:43,631 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:27:00,584 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:27:00,584 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:27:09,905 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:27:10,641 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:27:10,641 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:27:24,805 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:27:25,397 - aportamos - INFO - [config.py:236] - Created today's assignment for new task
+2026-06-01 11:27:30,881 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:27:31,648 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:27:31,649 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:28:42,289 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:28:42,963 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:28:43,883 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:28:45,697 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:10,994 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:11,152 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:11,402 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:29:11,569 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:11,727 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:12,849 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:29:12,849 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:29:26,552 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:29:27,686 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:29:27,687 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:29:50,393 - aportamos - INFO - [config.py:236] - Photo uploaded to Supabase Storage
+2026-06-01 11:29:50,485 - aportamos - INFO - [config.py:236] - Task completion record created
+2026-06-01 11:29:50,571 - aportamos - INFO - [config.py:236] - Task completed successfully
+2026-06-01 11:29:50,571 - aportamos - INFO - [config.py:236] - Task completed
+2026-06-01 11:29:54,044 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:29:55,203 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:30:01,220 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:30:04,826 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:30:06,576 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:30:06,576 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:30:12,707 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:30:12,708 - aportamos - INFO - [config.py:236] - Retrieving weekly schedule
+2026-06-01 11:30:12,947 - aportamos - INFO - [config.py:236] - Successfully retrieved weekly schedule
+2026-06-01 11:30:32,260 - aportamos - INFO - [config.py:236] - Adding task to schedule
+2026-06-01 11:30:32,885 - aportamos - INFO - [config.py:236] - Added task to schedule
+2026-06-01 11:30:33,251 - aportamos - INFO - [config.py:236] - Created today's assignment for new task
+2026-06-01 11:30:33,251 - aportamos - INFO - [config.py:236] - Successfully added task to schedule
+2026-06-01 11:30:33,685 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:30:42,629 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:31:25,254 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:31:25,419 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:31:25,733 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:31:25,981 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:31:26,149 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:31:27,291 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:31:27,291 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:31:37,577 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:31:38,725 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:31:38,725 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:31:47,028 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:31:47,029 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:34:18,088 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:34:18,930 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:34:18,931 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:34:25,252 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:34:26,010 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:34:26,010 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:34:47,372 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:34:49,211 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:34:49,212 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:34:52,891 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:34:52,891 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:35:06,581 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:35:07,455 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:35:07,455 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:36:14,473 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:36:15,246 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:36:15,246 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:36:59,650 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:37:00,875 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:00,875 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:01,676 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:01,677 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:02,791 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:02,792 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:08,642 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:08,642 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:09,427 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:09,427 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:10,542 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:10,542 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:11,333 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:11,333 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:12,125 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:12,125 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:16,482 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:16,482 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:17,278 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:17,278 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:18,062 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:18,063 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:18,848 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:18,849 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:37:19,954 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:19,954 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:37:29,353 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:37:30,151 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:37:30,151 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:38:07,217 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:38:12,253 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:38:12,253 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:39:33,270 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:39:33,858 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:39:34,029 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:39:34,435 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:39:34,598 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:39:34,765 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:39:35,917 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:39:35,917 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:39:37,055 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:39:37,056 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:39:58,134 - aportamos - INFO - [config.py:236] - Photo uploaded to Supabase Storage
+2026-06-01 11:39:58,225 - aportamos - INFO - [config.py:236] - Task completion record created
+2026-06-01 11:39:58,634 - aportamos - INFO - [config.py:236] - Household streak updated after 100% completion
+2026-06-01 11:39:58,634 - aportamos - INFO - [config.py:236] - Task completed successfully
+2026-06-01 11:39:58,634 - aportamos - INFO - [config.py:236] - Task completed
+2026-06-01 11:40:02,358 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:40:03,603 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:40:03,603 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:42:26,366 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:42:27,304 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:42:27,304 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:42:41,489 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:42:42,272 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:42:42,272 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:43:05,953 - aportamos - INFO - [config.py:236] - Shutting down AporTamos
+2026-06-01 11:43:06,715 - aportamos - INFO - [config.py:236] - Starting AporTamos v1.0.0
+2026-06-01 11:43:06,715 - aportamos - INFO - [config.py:236] - Supabase URL: https://bpyxpzhvyqvo...
+2026-06-01 11:43:30,267 - aportamos - INFO - [config.py:236] - Supabase client initialized successfully
+2026-06-01 11:43:31,105 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:43:31,262 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:43:31,513 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:43:31,754 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:43:31,911 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:43:33,292 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:43:33,292 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:43:34,368 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:43:34,368 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:16,101 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:44:16,833 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:16,833 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:17,467 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:17,467 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:19,301 - aportamos - INFO - [config.py:236] - User left household
+2026-06-01 11:44:19,605 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:44:20,820 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:20,821 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:23,524 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:44:24,292 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:24,292 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:24,931 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:24,931 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:26,621 - aportamos - INFO - [config.py:236] - User left household
+2026-06-01 11:44:26,945 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:44:28,075 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:28,076 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:31,801 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:44:32,703 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:32,703 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:33,496 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:33,496 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:39,319 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:44:40,441 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:40,441 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:41,578 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:41,578 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:57,909 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:57,909 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:44:58,047 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:44:59,159 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:44:59,874 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:44:59,874 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:00,641 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:00,641 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:01,183 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:01,183 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:01,506 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:45:02,489 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:45:02,490 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:45:02,705 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:45:03,267 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:03,267 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:04,127 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:04,128 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:04,682 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:04,683 - aportamos - INFO - [config.py:236] - Household stats retrieved
+2026-06-01 11:45:06,594 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:45:07,543 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:45:07,543 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:47:12,013 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:47:12,013 - aportamos - INFO - [config.py:236] - User stats retrieved
+2026-06-01 11:47:12,183 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:49:50,874 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:49:51,038 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:49:51,209 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:49:52,879 - aportamos - INFO - [config.py:236] - Household retrieved
+2026-06-01 11:49:53,514 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:50:00,466 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:50:14,484 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:50:42,945 - aportamos - INFO - [config.py:236] - User households listed
+2026-06-01 11:51:02,568 - aportamos - INFO - [config.py:236] - Photo uploaded to Supabase Storage
+2026-06-01 11:51:02,657 - aportamos - INFO - [config.py:236] - Task completion record created
+2026-06-01 11:51:03,004 - aportamos - INFO - [config.py:236] - Household streak updated after 100% completion
+2026-06-01 11:51:03,004 - aportamos - INFO - [config.py:236] - Task completed successfully
+2026-06-01 11:51:03,004 - aportamos - INFO - [config.py:236] - Task completed
+2026-06-01 11:51:05,740 - aportamos - INFO - [config.py:236] - User households listed

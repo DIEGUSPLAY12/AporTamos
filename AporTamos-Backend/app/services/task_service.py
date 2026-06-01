@@ -402,6 +402,67 @@ async def add_task_to_schedule(
         ) from exc
 
 
+async def create_assignment_for_task_today(
+    task_id: UUID,
+    household_id: UUID,
+) -> Optional[dict]:
+    """Create today's TaskAssignment for a single task, if it's scheduled for today.
+
+    Used right after adding a task so it appears in today's list without waiting
+    for the daily cron. Resolves the assignee (explicit user or random member).
+    No-op if the task's day_of_week isn't today or an assignment already exists.
+    """
+    import random
+
+    supabase = get_supabase_client()
+    today = date.today()
+    today_dow = today.strftime("%a").upper()[:3]
+
+    # Load the task to check its day and assignment config
+    task_resp = supabase.table("tasks").select("*").eq("id", str(task_id)).single().execute()
+    task = task_resp.data
+    if not task or task.get("day_of_week") != today_dow:
+        return None
+
+    # Skip if an assignment already exists for this task today
+    existing = supabase.table("task_assignments").select("id").eq(
+        "task_id", str(task_id)
+    ).eq("assignment_date", str(today)).execute()
+    if existing.data:
+        return existing.data[0]
+
+    # Resolve assignee
+    if task.get("assignment_type") == "explicit" and task.get("assigned_user_id"):
+        assigned_uid = task["assigned_user_id"]
+    else:
+        members_resp = supabase.table("household_members").select("user_id").eq(
+            "household_id", str(household_id)
+        ).execute()
+        members = [m["user_id"] for m in (members_resp.data or [])]
+        if not members:
+            return None
+        assigned_uid = random.choice(members)
+
+    now = datetime.utcnow().isoformat() + "Z"
+    assignment = {
+        "id": str(uuid4()),
+        "task_id": str(task_id),
+        "household_id": str(household_id),
+        "assigned_to_user_id": assigned_uid,
+        "assignment_date": str(today),
+        "is_completed": False,
+        "completed_at": None,
+        "created_at": now,
+        "updated_at": now,
+    }
+    supabase.table("task_assignments").insert(assignment).execute()
+    log_info(
+        "Created today's assignment for new task",
+        extra={"task_id": str(task_id), "household_id": str(household_id), "date": str(today)}
+    )
+    return assignment
+
+
 async def update_task(
     task_id: UUID,
     task_data: TaskUpdate,

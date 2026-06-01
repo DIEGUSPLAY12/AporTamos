@@ -30,6 +30,7 @@ from app.services.household_service import (
     invite_member,
     accept_invitation,
     remove_member,
+    leave_household,
     is_household_owner,
     check_user_household_access,
     HouseholdError,
@@ -701,3 +702,35 @@ async def remove_member_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to remove member",
         )
+
+
+@router.post(
+    "/{household_id}/leave",
+    response_model=Dict[str, Any],
+    status_code=status.HTTP_200_OK,
+)
+async def leave_household_endpoint(
+    household_id: UUID = Path(..., description="UUID of the household to leave"),
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> Dict[str, Any]:
+    """Leave a household.
+
+    Any member can leave. The household stays active for the remaining members.
+    If the owner leaves, ownership transfers to the oldest remaining member.
+    When the last member leaves, the household is permanently (soft) deleted.
+    """
+    try:
+        result = await leave_household(current_user_id, household_id)
+        log_info(
+            "User left household",
+            extra={"household_id": str(household_id), "user_id": str(current_user_id),
+                   "deleted": result.get("household_deleted")},
+        )
+        return result
+    except HouseholdMemberError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+    except HouseholdError as exc:
+        log_error("Failed to leave household", exc,
+                  extra={"household_id": str(household_id), "user_id": str(current_user_id)})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to leave household")

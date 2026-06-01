@@ -296,6 +296,14 @@ export async function removeMember(
 }
 
 /**
+ * Leave a household yourself.
+ * Household persists for remaining members; deleted when the last one leaves.
+ */
+export async function leaveHousehold(householdId: string): Promise<any> {
+  return post(`/households/${householdId}/leave`, {});
+}
+
+/**
  * Schedule API Methods
  */
 

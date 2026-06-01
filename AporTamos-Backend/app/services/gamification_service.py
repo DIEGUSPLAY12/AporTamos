@@ -175,6 +175,63 @@ async def calculate_completion_pct(
         ) from exc
 
 
+async def update_streak_if_complete(household_id: UUID) -> Optional[int]:
+    """Increment the household's daily streak if today reached 100% completion.
+
+    Called after a task is completed. Idempotent per day: if last_completion_date
+    is already today, does nothing (streak already counted).
+
+    Returns the new daily_streak value if it changed, otherwise None.
+    """
+    try:
+        supabase = get_supabase_client()
+        today = date.today()
+
+        pct = await calculate_completion_pct(household_id, today)
+        if pct is None or pct < 100:
+            return None
+
+        # Load current streak + last completion date
+        hh = supabase.table("households").select(
+            "daily_streak, last_completion_date"
+        ).eq("id", str(household_id)).single().execute()
+
+        if not hh.data:
+            return None
+
+        last_date = hh.data.get("last_completion_date")
+        # Already counted today → no-op
+        if last_date == str(today):
+            return None
+
+        # Continue streak if yesterday was the last completion, else restart at 1
+        yesterday = today - timedelta(days=1)
+        if last_date == str(yesterday):
+            new_streak = (hh.data.get("daily_streak") or 0) + 1
+        else:
+            new_streak = 1
+
+        supabase.table("households").update({
+            "daily_streak": new_streak,
+            "last_completion_date": str(today),
+            "updated_at": datetime.utcnow().isoformat() + "Z",
+        }).eq("id", str(household_id)).execute()
+
+        log_info(
+            "Household streak updated after 100% completion",
+            extra={"household_id": str(household_id), "new_streak": new_streak}
+        )
+        return new_streak
+
+    except Exception as exc:
+        log_error(
+            "Failed to update streak",
+            exc,
+            extra={"household_id": str(household_id)}
+        )
+        return None
+
+
 async def calculate_user_completion_pct(
     user_id: UUID,
     household_id: UUID,

@@ -250,6 +250,14 @@ async def complete_task(
         completed_at=completed_at,
     )
 
+    # If this completion brings the household to 100% today, bump its streak
+    try:
+        from app.services.gamification_service import update_streak_if_complete
+        await update_streak_if_complete(UUID(household_id))
+    except Exception as streak_exc:
+        log_error("Failed to update streak after completion", streak_exc,
+                  extra={"household_id": household_id})
+
     log_info(
         "Task completed successfully",
         extra={"assignment_id": assignment_id, "user_id": user_id},

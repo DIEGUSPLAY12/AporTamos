@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useHouseholdContext, useSelectedHousehold } from '@/context/HouseholdContext';
+import { useHouseholdContext } from '@/context/HouseholdContext';
 import { useAuthState } from '@/hooks/useAuth';
-import { useUserStats } from '@/hooks/useStats';
 import CreateHouseholdModal from '@/components/household/CreateHouseholdModal';
+
+const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
 
 // ─── Circular ring component (pure RN, no SVG) ────────────────────────────────
 
@@ -72,18 +74,56 @@ export default function HomeScreen() {
 
   const { user: authUser } = useAuthState();
   const { households, isLoading, error, loadHouseholds, clearError } = useHouseholdContext();
-  const selectedHousehold = useSelectedHousehold();
-  const { stats: userStats, isLoading: isLoadingStats } = useUserStats(
-    authUser?.id ?? null,
-    selectedHousehold?.id ?? null
-  );
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
+  // Aggregated completion across ALL households' tasks assigned to the user
+  const [completionPct, setCompletionPct] = useState(0);
+  const [isLoadingStats, setIsLoadingStats] = useState(false);
+
   const firstName = authUser?.name?.split(' ')[0] ?? 'Usuario';
-  const completionPct = userStats?.completionPct ?? 0;
-  const streak = selectedHousehold?.daily_streak ?? 0;
+  // Highest streak across all of the user's households
+  const streak = households.reduce((max, h) => Math.max(max, h.daily_streak ?? 0), 0);
+
+  // Fetch today's tasks for every household and compute a single weighted %
+  const fetchGlobalCompletion = useCallback(async () => {
+    if (households.length === 0) {
+      setCompletionPct(0);
+      return;
+    }
+    setIsLoadingStats(true);
+    try {
+      const token = await AsyncStorage.getItem('auth_token');
+      const results = await Promise.all(
+        households.map(async (h) => {
+          try {
+            const res = await fetch(`${API_BASE}/households/${h.id}/tasks`, {
+              headers: { Authorization: `Bearer ${token ?? ''}` },
+            });
+            if (!res.ok) return [];
+            const json = await res.json();
+            return (json.tasks ?? []) as { effort_weight: number; is_completed: boolean }[];
+          } catch {
+            return [];
+          }
+        })
+      );
+
+      let totalWeight = 0;
+      let completedWeight = 0;
+      for (const tasks of results) {
+        for (const t of tasks) {
+          const w = t.effort_weight ?? 1;
+          totalWeight += w;
+          if (t.is_completed) completedWeight += w;
+        }
+      }
+      setCompletionPct(totalWeight > 0 ? (completedWeight / totalWeight) * 100 : 0);
+    } finally {
+      setIsLoadingStats(false);
+    }
+  }, [households]);
 
   useFocusEffect(
     useCallback(() => {
@@ -91,10 +131,19 @@ export default function HomeScreen() {
     }, [authUser?.id, loadHouseholds])
   );
 
+  // Recompute the global % whenever the household list changes / screen focuses
+  useEffect(() => { fetchGlobalCompletion(); }, [fetchGlobalCompletion]);
+  useFocusEffect(
+    useCallback(() => { fetchGlobalCompletion(); }, [fetchGlobalCompletion])
+  );
+
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    try { await loadHouseholds(); } finally { setIsRefreshing(false); }
-  }, [loadHouseholds]);
+    try {
+      await loadHouseholds();
+      await fetchGlobalCompletion();
+    } finally { setIsRefreshing(false); }
+  }, [loadHouseholds, fetchGlobalCompletion]);
 
   if (isLoading && households.length === 0) {
     return (
@@ -162,7 +211,7 @@ export default function HomeScreen() {
           <View style={[styles.statsCard, styles.streakCard, { backgroundColor: colors.streak }, Shadows.streak]}>
             <Text style={styles.streakNumber}>{streak}</Text>
             <Text style={styles.streakUnit}>días</Text>
-            <Text style={styles.streakCaption}>Tu Racha 🔥</Text>
+            <Text style={styles.streakCaption}>Mejor Racha 🔥</Text>
           </View>
         </View>
 

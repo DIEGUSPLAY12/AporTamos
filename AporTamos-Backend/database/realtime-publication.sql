@@ -6,20 +6,17 @@
 -- Create Publication for Real-Time Events
 -- ============================================================================
 
--- Create publication if it doesn't exist
-CREATE PUBLICATION IF NOT EXISTS supabase_realtime FOR TABLE 
-  chat_messages,
-  task_assignments,
-  task_completions;
-
--- ============================================================================
--- Alternative: Enable per-table if publication already exists
--- ============================================================================
-
--- If you already have a supabase_realtime publication, use these commands:
-ALTER PUBLICATION supabase_realtime ADD TABLE chat_messages;
+-- Supabase ya crea la publicación 'supabase_realtime' por defecto.
+-- Añade las tablas (ADD TABLE falla si ya está, así que se ignora el error).
 ALTER PUBLICATION supabase_realtime ADD TABLE task_assignments;
 ALTER PUBLICATION supabase_realtime ADD TABLE task_completions;
+ALTER PUBLICATION supabase_realtime ADD TABLE chat_messages;
+
+-- REPLICA IDENTITY FULL hace que payload.new incluya TODAS las columnas
+-- (necesario para leer is_completed en el evento de realtime).
+ALTER TABLE task_assignments REPLICA IDENTITY FULL;
+ALTER TABLE task_completions REPLICA IDENTITY FULL;
+ALTER TABLE chat_messages REPLICA IDENTITY FULL;
 
 -- ============================================================================
 -- Verification Queries

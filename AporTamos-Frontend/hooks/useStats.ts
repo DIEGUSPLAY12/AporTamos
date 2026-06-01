@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { get } from '@/services/api';
 import { subscribeToTaskAssignments } from '@/services/supabase';
 
@@ -124,15 +125,20 @@ export function useHouseholdStats(
     };
   }, [fetchStats]);
 
+  // Refetch whenever the screen regains focus (reliable fallback to realtime)
+  useFocusEffect(
+    useCallback(() => {
+      fetchStats();
+    }, [fetchStats])
+  );
+
   // Real-time: re-fetch when any task_assignment in this household is updated
   useEffect(() => {
     if (!householdId) return;
 
     const sub = subscribeToTaskAssignments(householdId, (payload) => {
-      // Only re-fetch when a task just got completed
-      if (payload?.new?.is_completed === true) {
-        fetchStats();
-      }
+      // Re-fetch on any assignment change (completed or new task added)
+      fetchStats();
     });
 
     return () => {
@@ -187,14 +193,19 @@ export function useUserStats(
     };
   }, [fetchStats]);
 
+  // Refetch whenever the screen regains focus (reliable fallback to realtime)
+  useFocusEffect(
+    useCallback(() => {
+      fetchStats();
+    }, [fetchStats])
+  );
+
   // Real-time: re-fetch on completions in this household
   useEffect(() => {
     if (!householdId) return;
 
     const sub = subscribeToTaskAssignments(householdId, (payload) => {
-      if (payload?.new?.is_completed === true) {
-        fetchStats();
-      }
+      fetchStats();
     });
 
     return () => {

@@ -562,6 +562,93 @@ async def remove_member(
         raise HouseholdError(f"Failed to remove member: {str(e)}")
 
 
+async def leave_household(
+    user_id: UUID,
+    household_id: UUID,
+) -> dict:
+    """Let a user leave a household themselves.
+
+    Behavior:
+    - Removes the requesting user's membership.
+    - If the user was the owner and other members remain, ownership is
+      transferred to the earliest-joined remaining member.
+    - If no members remain afterwards, the household is soft-deleted.
+
+    Returns a dict describing what happened.
+    """
+    if not user_id or not household_id:
+        raise HouseholdError("User ID and household ID are required")
+
+    try:
+        supabase = get_supabase_client()
+
+        # Confirm the user is actually a member
+        membership = supabase.table("household_members").select("user_id").eq(
+            "household_id", str(household_id)
+        ).eq("user_id", str(user_id)).execute()
+        if not membership.data:
+            raise HouseholdMemberError("You are not a member of this household")
+
+        was_owner = await is_household_owner(user_id, household_id)
+
+        # Remove this user's membership
+        supabase.table("household_members").delete().eq(
+            "household_id", str(household_id)
+        ).eq("user_id", str(user_id)).execute()
+
+        # Who's left?
+        remaining = supabase.table("household_members").select(
+            "user_id, joined_at"
+        ).eq("household_id", str(household_id)).order("joined_at", desc=False).execute()
+        remaining_members = remaining.data or []
+
+        now = datetime.utcnow().isoformat() + "Z"
+
+        # No one left → soft-delete the household
+        if not remaining_members:
+            supabase.table("households").update({
+                "deleted_at": now,
+                "updated_at": now,
+            }).eq("id", str(household_id)).execute()
+            logger.info(f"Household {household_id} soft-deleted (last member left)")
+            return {
+                "message": "Left household; household deleted (no members left)",
+                "household_deleted": True,
+            }
+
+        # Owner left but members remain → transfer ownership to oldest member
+        if was_owner:
+            new_owner_id = remaining_members[0]["user_id"]
+            supabase.table("households").update({
+                "owner_id": new_owner_id,
+                "updated_at": now,
+            }).eq("id", str(household_id)).execute()
+            supabase.table("household_members").update({
+                "role": "owner",
+                "updated_at": now,
+            }).eq("household_id", str(household_id)).eq("user_id", new_owner_id).execute()
+            logger.info(
+                f"User {user_id} left household {household_id}; ownership transferred to {new_owner_id}"
+            )
+            return {
+                "message": "Left household; ownership transferred",
+                "household_deleted": False,
+                "new_owner_id": new_owner_id,
+            }
+
+        logger.info(f"User {user_id} left household {household_id}")
+        return {
+            "message": "Left household",
+            "household_deleted": False,
+        }
+
+    except (HouseholdMemberError,):
+        raise
+    except Exception as e:
+        logger.error(f"Error leaving household: {str(e)}")
+        raise HouseholdError(f"Failed to leave household: {str(e)}")
+
+
 async def remove_member_by_email(
     user_id: UUID,
     household_id: UUID,

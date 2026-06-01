@@ -298,25 +298,31 @@ export default function HouseholdDetailScreen(): JSX.Element {
         />
       )}
 
-      {/* Leave household (non-owners) */}
-      {isMember && !isOwner && (
+      {/* Leave household — available to all members */}
+      {isMember && (
         <View style={{ paddingHorizontal: Spacing.xl, marginTop: Spacing.section }}>
           <TouchableOpacity
             style={[styles.leaveButton, { borderColor: colors.error }]}
             onPress={() => {
+              const lastMember = household.members.length <= 1;
+              const msg = lastMember
+                ? `Eres el único miembro. Si sales, "${household.name}" se borrará definitivamente.`
+                : isOwner
+                ? `Si sales, la propiedad pasará a otro miembro. ¿Seguro que quieres abandonar "${household.name}"?`
+                : `¿Seguro que quieres abandonar "${household.name}"?`;
               Alert.alert(
                 'Abandonar hogar',
-                `¿Seguro que quieres abandonar "${household.name}"?`,
+                msg,
                 [
                   { text: 'Cancelar', style: 'cancel' },
                   {
-                    text: 'Abandonar',
+                    text: lastMember ? 'Salir y borrar' : 'Abandonar',
                     style: 'destructive',
                     onPress: async () => {
                       if (!user?.id) return;
                       try {
-                        await api.removeMember(household.id, user.id);
-                        router.back();
+                        await api.leaveHousehold(household.id);
+                        router.replace('/(tabs)' as any);
                       } catch {
                         Alert.alert('Error', 'No se pudo abandonar el hogar.');
                       }
@@ -326,7 +332,9 @@ export default function HouseholdDetailScreen(): JSX.Element {
               );
             }}
           >
-            <Text style={[styles.leaveButtonText, { color: colors.error }]}>Abandonar hogar</Text>
+            <Text style={[styles.leaveButtonText, { color: colors.error }]}>
+              {household.members.length <= 1 ? 'Salir y borrar hogar' : 'Abandonar hogar'}
+            </Text>
           </TouchableOpacity>
         </View>
       )}

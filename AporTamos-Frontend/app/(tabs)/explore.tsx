@@ -11,10 +11,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Colors, Spacing, Radius, Shadows } from '@/constants/theme';
+import { Colors, Spacing, Radius } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useSelectedHousehold } from '@/context/HouseholdContext';
-import { useAuthState } from '@/hooks/useAuth';
+import { useHouseholdContext } from '@/context/HouseholdContext';
 import TaskListItem from '@/components/task/TaskListItem';
 
 const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
@@ -28,33 +27,55 @@ interface TaskItem {
   assigned_to: string;
 }
 
+interface HouseholdTasks {
+  householdId: string;
+  householdName: string;
+  tasks: TaskItem[];
+}
+
 export default function MisTareasScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const selectedHousehold = useSelectedHousehold();
-  const { user } = useAuthState();
+  const { households } = useHouseholdContext();
 
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [grouped, setGrouped] = useState<HouseholdTasks[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTasks = useCallback(async () => {
-    if (!selectedHousehold?.id) return;
+  const fetchAllTasks = useCallback(async () => {
+    if (households.length === 0) {
+      setGrouped([]);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
     try {
       const token = await AsyncStorage.getItem('auth_token');
-      const res = await fetch(`${API_BASE}/households/${selectedHousehold.id}/tasks`, {
-        headers: { Authorization: `Bearer ${token ?? ''}` },
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `HTTP ${res.status}`);
-      }
-      const json = await res.json();
-      setTasks(json.tasks ?? []);
+
+      // Fetch each household's tasks in parallel
+      const results = await Promise.all(
+        households.map(async (h) => {
+          const res = await fetch(`${API_BASE}/households/${h.id}/tasks`, {
+            headers: { Authorization: `Bearer ${token ?? ''}` },
+          });
+          if (!res.ok) {
+            return { householdId: h.id, householdName: h.name, tasks: [] as TaskItem[] };
+          }
+          const json = await res.json();
+          return {
+            householdId: h.id,
+            householdName: h.name,
+            tasks: (json.tasks ?? []) as TaskItem[],
+          };
+        })
+      );
+
+      // Only keep households that actually have tasks today
+      setGrouped(results.filter((g) => g.tasks.length > 0));
       setError(null);
     } catch (e: any) {
       setError(e.message || 'No se pudieron cargar las tareas');
@@ -62,33 +83,34 @@ export default function MisTareasScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [selectedHousehold?.id]);
+  }, [households]);
 
   // Re-fetch every time this tab gets focus (catches completions + new tasks)
   useFocusEffect(
     useCallback(() => {
-      if (!selectedHousehold?.id) return;
       setLoading(true);
-      fetchTasks();
-    }, [selectedHousehold?.id, fetchTasks])
+      fetchAllTasks();
+    }, [fetchAllTasks])
   );
 
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchTasks();
-  }, [fetchTasks]);
+    fetchAllTasks();
+  }, [fetchAllTasks]);
 
-  // No household selected yet
-  if (!selectedHousehold) {
+  // No households at all
+  if (households.length === 0) {
     return (
       <View style={[styles.centered, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <Text style={[styles.emptyTitle, { color: colors.onSurface }]}>Mis Tareas</Text>
         <Text style={[styles.emptySubtitle, { color: colors.onSurfaceVariant }]}>
-          Ve a Inicio y selecciona un hogar para ver tus tareas de hoy.
+          Ve a Inicio y crea o únete a un hogar para ver tus tareas de hoy.
         </Text>
       </View>
     );
   }
+
+  const totalTasks = grouped.reduce((sum, g) => sum + g.tasks.length, 0);
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
@@ -108,11 +130,12 @@ export default function MisTareasScreen() {
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.onSurface }]}>Mis Tareas de Hoy</Text>
           <Text style={[styles.subtitle, { color: colors.onSurfaceVariant }]}>
-            {selectedHousehold.name}
+            {totalTasks > 0
+              ? `${totalTasks} ${totalTasks === 1 ? 'tarea' : 'tareas'} en ${grouped.length} ${grouped.length === 1 ? 'hogar' : 'hogares'}`
+              : 'Todos tus hogares'}
           </Text>
         </View>
 
-        {/* Loading */}
         {loading ? (
           <ActivityIndicator color={colors.primary} style={{ marginTop: 40 }} />
         ) : error ? (
@@ -120,48 +143,56 @@ export default function MisTareasScreen() {
             <Text style={[styles.emptySubtitle, { color: colors.error }]}>{error}</Text>
             <TouchableOpacity
               style={[styles.retryButton, { backgroundColor: colors.primary }]}
-              onPress={() => { setLoading(true); fetchTasks(); }}
+              onPress={() => { setLoading(true); fetchAllTasks(); }}
             >
               <Text style={styles.retryText}>Reintentar</Text>
             </TouchableOpacity>
           </View>
-        ) : tasks.length === 0 ? (
+        ) : totalTasks === 0 ? (
           <View style={styles.emptyState}>
             <Text style={{ fontSize: 40 }}>✅</Text>
             <Text style={[styles.emptyTitle, { color: colors.onSurface }]}>¡Sin tareas hoy!</Text>
             <Text style={[styles.emptySubtitle, { color: colors.onSurfaceVariant }]}>
-              No tienes tareas asignadas para hoy.
+              No tienes tareas asignadas hoy en ninguno de tus hogares.
             </Text>
-            <TouchableOpacity
-              style={[styles.retryButton, { backgroundColor: colors.primary }]}
-              onPress={() => router.push(`/(tabs)/${selectedHousehold.id}/schedule` as any)}
-            >
-              <Text style={styles.retryText}>Gestionar rutinas</Text>
-            </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.taskList}>
-            {tasks.map((task) => (
-              <TaskListItem
-                key={task.assignment_id}
-                taskId={task.task_id}
-                assignmentId={task.assignment_id}
-                name={task.name}
-                effortWeight={task.effort_weight}
-                isCompleted={task.is_completed}
-                assignedTo={task.assigned_to}
-                onPress={() => router.push(`/(tabs)/${selectedHousehold.id}/tasks` as any)}
-              />
-            ))}
-            <TouchableOpacity
-              style={[styles.viewAllButton, { borderColor: colors.primary }]}
-              onPress={() => router.push(`/(tabs)/${selectedHousehold.id}/tasks` as any)}
-            >
-              <Text style={[styles.viewAllText, { color: colors.primary }]}>
-                Completar tareas con foto →
-              </Text>
-            </TouchableOpacity>
-          </View>
+          // One section per household
+          grouped.map((group) => (
+            <View key={group.householdId} style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={[styles.sectionTitle, { color: colors.onSurface }]}>
+                  🏠  {group.householdName}
+                </Text>
+                <Text style={[styles.sectionCount, { color: colors.onSurfaceVariant }]}>
+                  {group.tasks.filter((t) => t.is_completed).length}/{group.tasks.length}
+                </Text>
+              </View>
+
+              <View style={styles.taskList}>
+                {group.tasks.map((task) => (
+                  <TaskListItem
+                    key={task.assignment_id}
+                    taskId={task.task_id}
+                    assignmentId={task.assignment_id}
+                    name={task.name}
+                    effortWeight={task.effort_weight}
+                    isCompleted={task.is_completed}
+                    assignedTo={task.assigned_to}
+                    onPress={() => router.push(`/(tabs)/${group.householdId}/tasks` as any)}
+                  />
+                ))}
+                <TouchableOpacity
+                  style={[styles.viewAllButton, { borderColor: colors.primary }]}
+                  onPress={() => router.push(`/(tabs)/${group.householdId}/tasks` as any)}
+                >
+                  <Text style={[styles.viewAllText, { color: colors.primary }]}>
+                    Completar con foto →
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
         )}
       </ScrollView>
     </View>
@@ -173,9 +204,19 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: Spacing.xl, paddingBottom: 32 },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, paddingTop: 60 },
 
-  header: { paddingTop: Spacing.lg, paddingBottom: Spacing.xl, gap: 4 },
+  header: { paddingTop: Spacing.lg, paddingBottom: Spacing.lg, gap: 4 },
   title: { fontSize: 26, fontWeight: '800', letterSpacing: -0.4 },
   subtitle: { fontSize: 14, fontWeight: '500' },
+
+  section: { marginBottom: Spacing.xl },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+  },
+  sectionTitle: { fontSize: 17, fontWeight: '700' },
+  sectionCount: { fontSize: 14, fontWeight: '600' },
 
   taskList: { gap: Spacing.sm },
 
