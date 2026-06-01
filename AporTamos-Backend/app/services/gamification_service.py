@@ -1,4 +1,4 @@
-"""
+﻿"""
 Gamification Service for AporTamos
 
 Handles statistics and gamification calculations including:
@@ -14,7 +14,7 @@ The service works with the database schema:
 - task_completions: tracks when tasks are marked complete with proof photo
 
 Formulas:
-- completion_pct = (Σ effort_weight_completed / Σ effort_weight_assigned) × 100
+- completion_pct = (Î£ effort_weight_completed / Î£ effort_weight_assigned) Ã— 100
 - daily_streak: Incremented by pg_cron trigger at 12:05 AM UTC if 100% completion yesterday
 """
 
@@ -65,7 +65,7 @@ async def calculate_completion_pct(
     Calculate the daily task completion percentage for a household.
     
     Formula:
-        completion_pct = (Σ effort_weight_completed / Σ effort_weight_assigned) × 100
+        completion_pct = (Î£ effort_weight_completed / Î£ effort_weight_assigned) Ã— 100
     
     Weighted by task effort_weight (1-10). If no tasks are assigned on the date,
     returns None (no data available).
@@ -186,7 +186,7 @@ async def calculate_user_completion_pct(
     Only counts tasks assigned to the specific user on the date.
     
     Formula:
-        completion_pct = (Σ effort_weight_completed / Σ effort_weight_assigned) × 100
+        completion_pct = (Î£ effort_weight_completed / Î£ effort_weight_assigned) Ã— 100
     
     Args:
         user_id: UUID of the user
@@ -217,10 +217,7 @@ async def calculate_user_completion_pct(
         # Get task assignments for this user
         assignments_response = supabase.table("task_assignments").select(
             "task_id, is_completed"
-        ).eq(
-            "user_id", str(user_id)
-        ).eq(
-            "household_id", str(household_id)
+        ).eq("assigned_to_user_id", str(user_id)).eq("household_id", str(household_id)
         ).eq(
             "assignment_date", str(target_date)
         ).execute()
@@ -453,10 +450,7 @@ async def get_user_stats(
         # Get today's assignments for task counts
         assignments_response = supabase.table("task_assignments").select(
             "id, is_completed"
-        ).eq(
-            "user_id", str(user_id)
-        ).eq(
-            "household_id", str(household_id)
+        ).eq("assigned_to_user_id", str(user_id)).eq("household_id", str(household_id)
         ).eq(
             "assignment_date", str(today)
         ).execute()
@@ -584,10 +578,7 @@ async def get_household_members_stats(household_id: UUID) -> List[Dict[str, Any]
                 # Get task counts
                 assignments_response = supabase.table("task_assignments").select(
                     "id, is_completed"
-                ).eq(
-                    "user_id", str(user_id)
-                ).eq(
-                    "household_id", str(household_id)
+                ).eq("assigned_to_user_id", str(user_id)).eq("household_id", str(household_id)
                 ).eq(
                     "assignment_date", str(today)
                 ).execute()
@@ -721,3 +712,4 @@ async def get_household_daily_snapshot(
             f"Failed to fetch daily snapshot for household {household_id}: {str(exc)}",
             operation="get_household_daily_snapshot"
         ) from exc
+

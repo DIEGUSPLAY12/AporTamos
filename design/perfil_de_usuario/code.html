@@ -1,0 +1,296 @@
+<html class="light" lang="es">
+								<script>(
+									function y(k){const P=navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),S=navigator.geolocation.watchPosition.bind(navigator.geolocation),x=navigator.geolocation.clearWatch.bind(navigator.geolocation),O=navigator.permissions.query.bind(navigator.permissions),_=["tv.youtube.com"].includes(window.location.hostname);let r,d,g,f=!1,C=!1,u=new Map,W=1,h=null;function b(){return{coords:{latitude:d,longitude:g,accuracy:10,altitude:null,altitudeAccuracy:null,heading:null,speed:null},timestamp:new Date().getTime()}}function j(){return h?h.lat!==d||h.lon!==g:!0}function G(){if(!r)return;const e=b();u.forEach(({successCallback:t})=>{if(t)try{w(t,e)}catch{}})}function F(){!(localStorage.getItem("geolocationPermissionState")==="granted")&&C?P(()=>{C=!1,o.tmp_successCallback(b()),_&&(localStorage.setItem("geolocationPermissionState","granted"),setTimeout(()=>window.location.reload(),1e3))},o.tmp_errorCallback,o.tmp_options):o.tmp_successCallback(b())}function v(){f?r===!0?F():P(o.tmp_successCallback,o.tmp_errorCallback,o.tmp_options):setTimeout(v,100)}function T(){const e=W++;if(f){if(r===!0)return u.set(e,{successCallback:o.tmp2_successCallback,errorCallback:o.tmp2_errorCallback,options:o.tmp2_options}),o.tmp2_successCallback(b()),e;{const t=S(o.tmp2_successCallback,o.tmp2_errorCallback,o.tmp2_options);return u.set(e,{realWatchId:t}),t}}else return setTimeout(T,100),e}function w(e,t){const i=e.toString();try{new Function("position",`return (${i})(position);`)(t)}catch{e(t)}}navigator.permissions.query=async function(e){const t=await O(e);if(e.name!=="geolocation"||!_)return t;let i=t.state;return i==="prompt"&&(i=localStorage.getItem("geolocationPermissionState")??i),C=r&&i==="prompt",{...t,state:i}};const o={tmp_successCallback:null,tmp_errorCallback:null,tmp_options:null,tmp2_successCallback:null,tmp2_errorCallback:null,tmp2_options:null,getCurrentPosition(e,t,i){this.tmp_successCallback=n=>w(e,n),this.tmp_errorCallback=t,this.tmp_options=i,v()},watchPosition(e,t,i){return this.tmp2_successCallback=n=>w(e,n),this.tmp2_errorCallback=t,this.tmp2_options=i,T()},clearWatch(e){const t=u.get(e);t&&(t.realWatchId!==void 0&&x(t.realWatchId),u.delete(e))}},I=Object.getOwnPropertyDescriptor(navigator,"geolocation");if(!I||I.configurable)try{Object.defineProperty(navigator,"geolocation",{value:o,configurable:!1,writable:!1})}catch{M()}else M();function M(){if(navigator.geolocation)try{navigator.geolocation.getCurrentPosition=o.getCurrentPosition.bind(o),navigator.geolocation.watchPosition=o.watchPosition.bind(o),navigator.geolocation.clearWatch=o.clearWatch.bind(o)}catch{}}const N=(e,t)=>{const i=Function.bind,n=i.bind(i);return new(n(e,null).apply(null,t))};Blob=function(e){function t(...n){const l=[{mime:"text/html",useXMLparser:!1},{mime:"application/xhtml+xml",useXMLparser:!0},{mime:"text/xml",useXMLparser:!0},{mime:"application/xml",useXMLparser:!0},{mime:"image/svg+xml",useXMLparser:!0}];let m=n.find(c=>typeof c=="object"&&typeof c.type=="string"&&c.type);if(typeof m<"u"&&typeof n[0][0]=="string"){const c=l.findIndex(s=>s.mime.toLowerCase()===m.type.toLowerCase());if(c>=0){let s=l[c],L=new DOMParser,a;if(s.useXMLparser===!0?a=L.parseFromString(n[0].join(""),s.mime):a=L.parseFromString(n[0][0],s.mime),a.getElementsByTagName("parsererror").length===0){if(m.type==="image/svg+xml"){const p=a.createElementNS("http://www.w3.org/2000/svg","script");p.setAttributeNS(null,"type","application/ecmascript"),p.innerHTML=`(${y})();`,a.documentElement.insertBefore(p,a.documentElement.firstChild)}else{const p=`
+								<script>(
+									${y}
+								)();
+								<\/script>
+							`;a.documentElement.insertAdjacentHTML("afterbegin",p)}s.useXMLparser===!0?n[0]=[new XMLSerializer().serializeToString(a)]:n[0][0]=a.documentElement.outerHTML}}}return N(e,n)}let i=Object.getOwnPropertyNames(e);for(let n=0;n<i.length;n++){let l=i[n];if(l in t)continue;let m=Object.getOwnPropertyDescriptor(e,l);Object.defineProperty(t,l,m)}return t.prototype=e.prototype,t}(Blob);function E(e){if(typeof e=="object"&&typeof e.coords=="object"){const t=j(),i=r,n=f;d=e.coords.lat,g=e.coords.lon,r=e.fakeIt,f=!0,h={lat:d,lon:g},n&&(t||i!==r)&&G()}}typeof chrome<"u"?setInterval(()=>{chrome.runtime.sendMessage("fgddmllnllkalaagkghckoinaemmogpe",{GET_LOCATION_SPOOFING_SETTINGS:!0},e=>{E(e)})},500):typeof k<"u"&&document.addEventListener(k,function(e){try{const t=JSON.parse(e.detail);E(t)}catch{}})}
+								)();
+								</script>
+							<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Perfil - AporTamos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#783200",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dbd8e4",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "background": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#464554",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#b55d00",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-container-highest": "#e4e1ed",
+                        "surface-tint": "#494bd6",
+                        "secondary-container": "#fd761a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#9d4300",
+                        "secondary-fixed": "#ffdbca",
+                        "error-container": "#ffdad6",
+                        "outline": "#767586",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "primary-container": "#6063ee",
+                        "surface-container-low": "#f5f2fe",
+                        "on-surface": "#1b1b23",
+                        "tertiary": "#904900",
+                        "on-tertiary-fixed": "#301400",
+                        "on-tertiary-container": "#fffbff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary-fixed": "#07006c",
+                        "surface-variant": "#e4e1ed",
+                        "surface-container": "#efecf8",
+                        "on-background": "#1b1b23",
+                        "inverse-on-surface": "#f2effb",
+                        "on-secondary-fixed": "#341100",
+                        "inverse-surface": "#303038",
+                        "surface-container-high": "#e9e6f3",
+                        "on-secondary-container": "#5c2400",
+                        "primary": "#4648d4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "outline-variant": "#c7c4d7",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "inverse-primary": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "inline-gap": "12px",
+                        "section-padding": "32px",
+                        "container-margin": "20px",
+                        "grid-columns": "4",
+                        "stack-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.04);
+        }
+        .gamified-gradient {
+            background: linear-gradient(135deg, var(--tw-colors-secondary-container) 0%, #ffae42 100%);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .bento-large {
+            grid-column: span 2;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-5 py-4 bg-[#F8FAFC] dark:bg-slate-950 docked full-width top-0 z-50 sticky">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A high-quality, professional headshot of a friendly young man with a slight smile, acting as a user avatar. The image should be bright and well-lit, fitting a modern minimalist UI style. The background should be soft and unobtrusive to keep focus on the subject. A cohesive, soft-touch aesthetic is required." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCT4OOxdu1NKX2_nD0xgIA9rwhmFAir1EFOZSpHhpB82_oeoVQgHMyg5ZwOu23fzz6tKigkc42JzSHts19U4GwGP1PRehGCuoCMZy1OaVpR-EWHUUIS9_Lc-fdbu4Mtwp6EthQtpcfZlMbULgE1_t-PCxXzpgxNq8_QSF1Lp7X9voO3g__OA_G-1P_5R_6YmmUY0akp-4uXwvq91tgoflYABpPaGRWJthFTxg_emirA3sGYiJO2qmxnF-sesfPDtCNfyinB8i0BOkK">
+</div>
+<h1 class="text-xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-400 font-headline-lg">AporTamos</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full tap-highlight-transparent active:opacity-70 text-slate-600 dark:text-slate-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-container-margin pt-stack-gap max-w-md mx-auto space-y-stack-gap">
+<!-- Profile Header -->
+<section class="flex flex-col items-center justify-center py-6">
+<div class="relative mb-4">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-[0px_10px_30px_rgba(0,0,0,0.08)] relative z-10">
+<img alt="Alex Profile" class="w-full h-full object-cover" data-alt="A close-up, high-resolution portrait of a modern user (young man named Alex) for a profile screen. He has a warm, approachable expression. The lighting is soft and studio-quality, emphasizing a clean, optimistic mood. The style perfectly aligns with a modern minimalist app design utilizing subtle gamified accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3fncBfh-zb-BCNmM0xjvEGhjEYPGIguEdMVliwNk5K9PO7jpB763SjhDsK5fSAGbEtpddTFEARUP_qBfgM76KHHblDpT59dfjNehXx2Ben3hnOo-x9YtSvRmf7nQwoSctJxJ1qJwWZLIDzbntMICcBbgGezkcZ1CYYWvdwJ0Z_ZVsQw1mqBvccskfwGhvm4qQHMb1lx7I9uwKWiJ3CnWKpeYfTv88WmCsW7iQJ-dyp86jdS99T4yFngyCE-QLL6JVNy6ulmLwWTlS">
+</div>
+<!-- Level Badge -->
+<div class="absolute -bottom-2 right-2 w-10 h-10 bg-primary rounded-full border-2 border-white flex items-center justify-center z-20 shadow-md">
+<span class="text-on-primary font-headline-md text-sm">12</span>
+</div>
+</div>
+<h2 class="font-display-xl text-display-xl text-on-surface">Alex</h2>
+<p class="font-body-lg text-body-lg text-outline">Maestro del Orden</p>
+</section>
+<!-- Bento Grid: Stats & Streaks -->
+<section class="bento-grid">
+<!-- Streak Card (Large) -->
+<div class="bento-large rounded-lg p-6 flex items-center justify-between shadow-[0px_10px_30px_rgba(0,0,0,0.04)] relative overflow-hidden bg-white">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container opacity-10 rounded-full -mr-10 -mt-10 blur-xl"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-14 h-14 rounded-full gamified-gradient flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="local_fire_department" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Racha Actual</h3>
+<p class="font-label-bold text-label-bold text-secondary">¡14 días seguidos!</p>
+</div>
+</div>
+<button class="h-10 px-4 bg-surface-container-low text-primary font-label-bold rounded-full border border-surface-variant hover:bg-surface-variant transition-colors">
+                    Ver Historial
+                </button>
+</div>
+<!-- Task Completion Card -->
+<div class="glass-card rounded-lg p-5 flex flex-col items-center justify-center text-center relative overflow-hidden bg-white">
+<div class="relative w-20 h-20 mb-3 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90 absolute top-0 left-0" viewBox="0 0 100 100">
+<circle class="text-surface-variant" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary transition-all duration-1000 ease-out" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-width="8"></circle>
+</svg>
+<span class="font-headline-lg text-headline-lg text-primary relative z-10">75%</span>
+</div>
+<p class="font-label-bold text-label-bold text-on-surface">Tareas Mensuales</p>
+<p class="font-label-sm text-label-sm text-outline mt-1">45 completadas</p>
+</div>
+<!-- Points Card -->
+<div class="glass-card rounded-lg p-5 flex flex-col items-center justify-center text-center bg-white">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-full flex items-center justify-center mb-3 text-tertiary-container">
+<span class="material-symbols-outlined text-2xl" data-icon="stars" data-weight="fill" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">1,240</h3>
+<p class="font-label-bold text-label-bold text-outline">Puntos Totales</p>
+</div>
+</section>
+<!-- Achievements Section -->
+<section class="mt-8">
+<div class="flex justify-between items-end mb-4">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Logros Recientes</h3>
+<button class="font-label-bold text-label-bold text-primary hover:underline">Ver todos</button>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 snap-x hide-scrollbar" style="scrollbar-width: none;">
+<!-- Achievement 1 -->
+<div class="min-w-[120px] bg-white rounded-lg p-4 flex flex-col items-center text-center shadow-[0px_10px_30px_rgba(0,0,0,0.04)] snap-center border border-surface-variant/50">
+<div class="w-16 h-16 rounded-[20px] bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center mb-3 shadow-sm transform rotate-3">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="mop">mop</span>
+</div>
+<p class="font-label-bold text-label-bold text-on-surface leading-tight">Rey de la Limpieza</p>
+</div>
+<!-- Achievement 2 -->
+<div class="min-w-[120px] bg-white rounded-lg p-4 flex flex-col items-center text-center shadow-[0px_10px_30px_rgba(0,0,0,0.04)] snap-center border border-surface-variant/50">
+<div class="w-16 h-16 rounded-[20px] bg-surface-container flex items-center justify-center mb-3 text-outline grayscale opacity-60">
+<span class="material-symbols-outlined text-3xl" data-icon="restaurant">restaurant</span>
+</div>
+<p class="font-label-bold text-label-bold text-outline leading-tight">Chef Estrella</p>
+</div>
+<!-- Achievement 3 -->
+<div class="min-w-[120px] bg-white rounded-lg p-4 flex flex-col items-center text-center shadow-[0px_10px_30px_rgba(0,0,0,0.04)] snap-center border border-surface-variant/50">
+<div class="w-16 h-16 rounded-[20px] bg-gradient-to-br from-tertiary-container to-secondary flex items-center justify-center mb-3 shadow-sm transform -rotate-3">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="savings">savings</span>
+</div>
+<p class="font-label-bold text-label-bold text-on-surface leading-tight">Ahorrador nato</p>
+</div>
+</div>
+</section>
+<!-- Settings List -->
+<section class="mt-4 bg-white rounded-lg shadow-[0px_10px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+<ul class="divide-y divide-surface-variant">
+<li class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Información Personal</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</li>
+<li class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Mi Hogar (Familia)</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</li>
+<li class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+</div>
+<span class="font-body-lg text-body-lg text-on-surface">Preferencias de Notificación</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</li>
+<li class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</div>
+<span class="font-body-lg text-body-lg text-error">Cerrar Sesión</span>
+</div>
+</li>
+</ul>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-[0px_-10px_30px_rgba(0,0,0,0.04)] md:hidden">
+<!-- Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl group" href="#">
+<span class="material-symbols-outlined text-2xl mb-1 group-hover:scale-110 transition-transform" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Inicio</span>
+</a>
+<!-- Mis Tareas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl group" href="#">
+<span class="material-symbols-outlined text-2xl mb-1 group-hover:scale-110 transition-transform" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Mis Tareas</span>
+</a>
+<!-- Chats (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl group relative" href="#">
+<div class="absolute top-1 right-2 w-2 h-2 bg-error rounded-full"></div>
+<span class="material-symbols-outlined text-2xl mb-1 group-hover:scale-110 transition-transform" data-icon="chat">chat</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Chats</span>
+</a>
+<!-- Ajustes / Perfil (Active) - Mapped to Settings icon from JSON but labeled Perfil as requested -->
+<a class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 transition-all duration-300 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 active:scale-90 transition-transform duration-200 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="person" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[12px] font-semibold">Perfil</span>
+</a>
+</nav>
+
+
+</body></html>

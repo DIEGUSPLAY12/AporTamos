@@ -9,7 +9,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -97,7 +97,11 @@ export default function HouseholdDetailScreen(): JSX.Element {
   }, [fetchHouseholdDetails]);
 
   useEffect(() => { fetchHouseholdDetails(); }, [fetchHouseholdDetails]);
-  useEffect(() => { fetchTasks(); }, [fetchTasks]);
+
+  // Re-fetch tasks every time this screen gets focus (after completing or adding tasks)
+  useFocusEffect(
+    useCallback(() => { fetchTasks(); }, [fetchTasks])
+  );
 
   const handleRemoveMember = useCallback((member: HouseholdMember) => {
     if (!household || !user?.id) return;
@@ -176,10 +180,10 @@ export default function HouseholdDetailScreen(): JSX.Element {
           <View style={[styles.avatar, { backgroundColor: colors.primaryFixed }]}>
             <Text style={{ fontSize: 16 }}>👤</Text>
           </View>
-          <Text style={[styles.appBarTitle, { color: colors.primary }]}>Household Hero</Text>
+          <Text style={[styles.appBarTitle, { color: colors.primary }]}>AporTamos</Text>
         </View>
         <TouchableOpacity style={styles.bellButton}>
-          <Text style={[styles.bellIcon, { color: colors.primary }]}>🔔</Text>
+          <Text style={[styles.bellIcon, { color: colors.primary }]}>🔔</Text>  
         </TouchableOpacity>
       </View>
 
@@ -187,8 +191,14 @@ export default function HouseholdDetailScreen(): JSX.Element {
       <View style={styles.headerSection}>
         <Text style={[styles.householdName, { color: colors.onSurface }]}>{household.name}</Text>
 
-        {/* Streak badge — animated */}
-        <StreakDisplay streak={household.daily_streak} size="default" />
+        {/* Streak badge — pill left-aligned */}
+        <View style={[styles.streakPill, { backgroundColor: colors.streak }]}>
+          <Text style={styles.streakPillEmoji}>🔥</Text>
+          <Text style={styles.streakPillText}>
+            Racha Diaria: {household.daily_streak} {household.daily_streak === 1 ? 'día' : 'días'}
+          </Text>
+          <Text style={styles.streakPillEmoji}>🔥</Text>
+        </View>
       </View>
 
       {/* Members Section — with individual stats, invite, and remove */}
@@ -382,17 +392,25 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: -0.7,
   },
-  streakBadge: {
+  streakPill: {
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    alignSelf: 'flex-start',
-    borderRadius: Radius.lg,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: 10,
+    borderRadius: Radius.full,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    ...Shadows.streak,
   },
-  streakIcon: { fontSize: 16 },
-  streakText: { color: '#ffffff', fontWeight: '700', fontSize: 14 },
+  streakPillText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  streakPillEmoji: {
+    fontSize: 14,
+    lineHeight: 18,
+  },
 
   // Members card
   card: {
@@ -426,6 +444,7 @@ const styles = StyleSheet.create({
   actionsSection: {
     paddingHorizontal: Spacing.xl,
     gap: Spacing.md,
+    marginTop: Spacing.xl,
     marginBottom: Spacing.xl,
   },
   actionButtonPrimary: {

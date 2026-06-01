@@ -491,14 +491,43 @@ async def add_task_endpoint(
         # Add task to schedule
         task = await add_task_to_schedule(schedule.id, household_id, task_data)
 
-        # Generate today's assignment for the new task if it matches today's day
+        # If the new task is scheduled for today, create its assignment directly
         try:
-            await generate_daily_assignments(schedule_id=schedule.id, household_id=household_id)
+            from datetime import date
+            from uuid import uuid4 as _uuid4
+            today = date.today()
+            today_dow = today.strftime("%a").upper()[:3]
+
+            if task.day_of_week.value == today_dow:
+                supabase = get_supabase_client()
+
+                # Resolve the assigned user
+                if task_data.assignment_type.value == "explicit" and task_data.assigned_user_id:
+                    assigned_uid = str(task_data.assigned_user_id)
+                else:
+                    # random: pick a household member
+                    import random as _random
+                    members_resp = supabase.table("household_members").select("user_id") \
+                        .eq("household_id", str(household_id)).execute()
+                    members = [m["user_id"] for m in (members_resp.data or [])]
+                    assigned_uid = _random.choice(members) if members else str(current_user_id)
+
+                supabase.table("task_assignments").insert({
+                    "id": str(_uuid4()),
+                    "task_id": str(task.id),
+                    "household_id": str(household_id),
+                    "assigned_to_user_id": assigned_uid,
+                    "assignment_date": str(today),
+                    "is_completed": False,
+                    "completed_at": None,
+                    "created_at": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+                    "updated_at": __import__('datetime').datetime.utcnow().isoformat() + "Z",
+                }).execute()
+                log_info("Created today's assignment for new task",
+                         extra={"task_id": str(task.id), "date": str(today)})
         except Exception as assign_exc:
-            log_warning(
-                "Could not regenerate daily assignments after adding task",
-                extra={"task_id": str(task.id), "error": str(assign_exc)}
-            )
+            log_warning("Could not create today's assignment for new task",
+                        extra={"task_id": str(task.id), "error": str(assign_exc)})
 
         log_info(
             "Successfully added task to schedule",

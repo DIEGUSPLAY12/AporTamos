@@ -635,8 +635,14 @@ async def generate_daily_assignments(schedule_id: UUID, household_id: UUID) -> N
                 assignments_to_create.append(assignment)
         
         if assignments_to_create:
-            supabase.table("task_assignments").insert(assignments_to_create).execute()
-            
+            # upsert with ignore_duplicates so re-running for the same day
+            # doesn't fail when some assignments already exist (UNIQUE task_id+date)
+            supabase.table("task_assignments").upsert(
+                assignments_to_create,
+                on_conflict="task_id,assignment_date",
+                ignore_duplicates=True,
+            ).execute()
+
             log_info(
                 "Generated daily task assignments",
                 extra={

@@ -40,8 +40,8 @@ export default function PhotoUpload({ onPhotoReady, isUploading = false }: Photo
     }
 
     const result = source === 'camera'
-      ? await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 1 })
-      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 1 });
+      ? await ImagePicker.launchCameraAsync({ mediaTypes: 'images', quality: 1 })
+      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: 'images', quality: 1 });
 
     if (result.canceled || !result.assets[0]) return;
 
