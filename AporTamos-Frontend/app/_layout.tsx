@@ -19,8 +19,10 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 
+import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { HouseholdProvider } from '@/context/HouseholdContext';
@@ -44,6 +46,8 @@ function SplashScreen() {
  */
 function RootStackLayout() {
   const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
   const { isLoggedIn, isLoading } = useAuth();
 
   // Show splash screen while checking auth state
@@ -89,6 +93,19 @@ function RootStackLayout() {
           />
         </Stack>
       )}
+      {/* Scrim opaco detras de la status bar: en modo edge-to-edge evita que el
+          contenido se solape con la hora/bateria al hacer scroll. */}
+      <View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: insets.top,
+          backgroundColor: colors.background,
+        }}
+      />
       <StatusBar style="auto" />
     </ThemeProvider>
   );
@@ -106,10 +123,12 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <HouseholdProvider>
-        <RootStackLayout />
-      </HouseholdProvider>
-    </AuthProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <AuthProvider>
+        <HouseholdProvider>
+          <RootStackLayout />
+        </HouseholdProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
