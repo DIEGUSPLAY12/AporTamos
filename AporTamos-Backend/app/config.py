@@ -80,7 +80,10 @@ class Settings(BaseSettings):
     sender_email: str = "noreply@aportamos.com"
     
     # Security
-    allowed_hosts: list = ["localhost", "127.0.0.1"]
+    # "*" allows any Host header. Needed for platforms like Render that serve on a
+    # generated hostname. Real security is handled by JWT auth + Supabase, not by
+    # TrustedHostMiddleware. Override via ALLOWED_HOSTS env if you want to restrict.
+    allowed_hosts: list = ["*"]
     
     class Config:
         env_file = ".env"
