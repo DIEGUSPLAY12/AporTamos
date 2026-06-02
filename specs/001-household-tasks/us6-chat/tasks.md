@@ -9,7 +9,7 @@
 ## Backend
 
 - [X] T093 [P] Create ChatChannel and ChatMessage Pydantic models in AporTamos-Backend/app/models/chat.py
-- [ ] T094 [P] Create chat service in AporTamos-Backend/app/services/chat_service.py (send message, fetch history, media handling)
+- [X] T094 [P] Create chat service in AporTamos-Backend/app/services/chat_service.py (send message, fetch history, media handling)
 - [ ] T095 Implement GET /households/{id}/chat/messages endpoint in AporTamos-Backend/app/routers/chat.py (fetch chat history with pagination)
 - [ ] T096 [P] Implement POST /households/{id}/chat/message endpoint (send text message)
 - [ ] T097 [P] Implement POST /households/{id}/chat/message with multipart upload for audio/image (same endpoint, different message_type)
