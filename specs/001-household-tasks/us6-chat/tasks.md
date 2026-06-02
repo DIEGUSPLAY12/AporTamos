@@ -13,8 +13,8 @@
 - [X] T095 Implement GET /households/{id}/chat/messages endpoint in AporTamos-Backend/app/routers/chat.py (fetch chat history with pagination)
 - [X] T096 [P] Implement POST /households/{id}/chat/message endpoint (send text message)
 - [X] T097 [P] Implement POST /households/{id}/chat/message with multipart upload for audio/image (same endpoint, different message_type)
-- [ ] T098 [P] Add message validation: exactly one of (content or media_url) must be set
-- [ ] T098b [P] Upload chat media to Supabase Storage bucket chat-media: /{household_id}/messages/{message_id}.{ext}
+- [X] T098 [P] Add message validation: exactly one of (content or media_url) must be set
+- [X] T098b [P] Upload chat media to Supabase Storage bucket chat-media: /{household_id}/messages/{message_id}.{ext}
 
 ## Frontend
 
