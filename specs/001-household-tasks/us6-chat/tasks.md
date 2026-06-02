@@ -18,8 +18,8 @@
 
 ## Frontend
 
-- [ ] T099 [P] Create real-time subscription in AporTamos-Frontend/services/realtime.ts for chat_messages table
-- [ ] T100 [P] Create ChatMessage component in AporTamos-Frontend/components/chat/ChatMessage.tsx (text / image / audio player)
+- [X] T099 [P] Create real-time subscription in AporTamos-Frontend/services/realtime.ts for chat_messages table
+- [X] T100 [P] Create ChatMessage component in AporTamos-Frontend/components/chat/ChatMessage.tsx (text / image / audio player)
 - [ ] T101 [P] Create MessageInput component in AporTamos-Frontend/components/chat/MessageInput.tsx (text input + attach + audio record + send)
 - [ ] T102 Create audio recording feature in AporTamos-Frontend/services/audio.ts (record, compress, upload via expo-av)
 - [ ] T103 [P] Create ChatList component in AporTamos-Frontend/components/chat/ChatList.tsx (auto-scroll to latest)
