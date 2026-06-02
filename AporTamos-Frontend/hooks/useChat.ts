@@ -11,7 +11,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 import { subscribeToChannelMessages, RealtimeChatMessage } from '@/services/realtime';
+import { enqueueChatMessage, processChatQueue } from '@/services/offlineQueue';
 import type { ChatMessageData } from '@/components/chat/ChatMessage';
 
 const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
@@ -25,6 +27,7 @@ export interface UseChatResult {
   hasMore: boolean;
   sending: boolean;
   error: string | null;
+  isConnected: boolean;
   loadMore: () => void;
   sendText: (content: string) => Promise<void>;
   sendImage: (uri: string) => Promise<void>;
@@ -40,6 +43,7 @@ export function useChat(householdId: string | null): UseChatResult {
   const [hasMore, setHasMore] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(true);
 
   const isMounted = useRef(true);
   useEffect(() => {
@@ -104,6 +108,18 @@ export function useChat(householdId: string | null): UseChatResult {
     return () => { sub.unsubscribe(); };
   }, [channelId, addMessage]);
 
+  // Connectivity: on reconnect, flush queued messages and catch up on history (T108)
+  useEffect(() => {
+    const unsub = NetInfo.addEventListener((state) => {
+      const connected = !!state.isConnected;
+      if (isMounted.current) setIsConnected(connected);
+      if (connected) {
+        processChatQueue().then(() => fetchHistory()).catch(() => {});
+      }
+    });
+    return () => unsub();
+  }, [fetchHistory]);
+
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore || messages.length === 0) return;
     const oldest = messages[messages.length - 1];
@@ -147,24 +163,33 @@ export function useChat(householdId: string | null): UseChatResult {
     [householdId, authHeaders, addMessage]
   );
 
-  const sendText = useCallback(
-    (content: string) => sendMultipart({ message_type: 'text', content }),
-    [sendMultipart]
-  );
-  const sendImage = useCallback(
-    (uri: string) => sendMultipart(
-      { message_type: 'image' },
-      { uri, name: `image-${Date.now()}.jpg`, type: 'image/jpeg' }
-    ),
-    [sendMultipart]
-  );
-  const sendAudio = useCallback(
-    (uri: string) => sendMultipart(
-      { message_type: 'audio' },
-      { uri, name: `voice-${Date.now()}.m4a`, type: 'audio/m4a' }
-    ),
-    [sendMultipart]
-  );
+  // On send failure (e.g. offline), queue the message for retry on reconnect (T107)
+  const sendText = useCallback(async (content: string) => {
+    try {
+      await sendMultipart({ message_type: 'text', content });
+    } catch {
+      if (householdId) await enqueueChatMessage(householdId, 'text', { content });
+      if (isMounted.current) setError('Sin conexión. El mensaje se enviará al reconectar.');
+    }
+  }, [sendMultipart, householdId]);
+
+  const sendImage = useCallback(async (uri: string) => {
+    try {
+      await sendMultipart({ message_type: 'image' }, { uri, name: `image-${Date.now()}.jpg`, type: 'image/jpeg' });
+    } catch {
+      if (householdId) await enqueueChatMessage(householdId, 'image', { uri });
+      if (isMounted.current) setError('Sin conexión. La imagen se enviará al reconectar.');
+    }
+  }, [sendMultipart, householdId]);
+
+  const sendAudio = useCallback(async (uri: string) => {
+    try {
+      await sendMultipart({ message_type: 'audio' }, { uri, name: `voice-${Date.now()}.m4a`, type: 'audio/m4a' });
+    } catch {
+      if (householdId) await enqueueChatMessage(householdId, 'audio', { uri });
+      if (isMounted.current) setError('Sin conexión. El audio se enviará al reconectar.');
+    }
+  }, [sendMultipart, householdId]);
 
   return {
     messages,
@@ -174,6 +199,7 @@ export function useChat(householdId: string | null): UseChatResult {
     hasMore,
     sending,
     error,
+    isConnected,
     loadMore,
     sendText,
     sendImage,

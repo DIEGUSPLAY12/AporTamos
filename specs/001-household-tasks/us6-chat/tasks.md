@@ -26,11 +26,11 @@
 - [X] T104 [P] Create useChat hook in AporTamos-Frontend/hooks/useChat.ts (fetch messages + real-time + offline queue)
 - [X] T105 Create Chat screen in AporTamos-Frontend/app/(tabs)/chat/index.tsx (list of household chats)
 - [X] T106 Create ChatDetail screen in AporTamos-Frontend/app/(tabs)/chat/[householdId].tsx (full chat UI)
-- [ ] T107 [P] Implement offline message queueing in AporTamos-Frontend/services/offlineQueue.ts (retry on reconnection)
-- [ ] T108 [P] Handle real-time socket disconnection and reconnection gracefully
-- [ ] T109 Add chat notification badge on tab showing unread count (optional enhancement)
+- [X] T107 [P] Implement offline message queueing in AporTamos-Frontend/services/offlineQueue.ts (retry on reconnection)
+- [X] T108 [P] Handle real-time socket disconnection and reconnection gracefully
+- [X] T109 Add chat notification badge on tab showing unread count (optional enhancement)
 
-**Checkpoint**: ⬜ US6 pendiente — real-time household communication enabled
+**Checkpoint**: ✅ US6 completo — real-time household communication enabled
 
 ---
 

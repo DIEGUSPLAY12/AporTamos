@@ -5,10 +5,12 @@ import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useUnreadChats } from '@/hooks/useUnreadChats';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const unreadChats = useUnreadChats();
 
   return (
     <Tabs
@@ -52,6 +54,7 @@ export default function TabLayout() {
         name="chat/index"
         options={{
           title: 'Chats',
+          tabBarBadge: unreadChats > 0 ? unreadChats : undefined,
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol size={26} name={'bubble.right.fill'} color={color} />
           ),

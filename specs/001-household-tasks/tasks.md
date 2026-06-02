@@ -15,7 +15,7 @@
 | [us3-schedule/](us3-schedule/tasks.md) | US3: Weekly Schedule (P1) | T050–T063 | ✅ Completo |
 | [us4-completion/](us4-completion/tasks.md) | US4: Task Completion + Photo (P1) | T064–T078 | ✅ Completo |
 | [us5-stats/](us5-stats/tasks.md) | US5: Statistics & Gamification (P2) | T079–T092 | ✅ Completo |
-| [us6-chat/](us6-chat/tasks.md) | US6: Real-Time Chat (P2) | T093–T109 | ⬜ Pendiente |
+| [us6-chat/](us6-chat/tasks.md) | US6: Real-Time Chat (P2) | T093–T109 | ✅ Completo |
 
 ---
 

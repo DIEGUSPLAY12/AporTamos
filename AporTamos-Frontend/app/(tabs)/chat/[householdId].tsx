@@ -18,6 +18,7 @@ import { Colors, Spacing } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthState } from '@/hooks/useAuth';
 import { useChat } from '@/hooks/useChat';
+import { markChatRead } from '@/services/chatUnread';
 import * as api from '@/services/api';
 import ChatList from '@/components/chat/ChatList';
 import MessageInput from '@/components/chat/MessageInput';
@@ -38,6 +39,7 @@ export default function ChatDetailScreen() {
     loadingMore,
     sending,
     error,
+    isConnected,
     loadMore,
     sendText,
     sendImage,
@@ -51,6 +53,13 @@ export default function ChatDetailScreen() {
       .then((h) => setHouseholdName(h.name))
       .catch(() => {});
   }, [householdId]);
+
+  // Mark chat read up to the newest message (clears the unread badge) — T109
+  useEffect(() => {
+    if (householdId && messages.length > 0) {
+      markChatRead(householdId, messages[0].created_at);
+    }
+  }, [householdId, messages]);
 
   const handleSendImage = useCallback((uri: string) => {
     sendImage(uri).catch((e) => Alert.alert('Error', e?.message || 'No se pudo enviar la imagen.'));
@@ -78,6 +87,15 @@ export default function ChatDetailScreen() {
         <Text style={[styles.title, { color: colors.onSurface }]} numberOfLines={1}>{householdName}</Text>
         <View style={{ width: 28 }} />
       </View>
+
+      {/* Offline banner (T108) */}
+      {!isConnected && (
+        <View style={[styles.offlineBanner, { backgroundColor: colors.errorContainer }]}>
+          <Text style={[styles.offlineText, { color: colors.error }]}>
+            Sin conexión — los mensajes se enviarán al reconectar
+          </Text>
+        </View>
+      )}
 
       {/* Messages */}
       <View style={{ flex: 1 }}>
@@ -120,4 +138,6 @@ const styles = StyleSheet.create({
   back: { fontSize: 32, fontWeight: '300', width: 28 },
   title: { flex: 1, fontSize: 18, fontWeight: '800', textAlign: 'center' },
   error: { textAlign: 'center', fontSize: 13, paddingVertical: 6 },
+  offlineBanner: { paddingVertical: 6, paddingHorizontal: 12, alignItems: 'center' },
+  offlineText: { fontSize: 12, fontWeight: '600' },
 });
