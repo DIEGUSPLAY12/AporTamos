@@ -16,6 +16,7 @@ from app.routers.households import router as households_router
 from app.routers.tasks import router as tasks_router
 from app.routers.completions import router as completions_router
 from app.routers.stats import router as stats_router
+from app.routers.chat import router as chat_router
 
 __all__ = [
     "auth_router",
@@ -23,4 +24,5 @@ __all__ = [
     "tasks_router",
     "completions_router",
     "stats_router",
+    "chat_router",
 ]

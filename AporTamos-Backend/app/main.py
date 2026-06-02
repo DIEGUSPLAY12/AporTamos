@@ -39,7 +39,7 @@ from app.config import (
     log_warning,
     settings,
 )
-from app.routers import auth_router, households_router, tasks_router, completions_router, stats_router
+from app.routers import auth_router, households_router, tasks_router, completions_router, stats_router, chat_router
 
 
 # ============================================================================
@@ -534,6 +534,7 @@ def create_app() -> FastAPI:
     app.include_router(tasks_router)
     app.include_router(completions_router)
     app.include_router(stats_router)
+    app.include_router(chat_router)
     
     return app
 
