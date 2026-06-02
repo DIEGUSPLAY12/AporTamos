@@ -72,6 +72,7 @@ export default function TabLayout() {
       <Tabs.Screen name="[householdId]/index" options={{ href: null }} />
       <Tabs.Screen name="[householdId]/schedule" options={{ href: null }} />
       <Tabs.Screen name="[householdId]/tasks" options={{ href: null }} />
+      <Tabs.Screen name="chat/[householdId]" options={{ href: null }} />
     </Tabs>
   );
 }
