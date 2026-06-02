@@ -1,0 +1,30 @@
+# EAS Build archive ignore — keeps only the Expo app (AporTamos-Frontend).
+# NOTE: when present, EAS uses this INSTEAD of .gitignore, so it must be complete.
+
+# Claude/agent tooling — contains a symlink that breaks the Windows tarball
+.agents/
+.claude/
+
+# Non-app parts of the monorepo (not needed for the mobile build)
+AporTamos-Backend/
+.specify/
+specs/
+design/
+
+# Heavy / regenerated
+node_modules/
+**/node_modules/
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+.git/
+.expo/
+**/.expo/
+dist/
+web-build/
+
+# Logs / OS
+*.log
+.DS_Store
+Thumbs.db
