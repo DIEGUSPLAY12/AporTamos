@@ -190,6 +190,17 @@ export async function patch(endpoint: string, data: any): Promise<any> {
 }
 
 /**
+ * PUT request helper
+ */
+export async function put(endpoint: string, data: any): Promise<any> {
+  const response = await request(endpoint, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
+
+/**
  * DELETE request helper
  *
  * @param {string} endpoint - API endpoint
@@ -272,13 +283,9 @@ export async function inviteMember(
  * @param {string} userId - User ID
  * @returns {Promise<any>} Acceptance response
  */
-export async function acceptInvitation(
-  householdId: string,
-  userId: string
-): Promise<any> {
-  return patch(`/households/${householdId}/members/${userId}`, {
-    action: 'accept',
-  });
+export async function acceptInvitation(householdId: string): Promise<any> {
+  // Joins using the authenticated user from the token (no id mismatch).
+  return post(`/households/${householdId}/join`, {});
 }
 
 /**

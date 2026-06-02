@@ -13,12 +13,12 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
@@ -492,6 +492,46 @@ def create_app() -> FastAPI:
             "timestamp": datetime.utcnow().isoformat(),
         }
     
+    @app.get("/join", response_class=HTMLResponse, tags=["Invitations"])
+    async def join_bridge(to: str = Query(..., description="App deep link to open")) -> str:
+        """HTML bridge page for household invitations.
+
+        Email clients only make http(s) links tappable, so the invitation email
+        points here. This page then redirects to the app's deep link (`to`),
+        which opens AporTamos and joins the household.
+        """
+        # Escape the URL for safe embedding in HTML/JS attributes
+        import html as _html
+        safe = _html.escape(to, quote=True)
+        return f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Abrir AporTamos</title>
+  <meta http-equiv="refresh" content="0; url={safe}">
+  <script>window.location.replace("{safe}");</script>
+  <style>
+    body {{ font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+           background:#fcf8ff;color:#1b1b23;display:flex;min-height:100vh;margin:0;
+           align-items:center;justify-content:center;text-align:center;padding:24px }}
+    .card {{ max-width:360px }}
+    .logo {{ font-size:30px;font-weight:800;color:#4648d4;margin-bottom:12px }}
+    a.btn {{ display:inline-block;background:#4648d4;color:#fff;text-decoration:none;
+            font-weight:700;padding:14px 28px;border-radius:9999px;margin-top:20px }}
+    p {{ color:#464554;line-height:1.5 }}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🏠 AporTamos</div>
+    <h2>Abriendo la app…</h2>
+    <p>Si no se abre automáticamente, pulsa el botón:</p>
+    <a class="btn" href="{safe}">Abrir AporTamos</a>
+  </div>
+</body>
+</html>"""
+
     @app.get("/", tags=["Status"])
     async def root() -> Dict[str, Any]:
         """Root endpoint with API information."""

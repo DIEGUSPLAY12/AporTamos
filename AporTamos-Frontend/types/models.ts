@@ -86,6 +86,8 @@ export interface CreateHouseholdRequest {
 
 export interface InviteMemberRequest {
   email: string;
+  /** Environment-correct deep link the email should open (computed via expo-linking). */
+  join_link?: string;
 }
 
 export interface InviteMemberResponse {

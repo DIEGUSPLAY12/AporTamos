@@ -26,6 +26,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { HouseholdProvider } from '@/context/HouseholdContext';
+import InviteLinkHandler from '@/components/InviteLinkHandler';
 
 /**
  * Splash screen component shown while checking authentication state
@@ -127,6 +128,7 @@ export default function RootLayout() {
       <AuthProvider>
         <HouseholdProvider>
           <RootStackLayout />
+          <InviteLinkHandler />
         </HouseholdProvider>
       </AuthProvider>
     </SafeAreaProvider>

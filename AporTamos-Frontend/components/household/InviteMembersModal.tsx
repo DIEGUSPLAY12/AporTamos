@@ -41,6 +41,7 @@ import {
   Keyboard,
   StyleSheet,
 } from 'react-native';
+import * as Linking from 'expo-linking';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import { inviteMember, ApiError } from '@/services/api';
@@ -107,9 +108,16 @@ export default function InviteMembersModal({
     setErrorMessage('');
 
     try {
+      // Deep link that opens THIS app environment (exp:// in Expo Go, aportamos:// in a build)
+      const appUrl = Linking.createURL('', { queryParams: { invite: householdId } });
+      // Wrap it in an http bridge on the backend so email clients make it tappable.
+      const apiBase = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+      const joinLink = `${apiBase}/join?to=${encodeURIComponent(appUrl)}`;
+
       // Prepare request
       const request: InviteMemberRequest = {
         email: email.trim().toLowerCase(),
+        join_link: joinLink,
       };
 
       // Send invitation

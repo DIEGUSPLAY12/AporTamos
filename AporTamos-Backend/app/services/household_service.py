@@ -371,6 +371,7 @@ async def invite_member(
     user_id: UUID,
     household_id: UUID,
     invite_email: str,
+    join_link: Optional[str] = None,
 ) -> dict:
     """Invite a user to join household by email.
     
@@ -408,16 +409,43 @@ async def invite_member(
             f"Non-owner attempted to invite member to household {household_id}"
         )
         raise HouseholdOwnerError("Only household owner can send invitations")
-    
-    # TODO: Implement invitation system with email notifications
-    # For now, this is a placeholder that will be enhanced in future sprints
-    logger.info(
-        f"Invitation sent from {user_id} to {invite_email} for household {household_id}"
+
+    # Resolve household name and inviter name for the email
+    supabase = get_supabase_client()
+    household_name = "tu hogar"
+    inviter_name = "Un miembro"
+    try:
+        hh = supabase.table("households").select("name").eq("id", str(household_id)).single().execute()
+        if hh.data:
+            household_name = hh.data["name"]
+        u = supabase.table("users").select("name").eq("id", str(user_id)).single().execute()
+        if u.data:
+            inviter_name = u.data["name"]
+    except Exception:
+        pass  # fall back to generic names
+
+    # Build the join deep link (frontend may pass an environment-correct one)
+    link = join_link or f"aportamos://join?household={household_id}"
+
+    # Send the invitation email (non-fatal if SMTP isn't configured / fails)
+    from app.services.email_service import send_invitation_email
+    email_sent = send_invitation_email(
+        to_email=invite_email,
+        household_name=household_name,
+        inviter_name=inviter_name,
+        join_link=link,
     )
-    
+
+    logger.info(
+        f"Invitation processed from {user_id} to {invite_email} for household {household_id} "
+        f"(email_sent={email_sent})"
+    )
+
     return {
-        "message": f"Invitation sent to {invite_email}",
+        "message": f"Invitación enviada a {invite_email}" if email_sent
+                   else f"Invitación registrada para {invite_email} (email no configurado)",
         "email": invite_email,
+        "email_sent": str(email_sent),
     }
 
 

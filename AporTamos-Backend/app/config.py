@@ -50,7 +50,14 @@ class Settings(BaseSettings):
     google_client_id: Optional[str] = None
     google_client_secret: Optional[str] = None
     google_oauth_redirect_uri: str = "http://localhost:8000/auth/google/callback"
-    
+
+    # Email (Gmail SMTP) for household invitations
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_user: Optional[str] = None          # your Gmail address
+    smtp_password: Optional[str] = None      # Gmail App Password (not your login password)
+    smtp_from_name: str = "AporTamos"
+
     # Logging Configuration
     log_level: LogLevel = LogLevel.INFO
     log_dir: str = "logs"

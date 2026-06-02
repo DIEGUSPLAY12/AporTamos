@@ -370,8 +370,9 @@ async def invite_member_endpoint(
                 detail="Only household owner can invite members",
             )
         
-        # Send invitation
-        result = await invite_member(current_user_id, household_id, email)
+        # Send invitation (join_link is computed by the client for the right environment)
+        join_link = invite_data.get("join_link")
+        result = await invite_member(current_user_id, household_id, email, join_link=join_link)
         
         log_info(
             f"Invitation sent",
@@ -439,6 +440,37 @@ async def invite_member_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to send invitation",
         )
+
+
+@router.post(
+    "/{household_id}/join",
+    response_model=Dict[str, str],
+    status_code=status.HTTP_200_OK,
+)
+async def join_household_endpoint(
+    household_id: UUID = Path(..., description="UUID of the household to join"),
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> Dict[str, str]:
+    """Join a household via an invitation link.
+
+    Uses the authenticated user from the token (no path user id to mismatch).
+    Idempotent: if already a member, returns success so the client can proceed.
+    """
+    try:
+        result = await accept_invitation(current_user_id, household_id)
+        log_info("User joined household via invite",
+                 extra={"household_id": str(household_id), "user_id": str(current_user_id)})
+        return result
+    except HouseholdMemberError:
+        # Already a member — treat as success
+        return {"message": "Ya eres miembro de este hogar", "household_id": str(household_id)}
+    except HouseholdNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Household not found")
+    except HouseholdError as exc:
+        log_error("Failed to join household", exc,
+                  extra={"household_id": str(household_id), "user_id": str(current_user_id)})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to join household")
 
 
 @router.put(
