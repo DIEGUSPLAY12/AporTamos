@@ -15,6 +15,8 @@ This module provides:
 - Request error handling utilities
 """
 
+from __future__ import annotations  # lazy annotations: TYPE_CHECKING-only types (e.g. Client) won't error at runtime
+
 from typing import AsyncGenerator, Callable, Optional, TYPE_CHECKING, Dict, Any
 import logging
 from datetime import datetime, timedelta
