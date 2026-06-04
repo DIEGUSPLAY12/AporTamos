@@ -12,6 +12,7 @@ All endpoints return standardized responses with access_token, token_type, expir
 
 import logging
 from typing import Dict, Any
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -21,11 +22,12 @@ from app.services.auth_service import (
     create_user,
     authenticate_user,
     create_or_get_user_google,
+    get_user_by_id,
     UserAlreadyExistsError,
     InvalidCredentialsError,
     UserNotFoundError,
 )
-from app.dependencies import get_supabase_client, create_access_token
+from app.dependencies import get_supabase_client, create_access_token, get_current_user_id
 from app.config import log_info, log_warning, log_error, ValidationException, ConflictException, settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -363,6 +365,25 @@ async def google_login(google_data: GoogleLogin) -> Dict[str, Any]:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Google authentication failed",
         )
+
+
+@router.get("/me", response_model=Dict[str, Any])
+async def get_me(current_user_id: UUID = Depends(get_current_user_id)) -> Dict[str, Any]:
+    """Return the authenticated user's profile.
+
+    Used by the app on startup to validate a stored session: a 401 here means the
+    token is invalid/expired and the client should sign out. On success it also
+    returns fresh user data (name, avatar) to replace any stale stored copy.
+    """
+    user = await get_user_by_id(current_user_id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return {
+        "id": str(user.id),
+        "email": user.email,
+        "name": user.name,
+        "avatar_url": user.avatar_url,
+    }
 
 
 @router.post("/logout", response_model=Dict[str, str])
