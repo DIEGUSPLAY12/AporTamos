@@ -55,8 +55,9 @@ def _send_email(to_email: str, subject: str, text_body: str, html_body: str) -> 
             log_info("Email sent", extra={"to": to_email, "subject": subject})
             return True
         log_error(
-            "Failed to send email — Brevo API error",
-            extra={"to": to_email, "status": response.status_code, "body": response.text[:500]},
+            f"Failed to send email — Brevo API error: status={response.status_code} "
+            f"body={response.text[:500]}",
+            extra={"to": to_email},
         )
         return False
     except Exception as exc:
