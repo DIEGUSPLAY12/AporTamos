@@ -150,7 +150,7 @@ export default function ProfileScreen() {
   ];
 
   const settingsRows = [
-    { icon: '👤', label: 'Información Personal', onPress: () => soon('Información Personal') },
+    { icon: '👤', label: 'Información Personal', onPress: () => router.push('/(tabs)/profile/personal-info' as any) },
     { icon: '👥', label: 'Mi Hogar (Familia)', onPress: () => router.push('/(tabs)' as any) },
     { icon: '🔔', label: 'Preferencias de Notificación', onPress: () => soon('Preferencias de Notificación') },
   ];

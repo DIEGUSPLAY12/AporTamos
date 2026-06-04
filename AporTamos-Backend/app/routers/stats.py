@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from pydantic import BaseModel, Field
 
 from app.models.stats import HouseholdStatsResponse, UserStatsResponse
+from app.models.user import UserUpdate, PasswordChangeRequest
 from app.services.gamification_service import (
     get_household_stats,
     get_user_stats,
@@ -22,6 +23,14 @@ from app.services.gamification_service import (
     StatsCalculationError,
 )
 from app.services.household_service import check_user_household_access, HouseholdError
+from app.services.auth_service import (
+    update_user,
+    get_user_by_id,
+    hash_password,
+    verify_password,
+    UserNotFoundError as AuthUserNotFoundError,
+    UserAlreadyExistsError,
+)
 from app.dependencies import get_current_user_id, get_supabase_client
 from app.config import log_error, log_info
 
@@ -146,6 +155,65 @@ async def get_user_stats_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to calculate user statistics.",
         )
+
+
+@router.patch("/users/me")
+async def update_my_profile_endpoint(
+    body: UserUpdate,
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> dict:
+    """Update the authenticated user's profile (name and/or email)."""
+    fields = {}
+    if body.name is not None:
+        fields["name"] = body.name
+    if body.email is not None:
+        fields["email"] = body.email
+    if not fields:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nothing to update.")
+
+    try:
+        user = await update_user(current_user_id, **fields)
+        log_info("Profile updated", extra={"user_id": str(current_user_id)})
+        return {
+            "id": str(user.id),
+            "email": user.email,
+            "name": user.name,
+            "avatar_url": user.avatar_url,
+        }
+    except UserAlreadyExistsError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ese email ya está en uso.")
+    except AuthUserNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    except Exception as exc:
+        log_error("Profile update failed", exc, extra={"user_id": str(current_user_id)})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update profile.")
+
+
+@router.post("/users/me/password")
+async def change_my_password_endpoint(
+    body: PasswordChangeRequest,
+    current_user_id: UUID = Depends(get_current_user_id),
+) -> dict:
+    """Change the authenticated user's password (verifies the current one)."""
+    user = await get_user_by_id(current_user_id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    if not user.password_hash:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Tu cuenta no tiene contraseña (inicia sesión con Google).",
+        )
+    if not verify_password(body.current_password, user.password_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="La contraseña actual es incorrecta.")
+
+    try:
+        new_hash = hash_password(body.new_password)
+        await update_user(current_user_id, password_hash=new_hash)
+        log_info("Password changed", extra={"user_id": str(current_user_id)})
+        return {"message": "Contraseña actualizada correctamente."}
+    except Exception as exc:
+        log_error("Password change failed", exc, extra={"user_id": str(current_user_id)})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to change password.")
 
 
 @router.patch("/users/me/avatar")

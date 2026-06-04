@@ -25,6 +25,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
   updateAvatar: (avatarUrl: string) => Promise<void>;
+  updateProfile: (fields: { name?: string; email?: string }) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -207,6 +209,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
   }
 
+  async function handleUpdateProfile(fields: { name?: string; email?: string }) {
+    if (!token || !user) return;
+    const res = await fetch(`${API_BASE}/users/me`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(fields),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.detail || 'No se pudo actualizar el perfil');
+    const updated = { ...user, name: data.name ?? user.name, email: data.email ?? user.email };
+    setUser(updated);
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(updated));
+  }
+
+  async function handleChangePassword(currentPassword: string, newPassword: string) {
+    if (!token) return;
+    const res = await fetch(`${API_BASE}/users/me/password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.detail || 'No se pudo cambiar la contraseña');
+  }
+
   const value: AuthContextType = {
     user,
     session: token ? { access_token: token } : null,
@@ -219,6 +246,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut: handleSignOut,
     refreshSession: handleRefreshSession,
     updateAvatar: handleUpdateAvatar,
+    updateProfile: handleUpdateProfile,
+    changePassword: handleChangePassword,
     clearError: () => setError(null),
   };
 
