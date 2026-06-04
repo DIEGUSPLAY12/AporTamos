@@ -42,6 +42,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import * as Linking from 'expo-linking';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import { inviteMember, ApiError } from '@/services/api';
@@ -68,6 +69,7 @@ export default function InviteMembersModal({
 }: Props) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
 
   // Form state
   const [email, setEmail] = useState('');
@@ -182,7 +184,11 @@ export default function InviteMembersModal({
       <View
         style={[
           styles.container,
-          { backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#fff' },
+          {
+            backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#fff',
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          },
         ]}
       >
         {/* Header */}

@@ -377,7 +377,9 @@ async def get_me(current_user_id: UUID = Depends(get_current_user_id)) -> Dict[s
     """
     user = await get_user_by_id(current_user_id)
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        # Valid token but the user no longer exists → treat as an auth failure so
+        # the client clears the stale session and shows login (not a 404).
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session no longer valid")
     return {
         "id": str(user.id),
         "email": user.email,

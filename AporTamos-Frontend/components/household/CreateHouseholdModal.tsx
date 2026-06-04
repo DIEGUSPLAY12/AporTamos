@@ -41,6 +41,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import { createHousehold, ApiError } from '@/services/api';
@@ -77,6 +78,7 @@ interface Props {
 export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Props) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
 
   // Form state
   const [name, setName] = useState('');
@@ -186,7 +188,11 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
       <View
         style={[
           styles.container,
-          { backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#fff' },
+          {
+            backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#fff',
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          },
         ]}
       >
         {/* Header */}

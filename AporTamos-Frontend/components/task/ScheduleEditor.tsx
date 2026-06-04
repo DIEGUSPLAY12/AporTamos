@@ -38,6 +38,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
 import { createSchedule, addTaskToSchedule, ApiError } from '@/services/api';
@@ -89,6 +90,7 @@ export default function ScheduleEditor({
 }: ScheduleEditorProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const insets = useSafeAreaInsets();
 
   // Form state - initialize from existing schedule if provided
   const initialTasks: FormTask[] = useMemo(() => {
@@ -656,7 +658,7 @@ export default function ScheduleEditor({
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       {/* Title */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
@@ -711,6 +713,7 @@ export default function ScheduleEditor({
           {
             backgroundColor: colors.secondaryBackground,
             borderTopColor: colors.border,
+            paddingBottom: 16 + insets.bottom,
           },
         ]}
       >
