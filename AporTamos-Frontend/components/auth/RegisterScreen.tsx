@@ -65,23 +65,23 @@ function validatePassword(password: string): {
   let isValid = true;
 
   if (password.length < 8) {
-    feedback.push('At least 8 characters');
+    feedback.push('Al menos 8 caracteres');
     isValid = false;
   }
   if (!/[A-Z]/.test(password)) {
-    feedback.push('One uppercase letter');
+    feedback.push('Una letra mayúscula');
     isValid = false;
   }
   if (!/[a-z]/.test(password)) {
-    feedback.push('One lowercase letter');
+    feedback.push('Una letra minúscula');
     isValid = false;
   }
   if (!/\d/.test(password)) {
-    feedback.push('One number');
+    feedback.push('Un número');
     isValid = false;
   }
   if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-    feedback.push('One special character');
+    feedback.push('Un carácter especial');
     isValid = false;
   }
 
@@ -89,11 +89,11 @@ function validatePassword(password: string): {
 }
 
 function getPasswordStrength(password: string): {
-  level: 'weak' | 'fair' | 'good' | 'strong';
+  level: 'débil' | 'media' | 'buena' | 'fuerte';
   percentage: number;
   color: string;
 } {
-  if (!password) return { level: 'weak', percentage: 0, color: '#ef4444' };
+  if (!password) return { level: 'débil', percentage: 0, color: '#ef4444' };
 
   let strength = 0;
   if (password.length >= 8) strength++;
@@ -103,10 +103,10 @@ function getPasswordStrength(password: string): {
   if (/\d/.test(password)) strength++;
   if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) strength++;
 
-  if (strength <= 2) return { level: 'weak', percentage: 25, color: '#ef4444' };
-  if (strength <= 3) return { level: 'fair', percentage: 50, color: '#f97316' };
-  if (strength <= 4) return { level: 'good', percentage: 75, color: '#eab308' };
-  return { level: 'strong', percentage: 100, color: '#22c55e' };
+  if (strength <= 2) return { level: 'débil', percentage: 25, color: '#ef4444' };
+  if (strength <= 3) return { level: 'media', percentage: 50, color: '#f97316' };
+  if (strength <= 4) return { level: 'buena', percentage: 75, color: '#eab308' };
+  return { level: 'fuerte', percentage: 100, color: '#22c55e' };
 }
 
 /**
@@ -170,53 +170,53 @@ export default function RegisterScreen() {
 
       // Validate name
       if (!name.trim()) {
-        setLocalError('Name is required');
+        setLocalError('El nombre es obligatorio');
         return;
       }
 
       if (!validateName(name)) {
-        setLocalError('Name must be between 1 and 100 characters');
+        setLocalError('El nombre debe tener entre 1 y 100 caracteres');
         return;
       }
 
       // Validate email
       if (!email.trim()) {
-        setLocalError('Email is required');
+        setLocalError('El correo es obligatorio');
         return;
       }
 
       if (!validateEmail(email)) {
-        setLocalError('Please enter a valid email address');
+        setLocalError('Introduce un correo válido');
         return;
       }
 
       // Validate password
       if (!password) {
-        setLocalError('Password is required');
+        setLocalError('La contraseña es obligatoria');
         return;
       }
 
       if (!passwordValidation.isValid) {
         setLocalError(
-          `Password must have: ${passwordValidation.feedback.join(', ')}`
+          `La contraseña debe tener: ${passwordValidation.feedback.join(', ')}`
         );
         return;
       }
 
       // Validate confirm password
       if (!confirmPassword) {
-        setLocalError('Please confirm your password');
+        setLocalError('Confirma tu contraseña');
         return;
       }
 
       if (password !== confirmPassword) {
-        setLocalError('Passwords do not match');
+        setLocalError('Las contraseñas no coinciden');
         return;
       }
 
       // Validate terms acceptance
       if (!agreeToTerms) {
-        setLocalError('You must agree to the terms and conditions');
+        setLocalError('Debes aceptar los términos y condiciones');
         return;
       }
 
@@ -261,10 +261,10 @@ export default function RegisterScreen() {
           {/* Header */}
           <View style={styles.header}>
             <ThemedText type="title" style={styles.title}>
-              Create Account
+              Crear cuenta
             </ThemedText>
             <ThemedText style={styles.subtitle}>
-              Join AporTamos to manage household tasks
+              Únete a AporTamos para organizar las tareas del hogar
             </ThemedText>
           </View>
 
@@ -290,7 +290,7 @@ export default function RegisterScreen() {
           <View style={styles.form}>
             {/* Name Input */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Full Name</ThemedText>
+              <ThemedText style={styles.label}>Nombre completo</ThemedText>
               <TextInput
                 style={[
                   styles.input,
@@ -300,7 +300,7 @@ export default function RegisterScreen() {
                     backgroundColor: colorScheme === 'dark' ? '#262626' : '#f5f5f5',
                   },
                 ]}
-                placeholder="John Doe"
+                placeholder="Juan Pérez"
                 placeholderTextColor={colors.icon}
                 autoCapitalize="words"
                 autoComplete="name"
@@ -314,7 +314,7 @@ export default function RegisterScreen() {
 
             {/* Email Input */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Email</ThemedText>
+              <ThemedText style={styles.label}>Correo electrónico</ThemedText>
               <TextInput
                 style={[
                   styles.input,
@@ -339,7 +339,7 @@ export default function RegisterScreen() {
 
             {/* Password Input */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Password</ThemedText>
+              <ThemedText style={styles.label}>Contraseña</ThemedText>
               <View style={styles.passwordInputContainer}>
                 <TextInput
                   style={[
@@ -350,7 +350,7 @@ export default function RegisterScreen() {
                       backgroundColor: colorScheme === 'dark' ? '#262626' : '#f5f5f5',
                     },
                   ]}
-                  placeholder="Enter a strong password"
+                  placeholder="Crea una contraseña segura"
                   placeholderTextColor={colors.icon}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -367,7 +367,7 @@ export default function RegisterScreen() {
                   disabled={isRegistering}
                 >
                   <ThemedText style={styles.showPasswordText}>
-                    {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? 'Ocultar' : 'Mostrar'}
                   </ThemedText>
                 </TouchableOpacity>
               </View>
@@ -392,7 +392,7 @@ export default function RegisterScreen() {
                       { color: passwordStrength.color },
                     ]}
                   >
-                    Strength: {passwordStrength.level}
+                    Seguridad: {passwordStrength.level}
                   </ThemedText>
                 </View>
               )}
@@ -411,7 +411,7 @@ export default function RegisterScreen() {
 
             {/* Confirm Password Input */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Confirm Password</ThemedText>
+              <ThemedText style={styles.label}>Confirmar contraseña</ThemedText>
               <View style={styles.passwordInputContainer}>
                 <TextInput
                   style={[
@@ -422,7 +422,7 @@ export default function RegisterScreen() {
                       backgroundColor: colorScheme === 'dark' ? '#262626' : '#f5f5f5',
                     },
                   ]}
-                  placeholder="Re-enter your password"
+                  placeholder="Repite tu contraseña"
                   placeholderTextColor={colors.icon}
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
@@ -439,7 +439,7 @@ export default function RegisterScreen() {
                   disabled={isRegistering}
                 >
                   <ThemedText style={styles.showPasswordText}>
-                    {showConfirmPassword ? 'Hide' : 'Show'}
+                    {showConfirmPassword ? 'Ocultar' : 'Mostrar'}
                   </ThemedText>
                 </TouchableOpacity>
               </View>
@@ -454,7 +454,7 @@ export default function RegisterScreen() {
                     },
                   ]}
                 >
-                  {passwordsMatch ? '✓ Passwords match' : '✗ Passwords do not match'}
+                  {passwordsMatch ? '✓ Las contraseñas coinciden' : '✗ Las contraseñas no coinciden'}
                 </ThemedText>
               )}
             </View>
@@ -480,7 +480,7 @@ export default function RegisterScreen() {
                   )}
                 </View>
                 <ThemedText style={styles.termsText}>
-                  I agree to the Terms & Conditions
+                  Acepto los términos y condiciones
                 </ThemedText>
               </TouchableOpacity>
             </View>
@@ -504,7 +504,7 @@ export default function RegisterScreen() {
                 <ActivityIndicator color="#fff" size="small" />
               ) : (
                 <ThemedText style={styles.registerButtonText}>
-                  Create Account
+                  Crear cuenta
                 </ThemedText>
               )}
             </TouchableOpacity>
@@ -512,7 +512,7 @@ export default function RegisterScreen() {
             {/* Divider */}
             <View style={styles.dividerContainer}>
               <View style={[styles.divider, { backgroundColor: colors.icon }]} />
-              <ThemedText style={styles.dividerText}>or</ThemedText>
+              <ThemedText style={styles.dividerText}>o</ThemedText>
               <View style={[styles.divider, { backgroundColor: colors.icon }]} />
             </View>
 
@@ -537,7 +537,7 @@ export default function RegisterScreen() {
                 <>
                   <Text style={styles.googleIcon}>🔵</Text>
                   <ThemedText style={styles.googleButtonText}>
-                    Sign up with Google
+                    Registrarse con Google
                   </ThemedText>
                 </>
               )}
@@ -547,14 +547,14 @@ export default function RegisterScreen() {
           {/* Footer - Login Link */}
           <View style={styles.footer}>
             <ThemedText style={styles.footerText}>
-              Already have an account?{' '}
+              ¿Ya tienes cuenta?{' '}
             </ThemedText>
             <TouchableOpacity
               onPress={handleNavigateToLogin}
               disabled={isRegistering}
             >
               <ThemedText style={styles.loginLink}>
-                Sign In
+                Iniciar sesión
               </ThemedText>
             </TouchableOpacity>
           </View>
