@@ -46,16 +46,16 @@ export default function ForgotPasswordScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Check Your Email</Text>
+          <Text style={styles.title}>Revisa tu correo</Text>
           <Text style={styles.subtitle}>
-            We've sent a password reset link to {email}. Follow the link to create a new password.
+            Te hemos enviado un enlace para restablecer la contraseña a {email}. Sigue el enlace para crear una nueva.
           </Text>
         </View>
 
         <View style={styles.footer}>
           <Link href="/(auth)/login" asChild>
             <TouchableOpacity>
-              <Text style={styles.link}>Back to Login</Text>
+              <Text style={styles.link}>Volver al inicio de sesión</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -66,16 +66,16 @@ export default function ForgotPasswordScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Reset Password</Text>
+        <Text style={styles.title}>Restablecer contraseña</Text>
         <Text style={styles.subtitle}>
-          Enter your email address and we'll send you a link to reset your password.
+          Introduce tu correo y te enviaremos un enlace para restablecer la contraseña.
         </Text>
       </View>
 
       <View style={styles.form}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="Correo electrónico"
           placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
@@ -90,7 +90,7 @@ export default function ForgotPasswordScreen() {
           disabled={loading}
         >
           <Text style={styles.buttonText}>
-            {loading ? 'Sending...' : 'Send Reset Link'}
+            {loading ? 'Enviando...' : 'Enviar enlace'}
           </Text>
         </TouchableOpacity>
       </View>

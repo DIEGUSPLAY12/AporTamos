@@ -41,7 +41,7 @@ export default function ScheduleManagementScreen() {
       const data = await api.getHouseholdDetails(householdId);
       setHousehold(data);
     } catch {
-      setHouseholdError('Failed to load household details');
+      setHouseholdError('No se pudo cargar el hogar');
     } finally {
       setIsLoadingHousehold(false);
     }
@@ -68,7 +68,7 @@ export default function ScheduleManagementScreen() {
         <View style={styles.center}>
           <ActivityIndicator size="large" color={colors.tint} />
           <Text style={[styles.loadingText, { color: colors.subtext }]}>
-            Loading schedule...
+            Cargando rutina...
           </Text>
         </View>
       </ThemedView>
@@ -86,7 +86,7 @@ export default function ScheduleManagementScreen() {
             style={[styles.button, { backgroundColor: colors.tint }]}
             onPress={fetchHousehold}
           >
-            <Text style={styles.buttonText}>Retry</Text>
+            <Text style={styles.buttonText}>Reintentar</Text>
           </Pressable>
         </View>
       </ThemedView>
@@ -98,13 +98,13 @@ export default function ScheduleManagementScreen() {
       <ThemedView style={styles.container}>
         <View style={styles.center}>
           <Text style={[styles.messageText, { color: colors.text }]}>
-            Only the household owner can manage the schedule.
+            Solo el propietario del hogar puede gestionar la rutina.
           </Text>
           <Pressable
             style={[styles.button, { backgroundColor: colors.tint }]}
             onPress={handleCancel}
           >
-            <Text style={styles.buttonText}>Go Back</Text>
+            <Text style={styles.buttonText}>Volver</Text>
           </Pressable>
         </View>
       </ThemedView>

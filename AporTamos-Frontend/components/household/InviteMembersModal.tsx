@@ -194,10 +194,10 @@ export default function InviteMembersModal({
             accessibilityRole="button"
             accessibilityLabel="Close"
           >
-            <Text style={[styles.cancelButton, { color: colors.tint }]}>Cancel</Text>
+            <Text style={[styles.cancelButton, { color: colors.tint }]}>Cancelar</Text>
           </TouchableOpacity>
 
-          <Text style={[styles.title, { color: colors.text }]}>Invite Member</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Invitar miembro</Text>
 
           <TouchableOpacity
             onPress={handleSubmit}
@@ -215,7 +215,7 @@ export default function InviteMembersModal({
                 },
               ]}
             >
-              {isLoading ? 'Sending...' : 'Send'}
+              {isLoading ? 'Enviando...' : 'Enviar'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -241,13 +241,13 @@ export default function InviteMembersModal({
           {/* Household Info Message */}
           <View style={styles.infoContainer}>
             <Text style={[styles.infoText, { color: colors.subtext }]}>
-              Invite someone to this household by entering their email address.
+              Invita a alguien a este hogar introduciendo su correo electrónico.
             </Text>
           </View>
 
           {/* Email Input */}
           <View style={styles.formGroup}>
-            <Text style={[styles.label, { color: colors.text }]}>Email Address</Text>
+            <Text style={[styles.label, { color: colors.text }]}>Correo electrónico</Text>
             <TextInput
               style={[
                 styles.input,

@@ -207,7 +207,7 @@ export default function ProfileScreen() {
             style={[styles.historyButton, { backgroundColor: colors.primaryFixed }]}
             onPress={() => soon('Historial')}
           >
-            <Text style={[styles.historyButtonText, { color: colors.primary }]}>Ver Historial</Text>
+            <Text style={[styles.historyButtonText, { color: colors.onPrimaryFixed }]}>Ver Historial</Text>
           </TouchableOpacity>
         </View>
 

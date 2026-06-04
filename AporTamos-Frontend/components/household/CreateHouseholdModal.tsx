@@ -198,10 +198,10 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
             accessibilityRole="button"
             accessibilityLabel="Close"
           >
-            <Text style={[styles.cancelButton, { color: colors.tint }]}>Cancel</Text>
+            <Text style={[styles.cancelButton, { color: colors.tint }]}>Cancelar</Text>
           </TouchableOpacity>
 
-          <Text style={[styles.title, { color: colors.text }]}>Create Household</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Crear Hogar</Text>
 
           <TouchableOpacity
             onPress={handleSubmit}
@@ -219,7 +219,7 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
                 },
               ]}
             >
-              {isLoading ? 'Creating...' : 'Create'}
+              {isLoading ? 'Creando...' : 'Crear'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -245,7 +245,7 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
         >
           {/* Household Name Input */}
           <View style={styles.formGroup}>
-            <Text style={[styles.label, { color: colors.text }]}>Household Name</Text>
+            <Text style={[styles.label, { color: colors.text }]}>Nombre del hogar</Text>
             <TextInput
               style={[
                 styles.input,
@@ -255,7 +255,7 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
                   backgroundColor: colorScheme === 'dark' ? '#262626' : '#f5f5f5',
                 },
               ]}
-              placeholder="e.g., My Apartment, Family Home"
+              placeholder="ej. Mi piso, Casa familiar"
               placeholderTextColor={colors.icon}
               value={name}
               onChangeText={setName}
@@ -274,7 +274,7 @@ export default function CreateHouseholdModal({ visible, onClose, onSuccess }: Pr
 
           {/* Timezone Picker */}
           <View style={styles.formGroup}>
-            <Text style={[styles.label, { color: colors.text }]}>Timezone</Text>
+            <Text style={[styles.label, { color: colors.text }]}>Zona horaria</Text>
             <TouchableOpacity
               onPress={() => setShowTimezoneDropdown(!showTimezoneDropdown)}
               disabled={isLoading}

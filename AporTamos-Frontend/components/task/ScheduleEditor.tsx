@@ -51,13 +51,13 @@ import type {
 
 const DAYS_OF_WEEK = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const DAY_LABELS = {
-  MON: 'Monday',
-  TUE: 'Tuesday',
-  WED: 'Wednesday',
-  THU: 'Thursday',
-  FRI: 'Friday',
-  SAT: 'Saturday',
-  SUN: 'Sunday',
+  MON: 'L',
+  TUE: 'M',
+  WED: 'X',
+  THU: 'J',
+  FRI: 'V',
+  SAT: 'S',
+  SUN: 'D',
 };
 
 const EFFORT_WEIGHT_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -121,36 +121,34 @@ export default function ScheduleEditor({
       const taskErrors: Record<string, string> = {};
 
       if (!task.name.trim()) {
-        taskErrors.name = 'Task name is required';
-      } else if (task.name.length < 1) {
-        taskErrors.name = 'Name must be at least 1 character';
+        taskErrors.name = 'El nombre de la tarea es obligatorio';
       } else if (task.name.length > 100) {
-        taskErrors.name = 'Name must be 100 characters or less';
+        taskErrors.name = 'El nombre no puede superar 100 caracteres';
       }
 
       if (task.description && task.description.length > 1000) {
-        taskErrors.description = 'Description must be 1000 characters or less';
+        taskErrors.description = 'La descripción no puede superar 1000 caracteres';
       }
 
       if (!DAYS_OF_WEEK.includes(task.day_of_week)) {
-        taskErrors.day_of_week = 'Invalid day of week';
+        taskErrors.day_of_week = 'Día no válido';
       }
 
       if (!Number.isInteger(task.effort_weight) || task.effort_weight < 1 || task.effort_weight > 10) {
-        taskErrors.effort_weight = 'Effort weight must be between 1 and 10';
+        taskErrors.effort_weight = 'La dificultad debe estar entre 1 y 10';
       }
 
       if (!ASSIGNMENT_TYPES.includes(task.assignment_type)) {
-        taskErrors.assignment_type = 'Invalid assignment type';
+        taskErrors.assignment_type = 'Tipo de asignación no válido';
       }
 
       if (task.assignment_type === 'explicit') {
         if (!task.assigned_user_id) {
-          taskErrors.assigned_user_id = 'User must be selected for explicit assignment';
+          taskErrors.assigned_user_id = 'Debes seleccionar a quién se asigna';
         }
       } else if (task.assignment_type === 'random') {
         if (task.assigned_user_id) {
-          taskErrors.assigned_user_id = 'No user should be selected for random assignment';
+          taskErrors.assigned_user_id = 'No debe seleccionarse usuario en asignación aleatoria';
         }
       }
 
@@ -166,7 +164,7 @@ export default function ScheduleEditor({
     const newErrors: ValidationErrors = {};
 
     if (tasks.length === 0) {
-      newErrors.global = 'At least one task is required';
+      newErrors.global = 'Debes añadir al menos una tarea';
       setErrors(newErrors);
       return false;
     }
@@ -215,10 +213,10 @@ export default function ScheduleEditor({
    * Handle remove task
    */
   const handleRemoveTask = useCallback((index: number) => {
-    Alert.alert('Remove Task', 'Are you sure you want to remove this task?', [
-      { text: 'Cancel', onPress: () => {} },
+    Alert.alert('Eliminar tarea', '¿Seguro que quieres eliminar esta tarea?', [
+      { text: 'Cancelar', onPress: () => {} },
       {
-        text: 'Remove',
+        text: 'Eliminar',
         onPress: () => {
           const newTasks = tasks.filter((_, i) => i !== index);
           setTasks(newTasks);
@@ -306,7 +304,7 @@ export default function ScheduleEditor({
     } catch (error) {
       const apiError = error as ApiError;
       const message =
-        apiError?.detail || apiError?.message || 'Failed to save schedule. Please try again.';
+        apiError?.detail || apiError?.message || 'No se pudo guardar la rutina. Inténtalo de nuevo.';
 
       setGlobalError(message);
 
@@ -328,7 +326,7 @@ export default function ScheduleEditor({
 
     return (
       <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: colors.text }]}>Day of Week</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Día de la semana</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -356,7 +354,7 @@ export default function ScheduleEditor({
                   },
                 ]}
               >
-                {day}
+                {DAY_LABELS[day as keyof typeof DAY_LABELS]}
               </Text>
             </TouchableOpacity>
           ))}
@@ -375,7 +373,7 @@ export default function ScheduleEditor({
 
     return (
       <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: colors.text }]}>Effort Weight (1-10)</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Dificultad (1-10)</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -426,7 +424,7 @@ export default function ScheduleEditor({
 
     return (
       <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: colors.text }]}>Assignment Type</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Tipo de asignación</Text>
         <View style={styles.assignmentTypeContainer}>
           {ASSIGNMENT_TYPES.map((type) => (
             <TouchableOpacity
@@ -450,7 +448,7 @@ export default function ScheduleEditor({
                   },
                 ]}
               >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+                {type === 'explicit' ? 'Asignado' : 'Aleatorio'}
               </Text>
             </TouchableOpacity>
           ))}
@@ -477,7 +475,7 @@ export default function ScheduleEditor({
 
     return (
       <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: colors.text }]}>Assign to</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Asignar a</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -555,11 +553,11 @@ export default function ScheduleEditor({
                 },
               ]}
             >
-              {task.name || 'New Task'}
+              {task.name || 'Nueva tarea'}
             </Text>
             <View style={styles.taskCardMeta}>
               <Text style={[styles.taskCardMetaText, { color: colors.lightText }]}>
-                {DAY_LABELS[task.day_of_week as keyof typeof DAY_LABELS]} • Weight: {task.effort_weight}
+                {DAY_LABELS[task.day_of_week as keyof typeof DAY_LABELS]} • Dificultad: {task.effort_weight}
               </Text>
             </View>
           </View>
@@ -584,7 +582,7 @@ export default function ScheduleEditor({
           >
             {/* Task Name */}
             <View style={styles.fieldContainer}>
-              <Text style={[styles.label, { color: colors.text }]}>Task Name *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Nombre de la tarea *</Text>
               <TextInput
                 style={[
                   styles.textInput,
@@ -594,7 +592,7 @@ export default function ScheduleEditor({
                     borderColor: nameError ? '#ef4444' : colors.border,
                   },
                 ]}
-                placeholder="e.g., Wash dishes"
+                placeholder="ej. Fregar los platos"
                 placeholderTextColor={colors.lightText}
                 value={task.name}
                 onChangeText={(text) => handleUpdateTask(index, 'name', text)}
@@ -611,7 +609,7 @@ export default function ScheduleEditor({
 
             {/* Task Description */}
             <View style={styles.fieldContainer}>
-              <Text style={[styles.label, { color: colors.text }]}>Description (optional)</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Descripción (opcional)</Text>
               <TextInput
                 style={[
                   styles.textAreaInput,
@@ -621,7 +619,7 @@ export default function ScheduleEditor({
                     borderColor: descriptionError ? '#ef4444' : colors.border,
                   },
                 ]}
-                placeholder="e.g., Clean all dishes and pans"
+                placeholder="ej. Limpiar platos y sartenes"
                 placeholderTextColor={colors.lightText}
                 value={task.description}
                 onChangeText={(text) => handleUpdateTask(index, 'description', text)}
@@ -662,7 +660,7 @@ export default function ScheduleEditor({
       {/* Title */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
-          {existingSchedule ? 'Edit Schedule' : 'Create Schedule'}
+          {existingSchedule ? 'Editar Rutina' : 'Crear Rutina'}
         </Text>
       </View>
 
@@ -702,7 +700,7 @@ export default function ScheduleEditor({
           onPress={handleAddTask}
           disabled={isLoading}
         >
-          <Text style={styles.addTaskButtonText}>+ Add Task</Text>
+          <Text style={styles.addTaskButtonText}>+ Añadir tarea</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -726,7 +724,7 @@ export default function ScheduleEditor({
           onPress={onCancel}
           disabled={isLoading}
         >
-          <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+          <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancelar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -744,7 +742,7 @@ export default function ScheduleEditor({
             <ActivityIndicator color="#fff" size="small" />
           ) : (
             <Text style={styles.submitButtonText}>
-              {existingSchedule ? 'Save Changes' : 'Create Schedule'}
+              {existingSchedule ? 'Guardar cambios' : 'Crear Rutina'}
             </Text>
           )}
         </TouchableOpacity>

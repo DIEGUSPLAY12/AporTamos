@@ -6,11 +6,26 @@
  * play/pause player via expo-audio.
  */
 
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors, Spacing, Radius } from '@/constants/theme';
+
+// Full-screen image viewer (tap to open from a chat image, tap/✕ to close)
+function ImageViewer({ uri, visible, onClose }: { uri: string; visible: boolean; onClose: () => void }) {
+  const { width, height } = Dimensions.get('window');
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <TouchableOpacity activeOpacity={1} style={styles.viewerBackdrop} onPress={onClose}>
+        <Image source={{ uri }} style={{ width, height: height * 0.85 }} resizeMode="contain" />
+        <TouchableOpacity style={styles.viewerClose} onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+          <Text style={styles.viewerCloseText}>✕</Text>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+}
 
 export interface ChatMessageData {
   id: string;
@@ -71,6 +86,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ message, isOwn }: ChatMessageProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
+  const [viewerOpen, setViewerOpen] = useState(false);
 
   const bubbleColor = isOwn ? colors.primary : colors.surfaceContainerHighest;
   const textColor = isOwn ? '#ffffff' : colors.onSurface;
@@ -100,7 +116,9 @@ export default function ChatMessage({ message, isOwn }: ChatMessageProps) {
           )}
 
           {message.message_type === 'image' && message.media_url && (
-            <Image source={{ uri: message.media_url }} style={styles.image} resizeMode="cover" />
+            <TouchableOpacity activeOpacity={0.85} onPress={() => setViewerOpen(true)}>
+              <Image source={{ uri: message.media_url }} style={styles.image} resizeMode="cover" />
+            </TouchableOpacity>
           )}
 
           {message.message_type === 'audio' && message.media_url && (
@@ -110,6 +128,10 @@ export default function ChatMessage({ message, isOwn }: ChatMessageProps) {
           <Text style={[styles.time, { color: metaColor }]}>{formatTime(message.created_at)}</Text>
         </View>
       </View>
+
+      {message.message_type === 'image' && message.media_url && (
+        <ImageViewer uri={message.media_url} visible={viewerOpen} onClose={() => setViewerOpen(false)} />
+      )}
     </View>
   );
 }
@@ -136,4 +158,15 @@ const styles = StyleSheet.create({
   audioIcon: { fontSize: 14 },
   audioBarTrack: { flex: 1, height: 4, borderRadius: 2, backgroundColor: 'rgba(127,127,127,0.3)', overflow: 'hidden' },
   audioBarFill: { height: 4, borderRadius: 2 },
+
+  // Full-screen image viewer
+  viewerBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.92)', alignItems: 'center', justifyContent: 'center' },
+  viewerClose: {
+    position: 'absolute', top: 48, right: 20,
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  viewerCloseText: { color: '#fff', fontSize: 20, fontWeight: '700' },
 });
+

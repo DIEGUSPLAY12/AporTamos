@@ -16,6 +16,7 @@ export const Colors = {
     onPrimary: '#ffffff',
     primaryContainer: '#6063ee',
     primaryFixed: '#e1e0ff',
+    onPrimaryFixed: '#07006c',
     inversePrimary: '#c0c1ff',
 
     // Secondary / streak (orange)
@@ -63,6 +64,7 @@ export const Colors = {
     onPrimary: '#07006c',
     primaryContainer: '#2f2ebe',
     primaryFixed: '#e1e0ff',
+    onPrimaryFixed: '#07006c',
     inversePrimary: '#4648d4',
 
     streak: '#ffb690',
