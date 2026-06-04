@@ -1,53 +1,64 @@
 """
-Email Service for AporTamos — sends transactional emails via Gmail SMTP.
+Email Service for AporTamos — sends transactional emails via the Brevo HTTP API.
 
-Uses the Python standard library (smtplib + email.message), so no extra
-dependency is added (Constitution Principle IV).
+We use Brevo's REST API over HTTPS (not SMTP) because hosting platforms like
+Render block outbound SMTP ports (25/465/587). httpx is already a dependency,
+so no new package is added (Constitution Principle IV).
 
-Configuration (set in .env):
-  SMTP_USER      = your Gmail address
-  SMTP_PASSWORD  = a Gmail "App Password" (16 chars, not your normal password)
-  SMTP_HOST      = smtp.gmail.com  (default)
-  SMTP_PORT      = 587             (default, STARTTLS)
+Configuration (set in .env / Render env):
+  BREVO_API_KEY       = your Brevo API key (starts with "xkeysib-")
+  BREVO_SENDER_EMAIL  = a sender email VERIFIED in your Brevo account
+  SMTP_FROM_NAME      = display name shown as the sender (default "AporTamos")
 
-If SMTP is not configured, send functions log a warning and return False
+If Brevo is not configured, send functions log a warning and return False
 instead of raising — so an unconfigured environment never breaks invitations.
 """
 
-import smtplib
-from email.message import EmailMessage
+import httpx
 
 from app.config import settings, log_info, log_warning, log_error
 
+# Brevo transactional email endpoint
+BREVO_SEND_URL = "https://api.brevo.com/v3/smtp/email"
+
 
 def is_email_configured() -> bool:
-    """True if SMTP credentials are present."""
-    return bool(settings.smtp_user and settings.smtp_password)
+    """True if Brevo API key and a verified sender are present."""
+    return bool(settings.brevo_api_key and settings.brevo_sender_email)
 
 
 def _send_email(to_email: str, subject: str, text_body: str, html_body: str) -> bool:
-    """Send a single email via Gmail SMTP. Returns True on success."""
+    """Send a single email via the Brevo HTTP API. Returns True on success."""
     if not is_email_configured():
         log_warning(
-            "Email not sent — SMTP not configured (set SMTP_USER and SMTP_PASSWORD)",
+            "Email not sent — Brevo not configured (set BREVO_API_KEY and BREVO_SENDER_EMAIL)",
             extra={"to": to_email},
         )
         return False
 
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = f"{settings.smtp_from_name} <{settings.smtp_user}>"
-    msg["To"] = to_email
-    msg.set_content(text_body)
-    msg.add_alternative(html_body, subtype="html")
+    payload = {
+        "sender": {"name": settings.smtp_from_name, "email": settings.brevo_sender_email},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "textContent": text_body,
+        "htmlContent": html_body,
+    }
+    headers = {
+        "api-key": settings.brevo_api_key,
+        "content-type": "application/json",
+        "accept": "application/json",
+    }
 
     try:
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=15) as server:
-            server.starttls()
-            server.login(settings.smtp_user, settings.smtp_password)
-            server.send_message(msg)
-        log_info("Email sent", extra={"to": to_email, "subject": subject})
-        return True
+        response = httpx.post(BREVO_SEND_URL, json=payload, headers=headers, timeout=15)
+        if response.status_code in (200, 201):
+            log_info("Email sent", extra={"to": to_email, "subject": subject})
+            return True
+        log_error(
+            "Failed to send email — Brevo API error",
+            extra={"to": to_email, "status": response.status_code, "body": response.text[:500]},
+        )
+        return False
     except Exception as exc:
         log_error("Failed to send email", exc, extra={"to": to_email})
         return False

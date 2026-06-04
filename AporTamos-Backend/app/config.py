@@ -51,12 +51,17 @@ class Settings(BaseSettings):
     google_client_secret: Optional[str] = None
     google_oauth_redirect_uri: str = "http://localhost:8000/auth/google/callback"
 
-    # Email (Gmail SMTP) for household invitations
+    # Email (Brevo HTTP API) for household invitations.
+    # Render blocks outbound SMTP, so we send via Brevo's REST API over HTTPS.
+    brevo_api_key: Optional[str] = None       # Brevo "API key" (starts with xkeysib-)
+    brevo_sender_email: Optional[str] = None  # a Sender verified in your Brevo account
+    smtp_from_name: str = "AporTamos"         # display name shown as the sender
+
+    # Legacy SMTP fields (kept so old .env files don't break; no longer used)
     smtp_host: str = "smtp.gmail.com"
     smtp_port: int = 587
-    smtp_user: Optional[str] = None          # your Gmail address
-    smtp_password: Optional[str] = None      # Gmail App Password (not your login password)
-    smtp_from_name: str = "AporTamos"
+    smtp_user: Optional[str] = None
+    smtp_password: Optional[str] = None
 
     # Logging Configuration
     log_level: LogLevel = LogLevel.INFO
