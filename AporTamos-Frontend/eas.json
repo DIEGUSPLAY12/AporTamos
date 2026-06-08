@@ -8,7 +8,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-hl9f.onrender.com",
+        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-gw41.onrender.com",
         "EXPO_PUBLIC_SUPABASE_URL": "https://bpyxpzhvyqvogietjqdd.supabase.co",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJweXhwemh2eXF2b2dpZXRqcWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNjU4ODUsImV4cCI6MjA5NDg0MTg4NX0.Vyi44-Y_fLjo-MmdsLevT0NgTunbyeaIzmd6UsoJM14",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "294510874940-hj77q51ng9j9tioue2e8gu9vr88v8v4f.apps.googleusercontent.com"
@@ -21,7 +21,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-hl9f.onrender.com",
+        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-gw41.onrender.com",
         "EXPO_PUBLIC_SUPABASE_URL": "https://bpyxpzhvyqvogietjqdd.supabase.co",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJweXhwemh2eXF2b2dpZXRqcWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNjU4ODUsImV4cCI6MjA5NDg0MTg4NX0.Vyi44-Y_fLjo-MmdsLevT0NgTunbyeaIzmd6UsoJM14",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "294510874940-hj77q51ng9j9tioue2e8gu9vr88v8v4f.apps.googleusercontent.com"
@@ -31,7 +31,7 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-hl9f.onrender.com",
+        "EXPO_PUBLIC_API_URL": "https://aportamos-backend-gw41.onrender.com",
         "EXPO_PUBLIC_SUPABASE_URL": "https://bpyxpzhvyqvogietjqdd.supabase.co",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJweXhwemh2eXF2b2dpZXRqcWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNjU4ODUsImV4cCI6MjA5NDg0MTg4NX0.Vyi44-Y_fLjo-MmdsLevT0NgTunbyeaIzmd6UsoJM14",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "294510874940-hj77q51ng9j9tioue2e8gu9vr88v8v4f.apps.googleusercontent.com"
