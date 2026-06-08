@@ -72,11 +72,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ]);
 
         // No stored session → show login.
-        if (!storedToken || !storedUser) return;
+        if (!storedToken || !storedUser) {
+          setIsLoading(false);
+          return;
+        }
 
-        // Validate the token. A 401 means it's invalid/expired → sign out.
-        // On timeout/network error (e.g. Render cold start) trust the stored
-        // session optimistically; the 401 interceptor will catch it later.
+        // Restore the cached session IMMEDIATELY so the UI never flashes the
+        // "Usuario" placeholder while we wait for the server (Render cold starts
+        // can take 30-50s). We validate in the background below and correct it.
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+        setIsLoading(false);
+
+        // Validate the token in the background. A 401 means it's invalid/expired
+        // → sign out. On timeout/network error keep the optimistic session.
         try {
           const controller = new AbortController();
           const t = setTimeout(() => controller.abort(), 8000);
@@ -88,24 +97,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
           if (res.ok) {
             const me = await res.json();
-            setToken(storedToken);
             setUser(me);
             await AsyncStorage.setItem(USER_KEY, JSON.stringify(me)); // refresh stale data
           } else if (res.status === 401) {
             await AsyncStorage.multiRemove([TOKEN_KEY, USER_KEY]); // invalid → login
-          } else {
-            // Unexpected status → trust stored session
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
+            setToken(null);
+            setUser(null);
           }
+          // Any other status → keep the optimistic session already set above.
         } catch {
-          // Network/timeout → optimistic restore (offline-friendly)
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+          // Network/timeout → keep the optimistic session already set above.
         }
       } catch {
         // start unauthenticated if storage fails
-      } finally {
         setIsLoading(false);
       }
     })();
