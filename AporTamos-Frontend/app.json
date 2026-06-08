@@ -22,7 +22,10 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.hugosolissorganization.aportamos"
+      "package": "com.hugosolissorganization.aportamos",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "output": "static",
@@ -53,6 +56,9 @@
         "projectId": "e67a611f-103a-4371-a3ba-6c94d3ced339"
       }
     },
-    "owner": "hugosoliss-organization"
+    "owner": "hugosoliss-organization",
+    "updates": {
+      "url": "https://u.expo.dev/e67a611f-103a-4371-a3ba-6c94d3ced339"
+    }
   }
 }
